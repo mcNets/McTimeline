@@ -9,8 +9,6 @@
     <x:Double x:Key="McTimelineMaxPixelsPerHour">300</x:Double>
     <x:Double x:Key="McTimelineTimeScaleHeight">50</x:Double>
     <x:Double x:Key="McTimelineMinimapHeight">80</x:Double>
-    <x:Double x:Key="McTimelineLegendToggleWidth">32</x:Double>
-    <x:Double x:Key="McTimelineLegendToggleHeight">32</x:Double>
 
     <!-- Thickness -->
     <Thickness x:Key="McTimelineDefaultPadding">8</Thickness>

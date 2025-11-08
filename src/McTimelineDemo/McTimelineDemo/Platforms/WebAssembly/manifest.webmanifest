@@ -1,0 +1,10 @@
+{
+  "background_color": "#ffffff",
+  "description": "McTimelineDemo",
+  "display": "standalone",
+  "name": "McTimelineDemo",
+  "short_name": "McTimelineDemo",
+  "start_url": "/index.html",
+  "theme_color": "#ffffff",
+  "scope": "/"
+}

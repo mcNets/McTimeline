@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/Docs/">
+    <File Path=".github/copilot-instructions.md" />
+  </Folder>
+  <Project Path="../McTimelineDemo/McTimelineDemo/McTimelineDemo.csproj" />
+  <Project Path="McTimeline.csproj" />
+</Solution>

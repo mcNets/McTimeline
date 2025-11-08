@@ -1,0 +1,180 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:local="using:McTimeline">
+
+	<!-- Merge Theme Resources -->
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="ms-appx:///McTimeline/Themes/McTimelineResources.xaml" />
+	</ResourceDictionary.MergedDictionaries>
+
+	<!-- Theme-aware dictionaries -->
+	<ResourceDictionary.ThemeDictionaries>
+		<ResourceDictionary x:Key="Light"
+							Source="ms-appx:///McTimeline/Themes/ThemeResources.Light.xaml" />
+
+		<ResourceDictionary x:Key="Dark"
+							Source="ms-appx:///McTimeline/Themes/ThemeResources.Dark.xaml" />
+	</ResourceDictionary.ThemeDictionaries>
+
+	<!-- Default Styles for control parts -->
+
+	<!-- Default style for time scale grid -->
+	<Style x:Key="DefaultTimeScaleStyle"
+		   TargetType="Grid">
+		<Setter Property="BorderBrush"
+				Value="{ThemeResource McTimelineGridLineBrush}" />
+		<Setter Property="BorderThickness"
+				Value="0,0,0,1" />
+	</Style>
+
+	<!-- Default style for legend border -->
+	<Style x:Key="DefaultLegendStyle"
+		   TargetType="Border">
+		<Setter Property="BorderBrush"
+				Value="{ThemeResource McTimelineGridLineBrush}" />
+		<Setter Property="BorderThickness"
+				Value="0,0,1,0" />
+		<Setter Property="Background"
+				Value="{ThemeResource McTimelineLegendBackgroundBrush}" />
+	</Style>
+
+	<!-- Default style for each legend item -->
+	<Style x:Key="DefaultLegendItemStyle"
+		   TargetType="Border">
+		<Setter Property="Height"
+				Value="{ThemeResource McTimelineDefaultRowHeight}" />
+		<Setter Property="Padding"
+				Value="{ThemeResource McTimelineDefaultPadding}" />
+		<Setter Property="BorderBrush"
+				Value="{ThemeResource McTimelineGridLineBrush}" />
+		<Setter Property="BorderThickness"
+				Value="0,0,0,1" />
+	</Style>
+
+	<!-- Default style for ScrollViewer -->
+	<Style x:Key="DefaultTimelineScrollStyle"
+		   TargetType="ScrollViewer">
+		<Setter Property="HorizontalScrollBarVisibility"
+				Value="Auto" />
+		<Setter Property="VerticalScrollBarVisibility"
+				Value="Auto" />
+		<Setter Property="HorizontalScrollMode"
+				Value="Auto" />
+		<Setter Property="VerticalScrollMode"
+				Value="Auto" />
+	</Style>
+
+	<!-- Default style for Canvas -->
+	<Style x:Key="DefaultTimelineCanvasStyle"
+		   TargetType="Canvas">
+		<Setter Property="Background"
+				Value="Transparent" />
+	</Style>
+
+	<!-- Default DataTemplate for legend items -->
+	<DataTemplate x:Key="DefaultLegendItemTemplate">
+		<Border Style="{StaticResource DefaultLegendItemStyle}">
+			<TextBlock Text="{Binding}"
+					   VerticalAlignment="Center"
+					   Foreground="{ThemeResource McTimelineForegroundBrush}"
+					   FontFamily="{ThemeResource McTimelineFontFamily}"
+					   FontSize="{ThemeResource McTimelineFontSize}"
+					   FontWeight="SemiBold" />
+		</Border>
+	</DataTemplate>
+
+	<!-- Main McTimeline Style -->
+	<Style TargetType="local:McTimeline">
+		<Setter Property="Background"
+				Value="{ThemeResource McTimelineBackgroundBrush}" />
+		<Setter Property="Foreground"
+				Value="{ThemeResource McTimelineForegroundBrush}" />
+		<Setter Property="TimeScaleStyle"
+				Value="{StaticResource DefaultTimeScaleStyle}" />
+		<Setter Property="LegendStyle"
+				Value="{StaticResource DefaultLegendStyle}" />
+		<Setter Property="LegendItemStyle"
+				Value="{StaticResource DefaultLegendItemStyle}" />
+		<Setter Property="TimelineScrollStyle"
+				Value="{StaticResource DefaultTimelineScrollStyle}" />
+		<Setter Property="TimelineCanvasStyle"
+				Value="{StaticResource DefaultTimelineCanvasStyle}" />
+		<Setter Property="LegendItemTemplate"
+				Value="{StaticResource DefaultLegendItemTemplate}" />
+
+		<Setter Property="Template">
+			<Setter.Value>
+				<ControlTemplate TargetType="local:McTimeline">
+					<Grid x:Name="PART_Container"
+						  Height="{TemplateBinding Height}"
+						  Width="{TemplateBinding Width}"
+						  CornerRadius="8"
+						  Background="{TemplateBinding Background}">
+
+						<Grid.RowDefinitions>
+							<!-- Time Scale Row -->
+							<RowDefinition Height="{ThemeResource McTimelineTimeScaleHeight}" />
+							<!-- Main Timeline Row -->
+							<RowDefinition Height="*" />
+						</Grid.RowDefinitions>
+
+						<!-- TOP: Time Scale -->
+						<Grid x:Name="PART_TimeScaleGrid"
+							  Grid.Row="0"
+							  Style="{TemplateBinding TimeScaleStyle}">
+							<Grid.ColumnDefinitions>
+								<!-- Left space for legend -->
+								<ColumnDefinition Width="{ThemeResource McTimelineDefaultSeriesLabelWidth}" />
+								<!-- Time scale area -->
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+
+							<!-- Time Scale Days -->
+							<Canvas x:Name="PART_TimeScaleDays"
+									Grid.Column="1" />
+
+							<!-- Time Scale Hours -->
+							<Canvas x:Name="PART_TimeScaleHours"
+									Grid.Column="1"
+									Margin="0,25,0,0" />
+						</Grid>
+
+						<!-- MIDDLE: Legend + Timeline -->
+						<Grid Grid.Row="1">
+							<Grid.ColumnDefinitions>
+								<!-- Legend Column -->
+								<ColumnDefinition Width="{ThemeResource McTimelineDefaultSeriesLabelWidth}" />
+								<!-- Timeline Column -->
+								<ColumnDefinition Width="*" />
+							</Grid.ColumnDefinitions>
+
+							<!-- Left Legend -->
+							<Border x:Name="PART_LegendBorder"
+									Grid.Column="0"
+									Style="{TemplateBinding LegendStyle}">
+								<ItemsRepeater x:Name="PART_SeriesRepeater">
+									<ItemsRepeater.ItemTemplate>
+										<DataTemplate>
+											<ContentControl Content="{Binding}"
+															ContentTemplate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:McTimeline.LegendItemTemplate)}" />
+										</DataTemplate>
+									</ItemsRepeater.ItemTemplate>
+								</ItemsRepeater>
+							</Border>
+
+							<!-- Right Timeline ScrollViewer + Canvas -->
+							<ScrollViewer x:Name="PART_TimelineScroll"
+										  Grid.Column="1"
+										  Style="{TemplateBinding TimelineScrollStyle}">
+								<Canvas x:Name="PART_TimelineCanvas"
+										Style="{TemplateBinding TimelineCanvasStyle}" />
+							</ScrollViewer>
+						</Grid>
+
+					</Grid>
+				</ControlTemplate>
+			</Setter.Value>
+		</Setter>
+	</Style>
+
+</ResourceDictionary>

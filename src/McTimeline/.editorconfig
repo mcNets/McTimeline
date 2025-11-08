@@ -1,0 +1,21 @@
+# EditorConfig is awesome: https://EditorConfig.org
+root = true
+
+[*.sql]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[.xaml]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
+[*.cs]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+charset = utf-8
+
+# C# code style: keep open brackets on the same line
+csharp_new_line_before_open_brace = none

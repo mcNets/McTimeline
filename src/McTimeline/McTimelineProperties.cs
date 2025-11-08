@@ -2,6 +2,34 @@ namespace McTimeline;
 
 public sealed partial class McTimeline
 {
+    #region Layout Dependency Properties
+
+    /// <summary>
+    /// Gets or sets a value indicating whether the legend column is visible.
+    /// </summary>
+    public bool IsLegendVisible
+    {
+        get => (bool)GetValue(IsLegendVisibleProperty);
+        set => SetValue(IsLegendVisibleProperty, value);
+    }
+
+    public static readonly DependencyProperty IsLegendVisibleProperty =
+        DependencyProperty.Register(
+            nameof(IsLegendVisible),
+            typeof(bool),
+            typeof(McTimeline),
+            new PropertyMetadata(true, OnIsLegendVisibleChanged));
+
+    private static void OnIsLegendVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    {
+        if (d is McTimeline timeline)
+        {
+            timeline.UpdateLegendVisibility();
+        }
+    }
+
+    #endregion
+
     #region Style Dependency Properties
 
     /// <summary>

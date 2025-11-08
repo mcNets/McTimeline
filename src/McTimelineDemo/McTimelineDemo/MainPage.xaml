@@ -6,27 +6,40 @@
       xmlns:mctl="using:McTimeline"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Page.Resources>
-        <Style x:Key="MyLegendStyle"
-               TargetType="Border">
-            <Setter Property="BorderBrush"
-                    Value="{ThemeResource McTimelineGridLineBrush}" />
-            <Setter Property="BorderThickness"
-                    Value="0,0,1,0" />
-            <Setter Property="Background"
-                    Value="DarkSlateGray" />
-        </Style>
-    </Page.Resources>
+        <Page.Resources>
+                <Style x:Key="MyLegendStyle"
+                       TargetType="Border">
+                        <Setter Property="BorderBrush"
+                                Value="{ThemeResource McTimelineGridLineBrush}"/>
+                        <Setter Property="BorderThickness"
+                                Value="0,0,1,0"/>
+                        <Setter Property="Background"
+                                Value="DarkSlateGray"/>
+                </Style>
+        </Page.Resources>
 
-    <Grid>
         <Grid utu:SafeArea.Insets="VisibleBounds"
-              Margin="40, 100">
-            <mctl:McTimeline RequestedTheme="Light" />
+              RowDefinitions="Auto,*"
+              RowSpacing="10">
+
+                <StackPanel Grid.Row="0"
+                            Orientation="Horizontal"
+                            Spacing="20"
+                            HorizontalAlignment="Center"
+                            Margin="10">
+
+                        <Button VerticalAlignment="Top"
+                                Content="Theme"
+                                Click="Button_Click"/>
+
+                        <CheckBox x:Name="legendCheckBox" 
+                                Content="Show legend" />
+
+                </StackPanel>
+
+                <mctl:McTimeline Grid.Row="1"
+                        IsLegendVisible="{Binding IsChecked, ElementName=legendCheckBox}"
+                                 Margin="30"/>
         </Grid>
-
-        <Button VerticalAlignment="Top" Content="Theme"
-                Click="Button_Click" />
-
-    </Grid>
 
 </Page>

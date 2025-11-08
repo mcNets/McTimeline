@@ -10,6 +10,7 @@
 	<Color x:Key="McTimelineMinimapBackgroundColor">#FAFAFA</Color>
 	<Color x:Key="McTimelineHoverColor">#E5F3FF</Color>
 	<Color x:Key="McTimelineSelectionColor">#CCE8FF</Color>
+	<Color x:Key="McTimelineBorderColor">#CCCCCC</Color>
 
 	<!-- Brushes -->
 	<SolidColorBrush x:Key="McTimelineAccentBrush"
@@ -28,5 +29,7 @@
 					 Color="{StaticResource McTimelineHoverColor}" />
 	<SolidColorBrush x:Key="McTimelineSelectionBrush"
 					 Color="{StaticResource McTimelineSelectionColor}" />
+	<SolidColorBrush x:Key="McTimelineBorderBrush"
+					 Color="{StaticResource McTimelineBorderColor}" />
 
 </ResourceDictionary>

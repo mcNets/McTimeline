@@ -7,7 +7,7 @@ public sealed partial class MainPage : Page
         this.InitializeComponent();
     }
 
-    private async void Button_Click(object sender, RoutedEventArgs e)
+    private void Button_Click(object sender, RoutedEventArgs e)
     {
         var theme = App.RootFrame.ActualTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
         var srv = App.RootFrame.RequestedTheme = theme;

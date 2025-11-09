@@ -103,7 +103,7 @@ Time Scale
 * Ctrl + mouse wheel changes `PixelsPerHour`
 * Anchor zoom at mouse cursor:
 
-  * keep same time position under pointer
+ * keep same time position under pointer
 * Clamp zoom values (5–300 px per hour)
 
 ---

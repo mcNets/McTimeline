@@ -1,4 +1,4 @@
-<Page x:Class="McTimelineDemo.MainPage"
+﻿<Page x:Class="McTimelineDemo.MainPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:local="using:McTimelineDemo"
@@ -32,13 +32,15 @@
                                 Content="Theme"
                                 Click="Button_Click"/>
 
-                        <CheckBox x:Name="legendCheckBox" 
-                                Content="Show legend" />
+                        <CheckBox x:Name="legendCheckBox"
+                                  Content="Show legend"/>
 
                 </StackPanel>
 
                 <mctl:McTimeline Grid.Row="1"
-                        IsLegendVisible="{Binding IsChecked, ElementName=legendCheckBox}"
+                                 LegendCaption="Timeline Graph"
+                                 LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
+                                 IsLegendVisible="{Binding IsChecked, ElementName=legendCheckBox}"
                                  Margin="30"/>
         </Grid>
 

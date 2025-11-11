@@ -1,4 +1,5 @@
 using Windows.Foundation;
+using System.Collections.Specialized;
 
 namespace McTimeline;
 
@@ -68,5 +69,44 @@ public sealed partial class McTimeline : Control {
         if (_timeScaleLegendColumn is not null) {
             _timeScaleLegendColumn.Width = isVisible ? _timeScaleLegendColumnWidth : new GridLength(0);
         }
+    }
+
+    private void OnSeriesCollectionChanged(McTimelineSeriesCollection oldValue, McTimelineSeriesCollection newValue) {
+        if (oldValue != null) {
+            oldValue.CollectionChanged -= OnSeriesCollectionChanged;
+            foreach (var series in oldValue) {
+                series.Items.CollectionChanged -= OnSeriesItemsChanged;
+            }
+        }
+        if (newValue != null) {
+            newValue.CollectionChanged += OnSeriesCollectionChanged;
+            foreach (var series in newValue) {
+                series.Items.CollectionChanged += OnSeriesItemsChanged;
+            }
+        }
+        InvalidateTimeline();
+    }
+
+    private void OnSeriesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+        if (e.OldItems != null) {
+            foreach (McTimelineSeries series in e.OldItems) {
+                series.Items.CollectionChanged -= OnSeriesItemsChanged;
+            }
+        }
+        if (e.NewItems != null) {
+            foreach (McTimelineSeries series in e.NewItems) {
+                series.Items.CollectionChanged += OnSeriesItemsChanged;
+            }
+        }
+        InvalidateTimeline();
+    }
+
+    private void OnSeriesItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) {
+        InvalidateTimeline();
+    }
+
+    private void InvalidateTimeline() {
+        // Placeholder for repaint logic
+        // Will be implemented later
     }
 }

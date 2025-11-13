@@ -1,4 +1,6 @@
-namespace McTimeline;
+using System;
+
+namespace CanvasTest;
 
 /// <summary>
 /// 1D axis based on time (DateTime). 
@@ -6,7 +8,8 @@ namespace McTimeline;
 /// Scale = pixels per hour.
 /// Combines the functionality of virtual space management and time axis in a single class.
 /// </summary>
-public sealed class VirtualTimeAxis {
+public sealed class VirtualTimeAxis
+{
     private double _offsetHours;          // world units (hours, left of the viewport)
     private double _pixelsPerHour = 10.0; // screen px per world unit (>0)
     private double _viewportPx;           // width of the viewport in pixels
@@ -27,7 +30,8 @@ public sealed class VirtualTimeAxis {
     /// </summary>
     /// <remarks>The value is constrained to be between 0 and the maximum allowed offset hours. Setting a
     /// value outside this range will automatically clamp it to the nearest valid value.</remarks>
-    public double OffsetHours {
+    public double OffsetHours
+    {
         get => _offsetHours;
         set => _offsetHours = Math.Clamp(value, 0, MaxOffsetHours);
     }
@@ -38,9 +42,11 @@ public sealed class VirtualTimeAxis {
     /// <remarks>Setting this property to a value less than or equal to zero will automatically adjust it to a
     /// minimal positive value. Changing the scale may affect related properties such as offset and maximum offset
     /// hours.</remarks>
-    public double PixelsPerHour {
+    public double PixelsPerHour
+    {
         get => _pixelsPerHour;
-        set {
+        set
+        {
             _pixelsPerHour = Math.Max(1e-6, value); // avoids 0 or negatives
             _offsetHours = Math.Clamp(_offsetHours, 0, MaxOffsetHours);
         }
@@ -52,9 +58,11 @@ public sealed class VirtualTimeAxis {
     /// <remarks>Setting this property to a negative value will automatically clamp it to zero. The value
     /// represents the horizontal size of the visible area in pixels and may affect layout or rendering
     /// calculations.</remarks>
-    public double ViewportPixels {
+    public double ViewportPixels
+    {
         get => _viewportPx;
-        set {
+        set
+        {
             _viewportPx = Math.Max(0, value);
             _offsetHours = Math.Clamp(_offsetHours, 0, MaxOffsetHours);
         }
@@ -63,9 +71,11 @@ public sealed class VirtualTimeAxis {
     /// <summary>
     /// Gets or sets the total number of content hours. The value is constrained to be non-negative.
     /// </summary>
-    public double ContentHours {
+    public double ContentHours
+    {
         get => _contentHours;
-        set {
+        set
+        {
             _contentHours = Math.Max(0, value);
             _offsetHours = Math.Clamp(_offsetHours, 0, MaxOffsetHours);
         }
@@ -75,7 +85,7 @@ public sealed class VirtualTimeAxis {
     /// Gets the total number of hours currently visible in the viewport.
     /// </summary>
     public double ViewportHours => _viewportPx / _pixelsPerHour;
-
+    
     /// <summary>
     /// Gets the maximum number of hours by which the content can be offset within the viewport.
     /// </summary>
@@ -144,7 +154,8 @@ public sealed class VirtualTimeAxis {
     /// <param name="bufferHours">An optional buffer, in hours, to expand the visible hours range for intersection testing. The default is 0.</param>
     /// <returns>true if the specified time range intersects with the visible hours range (including any buffer); otherwise,
     /// false.</returns>
-    public bool Intersects(double hours, double widthHours, double bufferHours = 0) {
+    public bool Intersects(double hours, double widthHours, double bufferHours = 0)
+    {
         var (L, R) = VisibleHoursRange;
         var left = hours;
         var right = hours + widthHours;
@@ -158,8 +169,10 @@ public sealed class VirtualTimeAxis {
     /// range. The value is clamped to the range [0, 1] when read. This property is useful for scenarios where scroll
     /// position needs to be represented or controlled in a normalized form, such as for UI sliders or progress
     /// indicators.</remarks>
-    public double ScrollNormalized {
-        get {
+    public double ScrollNormalized
+    {
+        get
+        {
             var denom = Math.Max(MaxOffsetHours, 1e-6);
             return Math.Clamp(_offsetHours / denom, 0, 1);
         }
@@ -175,7 +188,8 @@ public sealed class VirtualTimeAxis {
     /// <param name="max">The maximum date of the range. Must be later than <paramref name="min"/>. Represents the latest allowed date for
     /// the content.</param>
     /// <exception cref="ArgumentException">Thrown when <paramref name="max"/> is less than or equal to <paramref name="min"/>.</exception>
-    public void SetRange(DateTime min, DateTime max) {
+    public void SetRange(DateTime min, DateTime max)
+    {
         if (max <= min) {
             throw new ArgumentException("MaxDate must be > MinDate");
         }
@@ -243,7 +257,8 @@ public sealed class VirtualTimeAxis {
     /// <param name="bufferHours">The number of hours to expand the time range on both sides before testing for intersection. Must be zero or
     /// positive.</param>
     /// <returns>true if the buffered time range overlaps with the global date range; otherwise, false.</returns>
-    public bool Intersects(DateTime start, DateTime end, double bufferHours) {
+    public bool Intersects(DateTime start, DateTime end, double bufferHours)
+    {
         if (end < start)
             (start, end) = (end, start);
 
@@ -264,7 +279,8 @@ public sealed class VirtualTimeAxis {
     /// </summary>
     /// <param name="dt">The date and time value to convert to a screen position.</param>
     /// <returns>A double representing the pixel position on the screen that corresponds to the specified date and time.</returns>
-    public double TimeToScreen(DateTime dt) {
+    public double TimeToScreen(DateTime dt)
+    {
         // Convert the date to hours and then to viewport pixels
         return HoursToScreen(DateToHours(dt));
     }
@@ -274,8 +290,10 @@ public sealed class VirtualTimeAxis {
     /// </summary>
     /// <remarks>This method sets PixelsPerHour so that the total content hours fit exactly within the viewport pixels.
     /// If ContentHours is zero or ViewportPixels is zero, no change is made.</remarks>
-    public void ZoomToFit() {
-        if (ContentHours > 0 && ViewportPixels > 0) {
+    public void ZoomToFit()
+    {
+        if (ContentHours > 0 && ViewportPixels > 0)
+        {
             PixelsPerHour = ViewportPixels / ContentHours;
         }
     }

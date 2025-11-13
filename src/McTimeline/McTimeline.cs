@@ -4,6 +4,9 @@ using System.Collections.Specialized;
 namespace McTimeline;
 
 public sealed partial class McTimeline : Control {
+
+    #region Private fields
+
     private Grid? _container;
     private Grid? _timeScaleGrid;
     private Canvas? _timeScaleDays;
@@ -17,8 +20,13 @@ public sealed partial class McTimeline : Control {
     private GridLength _legendColumnWidth;
     private GridLength _timeScaleLegendColumnWidth;
 
+    private readonly McVirtualTimeAxis _timeAxis;
+
+    #endregion
+
     public McTimeline() {
         this.DefaultStyleKey = typeof(McTimeline);
+        _timeAxis = new McVirtualTimeAxis();
     }
 
     protected override void OnApplyTemplate() {
@@ -33,6 +41,7 @@ public sealed partial class McTimeline : Control {
         _timelineScroll = GetTemplateChild("PART_TimelineScroll") as ScrollViewer;
         _timelineCanvas = GetTemplateChild("PART_TimelineCanvas") as Canvas;
 
+        // Adjust legend column widths
         if (_legendBorder?.Parent is Grid legendHost && legendHost.ColumnDefinitions.Count > 0) {
             _legendColumn = legendHost.ColumnDefinitions[0];
             _legendColumnWidth = _legendColumn.Width;
@@ -43,7 +52,40 @@ public sealed partial class McTimeline : Control {
             _timeScaleLegendColumnWidth = _timeScaleLegendColumn.Width;
         }
 
+        // Subscribe to canvas size changes
+        if (_timelineCanvas != null) {
+            _timelineCanvas.SizeChanged += OnTimelineCanvasSizeChanged;
+        }
+
+        // Subscribe to scroll changes
+        if (_timelineScroll != null) {
+            _timelineScroll.ViewChanged += OnTimelineScrollViewChanged;
+        }
+
+        // Initialize time axis
+        _timeAxis.SetRange(MinDate, MaxDate);
+        _timeAxis.PixelsPerHour = PixelsPerHour;
+        if (_timelineCanvas != null) {
+            _timeAxis.ViewportPixels = _timelineCanvas.ActualWidth;
+        }
+
         UpdateLegendVisibility();
+    }
+
+    private void OnTimelineCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
+        // Update viewport width when canvas size changes
+        _timeAxis.ViewportPixels = e.NewSize.Width;
+        InvalidateTimeline();
+    }
+
+    private void OnTimelineScrollViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) {
+        // Update scroll offset when user scrolls
+        if (_timelineScroll != null) {
+            // Convert pixel offset to hours
+            double offsetHours = _timelineScroll.HorizontalOffset / _timeAxis.PixelsPerHour;
+            _timeAxis.OffsetHours = offsetHours;
+            InvalidateTimeline();
+        }
     }
 
     protected override Size MeasureOverride(Size availableSize) {
@@ -105,6 +147,12 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Invalidates the current timeline, signaling that it should be refreshed or repainted.
+    /// </summary>
+    /// <remarks>Call this method when changes occur that require the timeline to be updated visually. This
+    /// method does not immediately trigger a repaint; the actual update may be deferred depending on the
+    /// implementation.</remarks>
     private void InvalidateTimeline() {
         // Placeholder for repaint logic
         // Will be implemented later

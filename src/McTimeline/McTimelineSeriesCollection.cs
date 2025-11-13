@@ -3,7 +3,7 @@ using System.ComponentModel;
 
 namespace McTimeline;
 
-public class McTimelineSeriesCollection : ObservableCollection<McTimelineSeries>, IDisposable {
+public partial class McTimelineSeriesCollection : ObservableCollection<McTimelineSeries>, IDisposable {
     private bool _disposed;
     private string _name = string.Empty;
 

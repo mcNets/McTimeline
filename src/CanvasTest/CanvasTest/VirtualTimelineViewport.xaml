@@ -1,0 +1,28 @@
+﻿<UserControl x:Class="CanvasTest.VirtualTimelineViewport"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="using:TestTimeline">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Border x:Name="ViewportHost"
+                Grid.Row="0"
+                Background="Black">
+            <Canvas x:Name="CanvasHost" />
+        </Border>
+
+        <ScrollBar x:Name="HScroll"
+                   Grid.Row="1"
+                   Orientation="Horizontal"
+                   Height="16"
+                   HorizontalAlignment="Stretch"
+                   IndicatorMode="MouseIndicator"
+                   Minimum="0"
+                   Maximum="0"
+                   ValueChanged="OnHScrollChanged" />
+    </Grid>
+</UserControl>
+

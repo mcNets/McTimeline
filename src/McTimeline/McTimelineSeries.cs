@@ -23,24 +23,15 @@ public class McTimelineSeries : IEnumerable<McTimelineItem> {
 
     public ReadOnlyObservableCollection<McTimelineItem> ReadOnlyItems { get; }
 
-    public DateTime FixedMinDate { get; set; } = DateTime.MinValue;
-
-    public DateTime FixedMaxDate { get; set; } = DateTime.MinValue;
 
     public DateTime MinDate {
         get {
-            if (FixedMinDate != DateTime.MinValue) {
-                return FixedMinDate;
-            }
             return Items.Count == 0 ? DateTime.MinValue : Items.Min(i => i.Start);
         }
     }
 
     public DateTime MaxDate {
         get {
-            if (FixedMaxDate != DateTime.MinValue) {
-                return FixedMaxDate;
-            }
             return Items.Count == 0 ? DateTime.MinValue : Items.Max(i => i.End);
         }
     }

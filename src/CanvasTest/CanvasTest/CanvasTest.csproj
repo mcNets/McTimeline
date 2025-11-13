@@ -34,5 +34,10 @@
   <ItemGroup>
     <ProjectReference Include="..\..\McTimeline\McTimeline.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Update="VirtualTimelineViewport.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
 
 </Project>

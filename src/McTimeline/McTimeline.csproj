@@ -33,10 +33,4 @@
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Page Update="Themes\ThemeResources.Light.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </Page>
-	</ItemGroup>
-
 </Project>

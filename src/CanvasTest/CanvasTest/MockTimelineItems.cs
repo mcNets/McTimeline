@@ -1,16 +1,18 @@
-using McTimeline;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace McTimelineDemo;
+namespace CanvasTest;
 
-internal class MockTimelineItemsSeries
+internal class MockTimelineItems
 {
-    public static IEnumerable<McTimelineItem> Generate(int maxItemsCount, DateTime startDate, DateTime endDate)
+    public static IEnumerable<TimelineItem> Generate(int itemsCount, DateTime startDate, DateTime endDate)
     {
-        var items = new List<McTimelineItem>();
+        var items = new List<TimelineItem>();
         var random = new Random();
         var currentStartDate = startDate;
         var currentEndDate = endDate;
-        while (currentStartDate <= endDate && items.Count() < maxItemsCount)
+        while (currentStartDate <= endDate && items.Count() < itemsCount)
         {
             var duration = random.Next(8, 24); // durada entre 8 i 24 hores
             var itemEndDate = currentStartDate.AddHours(duration);
@@ -18,7 +20,7 @@ internal class MockTimelineItemsSeries
             {
                 itemEndDate = endDate;
             }
-            var item = new McTimelineItem
+            var item = new TimelineItem
             (
                 Guid.NewGuid().ToString(),
                 $"Item {items.Count() + 1}",
@@ -31,6 +33,6 @@ internal class MockTimelineItemsSeries
             var gap = random.Next(2, 10);
             currentStartDate = itemEndDate.AddHours(gap);
         }
-        return items.Take(maxItemsCount);
+        return items.Take(itemsCount);
     }
 }

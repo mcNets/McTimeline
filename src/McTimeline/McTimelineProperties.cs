@@ -6,8 +6,7 @@ public sealed partial class McTimeline {
     /// <summary>
     /// Gets or sets the collection of timeline series.
     /// </summary>
-    public McTimelineSeriesCollection SeriesCollection
-    {
+    public McTimelineSeriesCollection SeriesCollection {
         get => (McTimelineSeriesCollection)GetValue(SeriesCollectionProperty);
         set => SetValue(SeriesCollectionProperty, value);
     }
@@ -19,11 +18,91 @@ public sealed partial class McTimeline {
             typeof(McTimeline),
             new PropertyMetadata(null, OnSeriesCollectionChanged));
 
-    private static void OnSeriesCollectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-        if (d is McTimeline timeline)
-        {
+    private static void OnSeriesCollectionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is McTimeline timeline) {
             timeline.OnSeriesCollectionChanged((McTimelineSeriesCollection)e.OldValue, (McTimelineSeriesCollection)e.NewValue);
+        }
+    }
+
+    #endregion
+
+    #region Timeline Range and Scale Properties
+
+    /// <summary>
+    /// Gets or sets the minimum date/time of the timeline.
+    /// </summary>
+    public DateTime MinDate {
+        get => (DateTime)GetValue(MinDateProperty);
+        set => SetValue(MinDateProperty, value);
+    }
+
+    public static readonly DependencyProperty MinDateProperty =
+        DependencyProperty.Register(
+            nameof(MinDate),
+            typeof(DateTime),
+            typeof(McTimeline),
+            new PropertyMetadata(DateTime.Now, OnTimeRangeChanged));
+
+    /// <summary>
+    /// Gets or sets the maximum date/time of the timeline.
+    /// </summary>
+    public DateTime MaxDate {
+        get => (DateTime)GetValue(MaxDateProperty);
+        set => SetValue(MaxDateProperty, value);
+    }
+
+    public static readonly DependencyProperty MaxDateProperty =
+        DependencyProperty.Register(
+            nameof(MaxDate),
+            typeof(DateTime),
+            typeof(McTimeline),
+            new PropertyMetadata(DateTime.Now.AddDays(365), OnTimeRangeChanged));
+
+    private static void OnTimeRangeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is McTimeline timeline) {
+            timeline.InvalidateTimeline();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the zoom level in pixels per hour.
+    /// </summary>
+    public double PixelsPerHour {
+        get => (double)GetValue(PixelsPerHourProperty);
+        set => SetValue(PixelsPerHourProperty, value);
+    }
+
+    public static readonly DependencyProperty PixelsPerHourProperty =
+        DependencyProperty.Register(
+            nameof(PixelsPerHour),
+            typeof(double),
+            typeof(McTimeline),
+            new PropertyMetadata(6.0, OnPixelsPerHourChanged));
+
+    private static void OnPixelsPerHourChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is McTimeline timeline) {
+            timeline.InvalidateTimeline();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the height of each series row.
+    /// </summary>
+    public double SeriesHeight {
+        get => (double)GetValue(SeriesHeightProperty);
+        set => SetValue(SeriesHeightProperty, value);
+    }
+
+    public static readonly DependencyProperty SeriesHeightProperty =
+        DependencyProperty.Register(
+            nameof(SeriesHeight),
+            typeof(double),
+            typeof(McTimeline),
+            new PropertyMetadata(30.0, OnSeriesHeightChanged));
+
+    private static void OnSeriesHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is McTimeline timeline) {
+            timeline.InvalidateTimeline();
         }
     }
 

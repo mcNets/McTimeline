@@ -5,36 +5,6 @@
       xmlns:utu="using:Uno.Toolkit.UI"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Grid utu:SafeArea.Insets="VisibleBounds"
-          BorderThickness="1"
-          Margin="100"
-          BorderBrush="DarkSlateGray"
-          VerticalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <Canvas Grid.Row="0"
-                Height="200"
-                Background="Black" />
-
-        <ScrollBar Grid.Row="1"
-                   x:Name="Scroll"
-                   Orientation="Horizontal"
-                   IndicatorMode="MouseIndicator"
-                   Minimum="0"
-                   Maximum="1000"
-                   Value="10"
-                   Height="20"
-                   ViewportSize="100"
-                   SmallChange="1"
-                   LargeChange="10" />
-
-        <TextBlock Grid.Row="2"
-                   Margin="0,20,0,0"
-                   Text="{Binding ElementName=Scroll, Path=Value}" />
-    </Grid>
+    <local:VirtualTimelineViewport  Margin="100" />
     
 </Page>

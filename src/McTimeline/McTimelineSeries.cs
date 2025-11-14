@@ -1,9 +1,12 @@
 using System.Collections;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace McTimeline;
 
-public class McTimelineSeries : IEnumerable<McTimelineItem> {
+public partial class McTimelineSeries : INotifyPropertyChanged, IEnumerable<McTimelineItem> {
+    private string? _title;
+
     public McTimelineSeries(string title) {
         Title = title;
         Items = new ObservableCollection<McTimelineItem>();
@@ -17,7 +20,21 @@ public class McTimelineSeries : IEnumerable<McTimelineItem> {
         ReadOnlyItems = new ReadOnlyObservableCollection<McTimelineItem>(Items);
     }
 
-    public string? Title { get; set; }
+    public string? Title {
+        get => _title;
+        set {
+            if (_title != value) {
+                _title = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
+            }
+        }
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    public override string ToString() {
+        return $"{Title}";
+    }
 
     public ObservableCollection<McTimelineItem> Items { get; }
 

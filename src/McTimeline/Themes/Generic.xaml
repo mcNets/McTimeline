@@ -112,15 +112,28 @@
                                 Grid.Column="0"
                                 Style="{TemplateBinding LegendStyle}">
 
-                            <ItemsRepeater x:Name="PART_SeriesRepeater">
+                            <!--<ListBox Height="150"
+                                     SelectedIndex="0"
+                                     ItemsSource="{TemplateBinding SeriesCollection}"
+                                     Foreground="{ThemeResource McTimelineAccentBrush}" />-->
 
+                            <ItemsRepeater x:Name="PART_SeriesRepeater"
+                                           ItemsSource="{TemplateBinding SeriesCollection}">
+                                <ItemsRepeater.Layout>
+                                    <StackLayout Orientation="Vertical" />
+                                </ItemsRepeater.Layout>
                                 <ItemsRepeater.ItemTemplate>
 
                                     <DataTemplate>
 
-                                        <ContentControl Content="{Binding}"
-                                                        ContentTemplate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:McTimeline.LegendItemTemplate)}"/>
+                                        <TextBlock Text="{Binding Title}"
+                                                   Foreground="{ThemeResource McTimelineForegroundBrush}"
+                                                   Width="130"
+                                                   Height="50" />
 
+                                        <!--<ContentControl Content="{Binding}"
+                                                        ContentTemplate="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(local:McTimeline.LegendItemTemplate)}"
+                                                        Height="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=SeriesHeight}"/>-->
                                     </DataTemplate>
 
                                 </ItemsRepeater.ItemTemplate>

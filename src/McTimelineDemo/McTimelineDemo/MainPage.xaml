@@ -6,42 +6,51 @@
       xmlns:mctl="using:McTimeline"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <Page.Resources>
-                <Style x:Key="MyLegendStyle"
-                       TargetType="Border">
-                        <Setter Property="BorderBrush"
-                                Value="{ThemeResource McTimelineGridLineBrush}"/>
-                        <Setter Property="BorderThickness"
-                                Value="0,0,1,0"/>
-                        <Setter Property="Background"
-                                Value="DarkSlateGray"/>
-                </Style>
-        </Page.Resources>
+    <Page.Resources>
+        <Style x:Key="MyLegendStyle"
+               TargetType="Border">
+            <Setter Property="BorderBrush"
+                    Value="{ThemeResource McTimelineGridLineBrush}" />
+            <Setter Property="BorderThickness"
+                    Value="0,0,1,0" />
+            <Setter Property="Background"
+                    Value="DarkSlateGray" />
+        </Style>
+    </Page.Resources>
 
-        <Grid utu:SafeArea.Insets="VisibleBounds"
-              RowDefinitions="Auto,*"
-              RowSpacing="10">
+    <Grid utu:SafeArea.Insets="VisibleBounds"
+          ColumnDefinitions="Auto,*"
+          RowSpacing="10">
 
-                <StackPanel Grid.Row="0"
-                            Orientation="Horizontal"
-                            Spacing="20"
-                            HorizontalAlignment="Center"
-                            Margin="10">
+        <StackPanel Padding="20"
+                    Grid.Column="0"
+                    Spacing="20"
+                    HorizontalAlignment="Center"
+                    Margin="10">
 
-                        <Button VerticalAlignment="Top"
-                                Content="Theme"
-                                Click="Button_Click"/>
+            <Button Content="Change theme"
+                    Click="ThemeButton_Click" />
 
-                        <CheckBox x:Name="legendCheckBox"
-                                  Content="Show legend"/>
+            <CheckBox x:Name="legendCheckBox"
+                      IsChecked="True"
+                      Content="Show legend" />
 
-                </StackPanel>
+            <Button Content="New collection"
+                    Command="{x:Bind ViewModel.GenerarNovaCollecioCommand}" />
 
-                <mctl:McTimeline Grid.Row="1"
-                                 LegendCaption="Timeline Graph"
-                                 LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
-                                 IsLegendVisible="{Binding IsChecked, ElementName=legendCheckBox}"
-                                 Margin="30"/>
-        </Grid>
+            <ListBox Height="150"
+                     SelectedIndex="0"
+                     ItemsSource="{x:Bind ViewModel.Series, Mode=OneWay}"
+                     Foreground="{ThemeResource McTimelineAccentBrush}" />
+
+        </StackPanel>
+
+        <mctl:McTimeline Grid.Column="1"
+                         SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"
+                         LegendCaption="Timeline Graph"
+                         LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
+                         IsLegendVisible="{Binding IsChecked, ElementName=legendCheckBox}"
+                         Margin="30" />
+    </Grid>
 
 </Page>

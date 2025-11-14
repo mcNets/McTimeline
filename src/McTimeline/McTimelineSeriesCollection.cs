@@ -23,6 +23,10 @@ public partial class McTimelineSeriesCollection : ObservableCollection<McTimelin
         }
     }
 
+    public override string ToString() {
+        return $"{Name}/({Count})";
+    }
+
     public DateTime MinDateFromSeries() {
         if (Count == 0) {
             return DateTime.MinValue;

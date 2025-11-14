@@ -81,7 +81,7 @@
     <!-- Default DataTemplate for legend items -->
     <DataTemplate x:Key="DefaultLegendItemTemplate">
         <Border Style="{StaticResource DefaultLegendItemStyle}">
-            <TextBlock Text="{Binding}"
+            <TextBlock Text="{Binding Title, Mode=OneWay}"
                        VerticalAlignment="Center"
                        Foreground="{ThemeResource McTimelineForegroundBrush}"
                        FontFamily="{ThemeResource McTimelineFontFamily}"

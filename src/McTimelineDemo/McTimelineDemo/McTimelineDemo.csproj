@@ -1,22 +1,24 @@
 <Project Sdk="Uno.Sdk">
-  <PropertyGroup>
-    <TargetFrameworks>net9.0-desktop;net9.0-android;net9.0-ios;net9.0-windows10.0.26100;net9.0-browserwasm</TargetFrameworks>
+    <PropertyGroup>
+        <TargetFrameworks>net9.0-desktop;net9.0-android;net9.0-ios;net9.0-windows10.0.26100;net9.0-browserwasm</TargetFrameworks>
 
-    <OutputType>Exe</OutputType>
-    <UnoSingleProject>true</UnoSingleProject>
+        <OutputType>Exe</OutputType>
+        <UnoSingleProject>true</UnoSingleProject>
 
-    <!-- Display name -->
-    <ApplicationTitle>McTimelineDemo</ApplicationTitle>
-    <!-- App Identifier -->
-    <ApplicationId>com.McNets.McTimelineDemo</ApplicationId>
-    <!-- Versions -->
-    <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
-    <ApplicationVersion>1</ApplicationVersion>
-    <!-- Package Publisher -->
-    <ApplicationPublisher>Joan Magnet</ApplicationPublisher>
-    <!-- Package Description -->
-    <Description>McTimelineDemo powered by Uno Platform.</Description>
-    <!--
+        <LangVersion>preview</LangVersion>
+
+        <!-- Display name -->
+        <ApplicationTitle>McTimelineDemo</ApplicationTitle>
+        <!-- App Identifier -->
+        <ApplicationId>com.McNets.McTimelineDemo</ApplicationId>
+        <!-- Versions -->
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <ApplicationVersion>1</ApplicationVersion>
+        <!-- Package Publisher -->
+        <ApplicationPublisher>Joan Magnet</ApplicationPublisher>
+        <!-- Package Description -->
+        <Description>McTimelineDemo powered by Uno Platform.</Description>
+        <!--
       If you encounter this error message:
 
         error NETSDK1148: A referenced assembly was compiled using a newer version of Microsoft.Windows.SDK.NET.dll.
@@ -26,25 +28,25 @@
       the "Microsoft.Windows.SDK.BuildTools" package above, and the "revision" version number
       must be the highest found in https://www.nuget.org/packages/Microsoft.Windows.SDK.NET.Ref.
     -->
-    <!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
+        <!-- <WindowsSdkPackageVersion>10.0.22621.28</WindowsSdkPackageVersion> -->
 
-    <!--
+        <!--
       UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
       https://aka.platform.uno/singleproject-features
     -->
-    <UnoFeatures>
-      Lottie;
-      Hosting;
-      Toolkit;
-      Logging;
-      Mvvm;
-      ThemeService;
-      SkiaRenderer;
-    </UnoFeatures>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\..\McTimeline\McTimeline.csproj" />
-  </ItemGroup>
+        <UnoFeatures>
+            Lottie;
+            Hosting;
+            Toolkit;
+            Logging;
+            Mvvm;
+            ThemeService;
+            SkiaRenderer;
+        </UnoFeatures>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\McTimeline\McTimeline.csproj" />
+    </ItemGroup>
 
 </Project>

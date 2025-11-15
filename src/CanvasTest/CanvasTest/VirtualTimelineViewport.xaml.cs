@@ -162,7 +162,7 @@ public sealed partial class VirtualTimelineViewport : UserControl
 
         HScroll.Value = _timeAxis.OffsetHours;
         _suppressScrollEvent = false;
-        
+
         RealizeVisible();
     }
 

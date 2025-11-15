@@ -41,6 +41,14 @@ public record McTimelineItem(
 
 ---
 
+## Internal Classes
+
+- `McVirtualTimeAxis`: Manages the horizontal time axis, including conversions between DateTime and screen pixels, scroll offsets, zoom (PixelsPerHour), and visibility checks for time ranges.
+- `McVirtualVerticalAxis`: Manages the vertical axis for series positioning, including conversions between units (e.g., series indices) and screen pixels, scroll offsets, and visibility checks for vertical ranges.
+- `McTimelineViewport` (planned): Will combine `McVirtualTimeAxis` and `McVirtualVerticalAxis`, centralize handling of size change and scroll events, and provide methods for generating ticks, series visibility, and item positioning.
+
+---
+
 ## Key Public API
 
 ### Dependency Properties

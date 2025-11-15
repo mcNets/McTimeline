@@ -1,3 +1,5 @@
+using Windows.Foundation;
+
 namespace McTimeline;
 
 /// <summary>

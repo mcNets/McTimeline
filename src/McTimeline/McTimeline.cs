@@ -20,13 +20,13 @@ public sealed partial class McTimeline : Control {
     private GridLength _legendColumnWidth;
     private GridLength _timeScaleLegendColumnWidth;
 
-    private readonly McVirtualTimeAxis _timeAxis;
+    private readonly McTimelineViewport _viewport;
 
     #endregion
 
     public McTimeline() {
         this.DefaultStyleKey = typeof(McTimeline);
-        _timeAxis = new McVirtualTimeAxis();
+        _viewport = new McTimelineViewport();
     }
 
     protected override void OnApplyTemplate() {
@@ -63,27 +63,29 @@ public sealed partial class McTimeline : Control {
         }
 
         // Initialize time axis
-        _timeAxis.SetRange(MinDate, MaxDate);
-        _timeAxis.PixelsPerHour = PixelsPerHour;
+        _viewport.TimeAxis.SetRange(MinDate, MaxDate);
+        _viewport.TimeAxis.PixelsPerHour = PixelsPerHour;
         if (_timelineCanvas != null) {
-            _timeAxis.ViewportPixels = _timelineCanvas.ActualWidth;
+            _viewport.TimeAxis.ViewportPixels = _timelineCanvas.ActualWidth;
         }
+
+        // Initialize vertical axis
+        _viewport.SeriesHeight = SeriesHeight;
+        _viewport.VerticalAxis.ContentUnits = SeriesCollection?.Count ?? 0;
 
         UpdateLegendVisibility();
     }
 
     private void OnTimelineCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
-        // Update viewport width when canvas size changes
-        _timeAxis.ViewportPixels = e.NewSize.Width;
+        // Update viewport size when canvas size changes
+        _viewport.OnSizeChanged(e.NewSize);
         InvalidateTimeline();
     }
 
     private void OnTimelineScrollViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) {
-        // Update scroll offset when user scrolls
+        // Update scroll offsets when user scrolls
         if (_timelineScroll != null) {
-            // Convert pixel offset to hours
-            double offsetHours = _timelineScroll.HorizontalOffset / _timeAxis.PixelsPerHour;
-            _timeAxis.OffsetHours = offsetHours;
+            _viewport.OnScrollChanged(_timelineScroll.HorizontalOffset, _timelineScroll.VerticalOffset);
             InvalidateTimeline();
         }
     }
@@ -140,6 +142,7 @@ public sealed partial class McTimeline : Control {
                 series.Items.CollectionChanged += OnSeriesItemsChanged;
             }
         }
+        _viewport.VerticalAxis.ContentUnits = SeriesCollection.Count;
         InvalidateTimeline();
     }
 

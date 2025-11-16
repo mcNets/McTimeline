@@ -18,6 +18,7 @@ public class McTimelineViewportTests {
     [Fact]
     public void OnScrollChanged_ShouldUpdateOffsets() {
         var viewport = new McTimelineViewport();
+        viewport.VerticalAxis.SeriesHeight = 10;
         viewport.TimeAxis.ContentHours = 100;
         viewport.VerticalAxis.ContentUnits = 100;
 
@@ -51,10 +52,9 @@ public class McTimelineViewportTests {
     [Fact]
     public void IsSeriesVisible_ShouldReturnTrueForVisibleSeries() {
         var viewport = new McTimelineViewport();
-        viewport.SeriesHeight = 20;
+        viewport.VerticalAxis.SeriesHeight = 20;
         viewport.VerticalAxis.ContentUnits = 100;
         viewport.VerticalAxis.ViewportPixels = 100;
-        viewport.VerticalAxis.PixelsPerUnit = 1;
         viewport.VerticalAxis.OffsetUnits = 0;
 
         var isVisible = viewport.IsSeriesVisible(2); // y = 2 * 20 = 40
@@ -65,10 +65,9 @@ public class McTimelineViewportTests {
     [Fact]
     public void IsSeriesVisible_ShouldReturnFalseForInvisibleSeries() {
         var viewport = new McTimelineViewport();
-        viewport.SeriesHeight = 20;
+        viewport.VerticalAxis.SeriesHeight = 20;
         viewport.VerticalAxis.ContentUnits = 100;
         viewport.VerticalAxis.ViewportPixels = 50;
-        viewport.VerticalAxis.PixelsPerUnit = 1;
         viewport.VerticalAxis.OffsetUnits = 0;
 
         var isVisible = viewport.IsSeriesVisible(5); // y = 5 * 20 = 100, beyond viewport
@@ -107,7 +106,7 @@ public class McTimelineViewportTests {
     [Fact]
     public void GetItemPosition_ShouldCalculateCorrectly() {
         var viewport = new McTimelineViewport();
-        viewport.SeriesHeight = 30;
+        viewport.VerticalAxis.SeriesHeight = 30;
         viewport.TimeAxis.SetRange(new DateTime(2023, 1, 1), new DateTime(2023, 1, 2));
         viewport.TimeAxis.PixelsPerHour = 10;
         viewport.TimeAxis.OffsetHours = 0;

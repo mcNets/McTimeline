@@ -16,12 +16,15 @@ public sealed class McTimelineViewport {
     /// <summary>
     /// Gets the vertical axis for vertical positioning and visibility calculations.
     /// </summary>
-    public McVirtualVerticalAxis VerticalAxis { get; } = new();
+    public McVirtualSeriesAxis VerticalAxis { get; } = new();
 
     /// <summary>
     /// Gets or sets the height of each series in pixels, used for vertical positioning and visibility checks.
     /// </summary>
-    public double SeriesHeight { get; set; } = 30.0;
+    public double SeriesHeight {
+        get => VerticalAxis.SeriesHeight;
+        set => VerticalAxis.SeriesHeight = value;
+    }
 
     /// <summary>
     /// Updates the viewport sizes when the canvas or container size changes.
@@ -30,7 +33,7 @@ public sealed class McTimelineViewport {
     public void OnSizeChanged(Size newSize) {
         TimeAxis.ViewportPixels = newSize.Width;
         VerticalAxis.ViewportPixels = newSize.Height;
-        VerticalAxis.PixelsPerUnit = SeriesHeight;
+        VerticalAxis.SeriesHeight = SeriesHeight;
     }
 
     /// <summary>
@@ -40,7 +43,7 @@ public sealed class McTimelineViewport {
     /// <param name="verticalOffset">The vertical scroll offset in pixels.</param>
     public void OnScrollChanged(double horizontalOffset, double verticalOffset) {
         TimeAxis.OffsetHours = horizontalOffset / TimeAxis.PixelsPerHour;
-        VerticalAxis.OffsetUnits = verticalOffset / VerticalAxis.PixelsPerUnit;
+        VerticalAxis.OffsetUnits = verticalOffset / VerticalAxis.SeriesHeight;
     }
 
     /// <summary>

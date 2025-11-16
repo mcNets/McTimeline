@@ -2,15 +2,15 @@ namespace McTimeline;
 
 /// <summary>
 /// 1D vertical axis for managing vertical positioning and visibility.
-/// World units are arbitrary (e.g., rows or pixels).
-/// Scale = pixels per unit.
+/// World units are series indices.
+/// Scale = pixels per series.
 /// Combines the functionality of virtual space management and vertical axis in a single class.
 /// </summary>
-public sealed class McVirtualVerticalAxis {
-    private double _offsetUnits;          // world units (units, above the viewport)
-    private double _pixelsPerUnit = 10.0; // screen px per world unit (>0)
+public sealed class McVirtualSeriesAxis {
+    private double _offsetUnits;          // world units (series indices, above the viewport)
+    private double _seriesHeight = 30.0; // screen px per series (>0)
     private double _viewportPx;           // height of the viewport in pixels
-    private double _contentUnits;         // total length of the content in units
+    private double _contentUnits;         // total number of series
 
     /// <summary>
     /// Gets or sets the minimum unit value for the axis range.
@@ -28,15 +28,15 @@ public sealed class McVirtualVerticalAxis {
     }
 
     /// <summary>
-    /// Gets or sets the number of pixels that represent one unit on the vertical scale.
+    /// Gets or sets the number of pixels that represent one series on the vertical scale.
     /// </summary>
     /// <remarks>Setting this property to a value less than or equal to zero will automatically adjust it to a
     /// minimal positive value. Changing the scale may affect related properties such as offset and maximum offset
     /// units.</remarks>
-    public double PixelsPerUnit {
-        get => _pixelsPerUnit;
+    public double SeriesHeight {
+        get => _seriesHeight;
         set {
-            _pixelsPerUnit = Math.Max(1e-6, value); // avoids 0 or negatives
+            _seriesHeight = Math.Max(1e-6, value); // avoids 0 or negatives
             _offsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
         }
     }
@@ -69,7 +69,7 @@ public sealed class McVirtualVerticalAxis {
     /// <summary>
     /// Gets the total number of units currently visible in the viewport.
     /// </summary>
-    public double ViewportUnits => _viewportPx / _pixelsPerUnit;
+    public double ViewportUnits => _viewportPx / _seriesHeight;
 
     /// <summary>
     /// Gets the maximum number of units by which the content can be offset within the viewport.
@@ -84,20 +84,20 @@ public sealed class McVirtualVerticalAxis {
     /// </summary>
     /// <param name="units">The unit value to convert to screen coordinates.</param>
     /// <returns>A double value representing the pixel position on the screen that corresponds to the specified number of units.</returns>
-    public double UnitsToScreen(double units) => (units - _offsetUnits) * _pixelsPerUnit;
+    public double UnitsToScreen(double units) => (units - _offsetUnits) * _seriesHeight;
 
     /// <summary>
     /// Converts a vertical screen coordinate to its corresponding unit value.
     /// </summary>
     /// <param name="screenY">The vertical position, in pixels, to convert to units.</param>
     /// <returns>A double value representing the unit corresponding to the specified screen coordinate.</returns>
-    public double ScreenToUnits(double screenY) => screenY / _pixelsPerUnit + _offsetUnits;
+    public double ScreenToUnits(double screenY) => screenY / _seriesHeight + _offsetUnits;
 
     /// <summary>
     /// Scrolls the view vertically by the specified number of pixels.
     /// </summary>
     /// <param name="deltaPx">The number of pixels to scroll the view. Positive values scroll down; negative values scroll up.</param>
-    public void ScrollByPixels(double deltaPx) => OffsetUnits = _offsetUnits + deltaPx / _pixelsPerUnit;
+    public void ScrollByPixels(double deltaPx) => OffsetUnits = _offsetUnits + deltaPx / _seriesHeight;
 
     /// <summary>
     /// Adjusts the current scroll position by the specified number of units.
@@ -164,14 +164,14 @@ public sealed class McVirtualVerticalAxis {
     /// </summary>
     /// <param name="units">The height in units.</param>
     /// <returns>The height in pixels.</returns>
-    public double UnitsToPixels(double units) => units * _pixelsPerUnit;
+    public double UnitsToPixels(double units) => units * _seriesHeight;
 
     /// <summary>
     /// Adjusts the pixels per unit to fit the entire content within the viewport.
     /// </summary>
     public void ZoomToFit() {
         if (ContentUnits > 0 && ViewportPixels > 0) {
-            PixelsPerUnit = ViewportPixels / ContentUnits;
+            SeriesHeight = ViewportPixels / ContentUnits;
         }
     }
 }

@@ -13,13 +13,18 @@ public sealed class McVirtualVerticalAxis {
     private double _contentUnits;         // total length of the content in units
 
     /// <summary>
+    /// Gets or sets the minimum unit value for the axis range.
+    /// </summary>
+    public double MinUnits { get; set; } = 0;
+
+    /// <summary>
     /// Gets or sets the offset value, in units, used for vertical calculations.
     /// </summary>
-    /// <remarks>The value is constrained to be between 0 and the maximum allowed offset units. Setting a
+    /// <remarks>The value is constrained to be between MinUnits and the maximum allowed offset units. Setting a
     /// value outside this range will automatically clamp it to the nearest valid value.</remarks>
     public double OffsetUnits {
         get => _offsetUnits;
-        set => _offsetUnits = Math.Clamp(value, 0, MaxOffsetUnits);
+        set => _offsetUnits = Math.Clamp(value, MinUnits, MinUnits + MaxOffsetUnits);
     }
 
     /// <summary>
@@ -148,6 +153,7 @@ public sealed class McVirtualVerticalAxis {
         if (max <= min) {
             throw new ArgumentException("Max must be > Min");
         }
+        MinUnits = min;
         ContentUnits = max - min;
         // re-clamp in case the offset is out of bounds
         OffsetUnits = OffsetUnits;

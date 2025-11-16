@@ -30,6 +30,7 @@ public sealed class McTimelineViewport {
     public void OnSizeChanged(Size newSize) {
         TimeAxis.ViewportPixels = newSize.Width;
         VerticalAxis.ViewportPixels = newSize.Height;
+        VerticalAxis.PixelsPerUnit = SeriesHeight;
     }
 
     /// <summary>
@@ -57,7 +58,7 @@ public sealed class McTimelineViewport {
     /// <param name="minUnits">The minimum units.</param>
     /// <param name="maxUnits">The maximum units.</param>
     public void SetVerticalRange(double minUnits, double maxUnits) {
-        VerticalAxis.ContentUnits = maxUnits - minUnits;
+        VerticalAxis.SetRange(minUnits, maxUnits);
     }
 
     /// <summary>
@@ -76,8 +77,7 @@ public sealed class McTimelineViewport {
     /// <param name="seriesIndex">The index of the series.</param>
     /// <returns>true if the series is visible; otherwise, false.</returns>
     public bool IsSeriesVisible(int seriesIndex) {
-        double y = seriesIndex * SeriesHeight;
-        return VerticalAxis.Intersects(y, SeriesHeight);
+        return VerticalAxis.Intersects(seriesIndex, 1);
     }
 
     /// <summary>
@@ -113,7 +113,7 @@ public sealed class McTimelineViewport {
     /// <returns>A tuple containing the X position, Y position, and width of the item.</returns>
     public (double X, double Y, double Width) GetItemPosition(McTimelineItem item, int seriesIndex) {
         double x = TimeAxis.TimeToScreen(item.Start);
-        double y = seriesIndex * SeriesHeight;
+        double y = VerticalAxis.UnitsToScreen(seriesIndex);
         double width = TimeAxis.DurationToPixels(item.End - item.Start);
         return (x, y, width);
     }

@@ -18,6 +18,7 @@ public sealed partial class McTimeline : Control {
     private ItemsRepeater? _seriesRepeater;
     private ScrollViewer? _timelineScroll;
     private Canvas? _timelineCanvas;
+    private Canvas? _legendCanvas;
     private ScrollBar? _hScroll;
     private ScrollBar? _vScroll;
     private ColumnDefinition? _legendColumn;
@@ -47,7 +48,7 @@ public sealed partial class McTimeline : Control {
         _timelineCanvas = GetTemplateChild("PART_TimelineCanvas") as Canvas;
         _hScroll = GetTemplateChild("PART_HScroll") as ScrollBar;
         _vScroll = GetTemplateChild("PART_VScroll") as ScrollBar;
-
+        _legendCanvas = GetTemplateChild("PART_LegendCanvas") as Canvas;
         // Adjust legend column widths
         if (_legendBorder?.Parent is Grid legendHost && legendHost.ColumnDefinitions.Count > 0) {
             _legendColumn = legendHost.ColumnDefinitions[0];
@@ -63,6 +64,10 @@ public sealed partial class McTimeline : Control {
         if (_timelineCanvas != null) {
             _timelineCanvas.SizeChanged += OnTimelineCanvasSizeChanged;
             _timelineCanvas.PointerWheelChanged += OnCanvasPointerWheelChanged;
+        }
+
+        if (_legendCanvas != null) {
+            _legendCanvas.SizeChanged += OnLegendCanvasSizeChanged;
         }
 
         // Subscribe to scroll changes
@@ -88,6 +93,9 @@ public sealed partial class McTimeline : Control {
         // Initialize vertical axis
         _viewport.SeriesHeight = SeriesHeight;
         _viewport.VerticalAxis.ContentUnits = SeriesCollection?.Count ?? 0;
+        if (_legendCanvas != null) {
+            _viewport.VerticalAxis.ViewportPixels = _legendCanvas.ActualHeight;
+        }
 
         UpdateHScroll();
         UpdateVScroll();
@@ -99,6 +107,13 @@ public sealed partial class McTimeline : Control {
         // Update viewport size when canvas size changes
         _viewport.OnSizeChanged(e.NewSize);
         UpdateHScroll();
+        UpdateVScroll();
+        InvalidateTimeline();
+    }
+
+    private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
+        // Update vertical axis viewport pixels when legend canvas size changes
+        _viewport.VerticalAxis.ViewportPixels = e.NewSize.Height;
         UpdateVScroll();
         InvalidateTimeline();
     }
@@ -163,14 +178,33 @@ public sealed partial class McTimeline : Control {
     }
 
     /// <summary>
+    /// Draws the legend for the series in the legend area.
+    /// </summary>
+    private void DrawLegend() {
+        if (_legendCanvas != null) {
+            _legendCanvas.Children.Clear();
+            double y = 0;
+            foreach (var series in SeriesCollection) {
+                var textBlock = new TextBlock {
+                    Text = series.Title,
+                    VerticalAlignment = VerticalAlignment.Top,
+                    Margin = new Thickness(0, y, 0, 0)
+                };
+                _legendCanvas.Children.Add(textBlock);
+                y += _viewport.SeriesHeight;
+            }
+        }
+    }
+
+    /// <summary>
     /// Invalidates the current timeline, signaling that it should be refreshed or repainted.
     /// </summary>
     /// <remarks>Call this method when changes occur that require the timeline to be updated visually. This
     /// method does not immediately trigger a repaint; the actual update may be deferred depending on the
     /// implementation.</remarks>
     private void InvalidateTimeline() {
-        // Placeholder for repaint logic
-        // Will be implemented later
+        DrawLegend();
+        // TODO: Implement timeline drawing
     }
 
     private void OnHScrollValueChanged(object? sender, RangeBaseValueChangedEventArgs e) {

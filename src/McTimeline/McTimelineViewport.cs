@@ -32,8 +32,7 @@ public sealed class McTimelineViewport {
     /// <param name="newSize">The new size of the viewport.</param>
     public void OnSizeChanged(Size newSize) {
         TimeAxis.ViewportPixels = newSize.Width;
-        VerticalAxis.ViewportPixels = newSize.Height;
-        VerticalAxis.SeriesHeight = SeriesHeight;
+        // VerticalAxis.ViewportPixels is set based on legend canvas height
     }
 
     /// <summary>

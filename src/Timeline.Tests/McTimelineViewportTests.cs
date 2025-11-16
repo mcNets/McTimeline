@@ -12,7 +12,7 @@ public class McTimelineViewportTests {
         viewport.OnSizeChanged(size);
 
         viewport.TimeAxis.ViewportPixels.Should().Be(200);
-        viewport.VerticalAxis.ViewportPixels.Should().Be(100);
+        // VerticalAxis.ViewportPixels is now set based on legend canvas height
     }
 
     [Fact]

@@ -49,6 +49,7 @@ public sealed partial class McTimeline : Control {
         _hScroll = GetTemplateChild("PART_HScroll") as ScrollBar;
         _vScroll = GetTemplateChild("PART_VScroll") as ScrollBar;
         _legendCanvas = GetTemplateChild("PART_LegendCanvas") as Canvas;
+
         // Adjust legend column widths
         if (_legendBorder?.Parent is Grid legendHost && legendHost.ColumnDefinitions.Count > 0) {
             _legendColumn = legendHost.ColumnDefinitions[0];
@@ -92,9 +93,9 @@ public sealed partial class McTimeline : Control {
 
         // Initialize vertical axis
         _viewport.SeriesHeight = SeriesHeight;
-        _viewport.VerticalAxis.ContentUnits = SeriesCollection?.Count ?? 0;
+        _viewport.SeriesAxis.ContentUnits = SeriesCollection?.Count ?? 0;
         if (_legendCanvas != null) {
-            _viewport.VerticalAxis.ViewportPixels = _legendCanvas.ActualHeight;
+            _viewport.SeriesAxis.ViewportPixels = _legendCanvas.ActualHeight;
         }
 
         UpdateHScroll();
@@ -113,7 +114,7 @@ public sealed partial class McTimeline : Control {
 
     private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
         // Update vertical axis viewport pixels when legend canvas size changes
-        _viewport.VerticalAxis.ViewportPixels = e.NewSize.Height;
+        _viewport.SeriesAxis.ViewportPixels = e.NewSize.Height;
         UpdateVScroll();
         InvalidateTimeline();
     }
@@ -169,7 +170,7 @@ public sealed partial class McTimeline : Control {
                 series.Items.CollectionChanged += OnSeriesItemsChanged;
             }
         }
-        _viewport.VerticalAxis.ContentUnits = SeriesCollection.Count;
+        _viewport.SeriesAxis.ContentUnits = SeriesCollection.Count;
         InvalidateTimeline();
     }
 
@@ -185,12 +186,18 @@ public sealed partial class McTimeline : Control {
             _legendCanvas.Children.Clear();
             double y = 0;
             foreach (var series in SeriesCollection) {
-                var textBlock = new TextBlock {
-                    Text = series.Title,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Margin = new Thickness(0, y, 0, 0)
+                var border = new Border {
+                    Width = _legendCanvas.ActualWidth,
+                    Height = _viewport.SeriesHeight,
+                    Style = LegendItemStyle
                 };
-                _legendCanvas.Children.Add(textBlock);
+                border.Child =  new TextBlock {
+                    Text = series.Title,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    HorizontalAlignment = HorizontalAlignment.Center,
+                };
+                Canvas.SetTop(border, y);
+                _legendCanvas.Children.Add(border);
                 y += _viewport.SeriesHeight;
             }
         }
@@ -254,11 +261,11 @@ public sealed partial class McTimeline : Control {
     private void UpdateVScroll() {
         if (_vScroll != null) {
             _vScroll.Minimum = 0;
-            _vScroll.Maximum = _viewport.VerticalAxis.MaxOffsetUnits;
-            _vScroll.Value = _viewport.VerticalAxis.OffsetUnits;
-            _vScroll.ViewportSize = _viewport.VerticalAxis.ViewportUnits;
-            _vScroll.LargeChange = _viewport.VerticalAxis.ViewportUnits;
-            _vScroll.SmallChange = _viewport.VerticalAxis.ViewportUnits / 10;
+            _vScroll.Maximum = _viewport.SeriesAxis.MaxOffsetUnits;
+            _vScroll.Value = _viewport.SeriesAxis.OffsetUnits;
+            _vScroll.ViewportSize = _viewport.SeriesAxis.ViewportUnits;
+            _vScroll.LargeChange = _viewport.SeriesAxis.ViewportUnits;
+            _vScroll.SmallChange = _viewport.SeriesAxis.ViewportUnits / 10;
         }
     }
 }

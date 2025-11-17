@@ -3,25 +3,41 @@ using McTimeline;
 
 namespace Timeline.Tests;
 
-public class McVirtualVerticalAxisTests {
+public class McVirtualSeriesAxisTests {
     [Fact]
-    public void OffsetUnits_ShouldBeClamped() {
-        var axis = new McVirtualSeriesAxis();
-        axis.ContentUnits = 100;
-        axis.ViewportPixels = 50;
-        axis.SeriesHeight = 10;
+    public void OffsetUnits_ShouldBeClampedAndFloored() {
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            ViewportPixels = 50,
+            SeriesHeight = 10,
 
-        axis.OffsetUnits = 200; // Beyond MaxOffsetUnits
+            OffsetUnits = 200 // Beyond MaxOffsetUnits
+        };
 
-        axis.OffsetUnits.Should().Be(axis.MaxOffsetUnits);
+        // MaxOffsetUnits = 100 - (50/10) = 95
+        // OffsetUnits should be clamped to 95 and floored to 95
+        axis.OffsetUnits.Should().Be(Math.Floor(axis.MaxOffsetUnits));
+    }
+
+    [Fact]
+    public void ScrollToUnits_ShouldSetOffsetCorrectly() {
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            ViewportPixels = 50,
+            SeriesHeight = 10,
+        };
+
+        axis.ScrollToUnits(2);
+        axis.OffsetUnits.Should().Be(2);
     }
 
     [Fact]
     public void UnitsToScreen_ShouldConvertCorrectly() {
-        var axis = new McVirtualSeriesAxis();
-        axis.ContentUnits = 100;
-        axis.SeriesHeight = 5;
-        axis.OffsetUnits = 10;
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            SeriesHeight = 5,
+            OffsetUnits = 10
+        };
 
         var y = axis.UnitsToScreen(20);
 
@@ -30,10 +46,11 @@ public class McVirtualVerticalAxisTests {
 
     [Fact]
     public void ScreenToUnits_ShouldConvertCorrectly() {
-        var axis = new McVirtualSeriesAxis();
-        axis.ContentUnits = 100;
-        axis.SeriesHeight = 5;
-        axis.OffsetUnits = 10;
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            SeriesHeight = 5,
+            OffsetUnits = 10
+        };
 
         var units = axis.ScreenToUnits(50);
 
@@ -41,24 +58,39 @@ public class McVirtualVerticalAxisTests {
     }
 
     [Fact]
-    public void ScrollByPixels_ShouldUpdateOffset() {
-        var axis = new McVirtualSeriesAxis();
-        axis.ContentUnits = 100;
-        axis.SeriesHeight = 10;
-        axis.OffsetUnits = 0;
+    public void ScrollByPixels_ShouldUpdateOffsetAndFloor() {
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            SeriesHeight = 10,
+            OffsetUnits = 0
+        };
 
-        axis.ScrollByPixels(50);
+        axis.ScrollByPixels(55); // 55 / 10 = 5.5 units
 
-        axis.OffsetUnits.Should().Be(5); // 50 / 10
+        axis.OffsetUnits.Should().Be(5); // Floored to 5
+    }
+
+    [Fact]
+    public void ScrollByUnits_ShouldUpdateOffsetAndFloor() {
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            SeriesHeight = 10,
+            OffsetUnits = 0
+        };
+
+        axis.ScrollByUnits(5.7);
+
+        axis.OffsetUnits.Should().Be(5); // Floored to 5
     }
 
     [Fact]
     public void Intersects_ShouldReturnTrueForVisibleRange() {
-        var axis = new McVirtualSeriesAxis();
-        axis.ContentUnits = 100;
-        axis.ViewportPixels = 50;
-        axis.SeriesHeight = 1;
-        axis.OffsetUnits = 0;
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            ViewportPixels = 50,
+            SeriesHeight = 1,
+            OffsetUnits = 0
+        };
 
         var intersects = axis.Intersects(10, 10); // Units 10-20
 
@@ -67,11 +99,12 @@ public class McVirtualVerticalAxisTests {
 
     [Fact]
     public void Intersects_ShouldReturnFalseForInvisibleRange() {
-        var axis = new McVirtualSeriesAxis();
-        axis.ContentUnits = 100;
-        axis.ViewportPixels = 50;
-        axis.SeriesHeight = 1;
-        axis.OffsetUnits = 0;
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            ViewportPixels = 50,
+            SeriesHeight = 1,
+            OffsetUnits = 0
+        };
 
         var intersects = axis.Intersects(60, 10); // Units 60-70, beyond viewport
 
@@ -80,9 +113,10 @@ public class McVirtualVerticalAxisTests {
 
     [Fact]
     public void ZoomToFit_ShouldAdjustSeriesHeight() {
-        var axis = new McVirtualSeriesAxis();
-        axis.ContentUnits = 100;
-        axis.ViewportPixels = 50;
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 100,
+            ViewportPixels = 50
+        };
 
         axis.ZoomToFit();
 

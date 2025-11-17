@@ -16,14 +16,14 @@ public sealed class McTimelineViewport {
     /// <summary>
     /// Gets the vertical axis for vertical positioning and visibility calculations.
     /// </summary>
-    public McVirtualSeriesAxis VerticalAxis { get; } = new();
+    public McVirtualSeriesAxis SeriesAxis { get; } = new();
 
     /// <summary>
     /// Gets or sets the height of each series in pixels, used for vertical positioning and visibility checks.
     /// </summary>
     public double SeriesHeight {
-        get => VerticalAxis.SeriesHeight;
-        set => VerticalAxis.SeriesHeight = value;
+        get => SeriesAxis.SeriesHeight;
+        set => SeriesAxis.SeriesHeight = value;
     }
 
     /// <summary>
@@ -32,7 +32,7 @@ public sealed class McTimelineViewport {
     /// <param name="newSize">The new size of the viewport.</param>
     public void OnSizeChanged(Size newSize) {
         TimeAxis.ViewportPixels = newSize.Width;
-        // VerticalAxis.ViewportPixels is set based on legend canvas height
+        SeriesAxis.ViewportPixels = newSize.Height;
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public sealed class McTimelineViewport {
     /// <param name="verticalOffset">The vertical scroll offset in pixels.</param>
     public void OnScrollChanged(double horizontalOffset, double verticalOffset) {
         TimeAxis.OffsetHours = horizontalOffset / TimeAxis.PixelsPerHour;
-        VerticalAxis.OffsetUnits = verticalOffset / VerticalAxis.SeriesHeight;
+        SeriesAxis.OffsetUnits = verticalOffset / SeriesAxis.SeriesHeight;
     }
 
     /// <summary>
@@ -59,8 +59,8 @@ public sealed class McTimelineViewport {
     /// </summary>
     /// <param name="minUnits">The minimum units.</param>
     /// <param name="maxUnits">The maximum units.</param>
-    public void SetVerticalRange(double minUnits, double maxUnits) {
-        VerticalAxis.SetRange(minUnits, maxUnits);
+    public void SetSeriesRange(double minUnits, double maxUnits) {
+        SeriesAxis.SetRange(minUnits, maxUnits);
     }
 
     /// <summary>
@@ -71,7 +71,7 @@ public sealed class McTimelineViewport {
     /// <summary>
     /// Gets the visible vertical range as a tuple of start and end units.
     /// </summary>
-    public (double Start, double End) VisibleVerticalRange => VerticalAxis.VisibleUnitsRange;
+    public (double Start, double End) VisibleSeriesRange => SeriesAxis.VisibleUnitsRange;
 
     /// <summary>
     /// Determines whether a series at the specified index is visible in the viewport.
@@ -79,7 +79,7 @@ public sealed class McTimelineViewport {
     /// <param name="seriesIndex">The index of the series.</param>
     /// <returns>true if the series is visible; otherwise, false.</returns>
     public bool IsSeriesVisible(int seriesIndex) {
-        return VerticalAxis.Intersects(seriesIndex, 1);
+        return SeriesAxis.Intersects(seriesIndex, 1);
     }
 
     /// <summary>
@@ -115,7 +115,7 @@ public sealed class McTimelineViewport {
     /// <returns>A tuple containing the X position, Y position, and width of the item.</returns>
     public (double X, double Y, double Width) GetItemPosition(McTimelineItem item, int seriesIndex) {
         double x = TimeAxis.TimeToScreen(item.Start);
-        double y = VerticalAxis.UnitsToScreen(seriesIndex);
+        double y = SeriesAxis.UnitsToScreen(seriesIndex);
         double width = TimeAxis.DurationToPixels(item.End - item.Start);
         return (x, y, width);
     }

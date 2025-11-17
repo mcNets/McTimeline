@@ -7,37 +7,55 @@ namespace McTimeline;
 /// Combines the functionality of virtual space management and vertical axis in a single class.
 /// </summary>
 public sealed class McVirtualSeriesAxis {
+    #region Private fields
+    
     private double _offsetUnits;          // world units (series indices, above the viewport)
     private double _seriesHeight = 30.0; // screen px per series (>0)
     private double _viewportPx;           // height of the viewport in pixels
     private double _contentUnits;         // total number of series
 
+    #endregion
+
     /// <summary>
     /// Gets or sets the minimum unit value for the axis range.
+    /// (Minimum number of series)
     /// </summary>
     public double MinUnits { get; set; } = 0;
 
     /// <summary>
-    /// Gets or sets the offset value, in units, used for vertical calculations.
+    /// Gets or sets the offset value, in units (series indices), used for vertical positioning calculations.
+    /// This represents how many series are scrolled above the visible viewport.
     /// </summary>
-    /// <remarks>The value is constrained to be between MinUnits and the maximum allowed offset units. Setting a
-    /// value outside this range will automatically clamp it to the nearest valid value.</remarks>
+    /// <remarks>
+    /// The offset determines the starting series index visible at the top of the viewport.
+    /// For example, an offset of 5 means series 5, 6, 7, etc. are visible.
+    /// The value is automatically clamped to the valid range [MinUnits, MinUnits + MaxOffsetUnits]
+    /// and floored to ensure only whole series are displayed, preventing partial series visibility.
+    /// Setting this property triggers a re-clamping of the offset if the viewport or content changes.
+    /// </remarks>
     public double OffsetUnits {
         get => _offsetUnits;
-        set => _offsetUnits = Math.Clamp(value, MinUnits, MinUnits + MaxOffsetUnits);
+        set => _offsetUnits = Math.Floor(Math.Clamp(value, MinUnits, MinUnits + MaxOffsetUnits));
     }
 
     /// <summary>
     /// Gets or sets the number of pixels that represent one series on the vertical scale.
+    /// This defines the height of each series row in the timeline.
     /// </summary>
-    /// <remarks>Setting this property to a value less than or equal to zero will automatically adjust it to a
-    /// minimal positive value. Changing the scale may affect related properties such as offset and maximum offset
-    /// units.</remarks>
+    /// <remarks>
+    /// The series height determines how tall each series appears on screen.
+    /// For example, a SeriesHeight of 30 means each series occupies 30 pixels vertically.
+    /// Setting this property to a value less than or equal to zero will automatically adjust it to a
+    /// minimal positive value (1e-6) to avoid division by zero.
+    /// Changing the series height may affect the number of visible series (ViewportUnits) and
+    /// will trigger a re-clamping of the offset to ensure valid scrolling bounds.
+    /// This property is typically bound to the SeriesHeight dependency property of the McTimeline control.
+    /// </remarks>
     public double SeriesHeight {
         get => _seriesHeight;
         set {
             _seriesHeight = Math.Max(1e-6, value); // avoids 0 or negatives
-            _offsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
+            OffsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
         }
     }
 
@@ -51,18 +69,19 @@ public sealed class McVirtualSeriesAxis {
         get => _viewportPx;
         set {
             _viewportPx = Math.Max(0, value);
-            _offsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
+            OffsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
         }
     }
 
     /// <summary>
-    /// Gets or sets the total number of content units. The value is constrained to be non-negative.
+    /// Gets or sets the total number of content units. (Number of series)
+    /// The value is constrained to be non-negative.
     /// </summary>
     public double ContentUnits {
         get => _contentUnits;
         set {
             _contentUnits = Math.Max(0, value);
-            _offsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
+            OffsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
         }
     }
 
@@ -156,7 +175,7 @@ public sealed class McVirtualSeriesAxis {
         MinUnits = min;
         ContentUnits = max - min;
         // re-clamp in case the offset is out of bounds
-        OffsetUnits = OffsetUnits;
+        OffsetUnits = Math.Clamp(_offsetUnits, MinUnits, MinUnits + MaxOffsetUnits);
     }
 
     /// <summary>

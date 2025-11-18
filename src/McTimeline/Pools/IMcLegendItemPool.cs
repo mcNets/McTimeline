@@ -1,4 +1,4 @@
-namespace McTimeline;
+namespace McTimeline.Pools;
 
 public interface IMcLegendItemPool {
     void Clear();

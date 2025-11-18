@@ -6,51 +6,61 @@
       xmlns:mctl="using:McTimeline"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-    <Page.Resources>
-        <Style x:Key="MyLegendStyle"
-               TargetType="Border">
-            <Setter Property="BorderBrush"
-                    Value="{ThemeResource McTimelineGridLineBrush}" />
-            <Setter Property="BorderThickness"
-                    Value="0,0,1,0" />
-            <Setter Property="Background"
-                    Value="DarkSlateGray" />
-        </Style>
-    </Page.Resources>
+  <Page.Resources>
+    <Style x:Key="MyLegendStyle"
+           TargetType="Border">
+      <Setter Property="BorderBrush"
+              Value="{ThemeResource McTimelineGridLineBrush}" />
+      <Setter Property="BorderThickness"
+              Value="0,0,1,0" />
+      <Setter Property="Background"
+              Value="DarkSlateGray" />
+    </Style>
+  </Page.Resources>
 
-    <Grid utu:SafeArea.Insets="VisibleBounds"
-          ColumnDefinitions="Auto,*"
-          RowSpacing="10">
+  <Grid utu:SafeArea.Insets="VisibleBounds"
+        ColumnDefinitions="Auto,*"
+        RowSpacing="10">
 
-        <StackPanel Padding="20"
-                    Grid.Column="0"
-                    Spacing="20"
-                    HorizontalAlignment="Center"
-                    Margin="10">
+    <StackPanel Padding="20"
+                Grid.Column="0"
+                Spacing="20"
+                HorizontalAlignment="Center"
+                Margin="10">
 
-            <Button Content="Change theme"
-                    Click="ThemeButton_Click" />
+      <Button Content="Change theme"
+              Click="ThemeButton_Click" />
 
-            <CheckBox x:Name="legendCheckBox"
-                      IsChecked="True"
-                      Content="Show legend" />
+      <Button Content="New collection"
+              Command="{x:Bind ViewModel.GenerarNovaCollecioCommand}" />
 
-            <Button Content="New collection"
-                    Command="{x:Bind ViewModel.GenerarNovaCollecioCommand}" />
+      <CheckBox IsChecked="{x:Bind ViewModel.IsLegendVisible, Mode=TwoWay}"
+                Content="Show legend" />
 
-            <ListBox Height="150"
-                     SelectedIndex="0"
-                     ItemsSource="{x:Bind ViewModel.Series, Mode=OneWay}"
-                     Foreground="{ThemeResource McTimelineAccentBrush}" />
+      <NumberBox Header="Legend width"
+                 SpinButtonPlacementMode="Inline"
+                 Minimum="100"
+                 Maximum="300"
+                 SmallChange="10"
+                 Value="{x:Bind ViewModel.LegendWidth, Mode=TwoWay}" />
 
-        </StackPanel>
+      <NumberBox Header="Scale height"
+                 SpinButtonPlacementMode="Inline"
+                 Minimum="50"
+                 Maximum="200"
+                 SmallChange="10"
+                 Value="{x:Bind ViewModel.ScaleHeight, Mode=TwoWay}" />
 
-        <mctl:McTimeline Grid.Column="1"
-                         SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"
-                         LegendCaption="Timeline Graph"
-                         LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
-                         IsLegendVisible="{Binding IsChecked, ElementName=legendCheckBox}"
-                         Margin="30" />
-    </Grid>
+    </StackPanel>
+
+    <mctl:McTimeline Grid.Column="1"
+                     LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=OneWay}"
+                     ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=OneWay}"
+                     SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"
+                     LegendCaption="Timeline Graph"
+                     LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
+                     IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=OneWay}"
+                     Margin="30" />
+  </Grid>
 
 </Page>

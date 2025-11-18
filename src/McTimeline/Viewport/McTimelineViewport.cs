@@ -1,6 +1,6 @@
 using Windows.Foundation;
 
-namespace McTimeline;
+namespace McTimeline.Viewport;
 
 /// <summary>
 /// Manages the viewport for both time (horizontal) and vertical axes in the McTimeline control.

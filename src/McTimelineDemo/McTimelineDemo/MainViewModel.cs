@@ -10,6 +10,15 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial McTimelineSeriesCollection Series { get; set; } = new();
 
+    [ObservableProperty]
+    public partial double LegendWidth { get; set; } = 200;
+
+    [ObservableProperty]
+    public partial double ScaleHeight { get; set; } = 50;
+
+    [ObservableProperty]
+    public partial bool IsLegendVisible { get; set; } = true;
+
     [RelayCommand]
     public async Task GenerarNovaCollecio()
     {

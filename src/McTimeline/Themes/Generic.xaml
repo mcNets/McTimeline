@@ -1,154 +1,172 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="using:McTimeline">
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:local="using:McTimeline">
 
-        <!-- Merge all resource dictionaries -->
-        <ResourceDictionary.MergedDictionaries>
-                <ResourceDictionary Source="ms-appx:///McTimeline/Themes/McTimelineResources.xaml"/>
-        </ResourceDictionary.MergedDictionaries>
+	<!-- Merge all resource dictionaries -->
+	<ResourceDictionary.MergedDictionaries>
+		<ResourceDictionary Source="ms-appx:///McTimeline/Themes/McTimelineResources.xaml" />
+	</ResourceDictionary.MergedDictionaries>
 
-        <!-- Main McTimeline Style -->
-        <Style TargetType="local:McTimeline">
-                <Setter Property="Background"
-                        Value="{ThemeResource McTimelineBackgroundBrush}"/>
-                <Setter Property="Foreground"
-                        Value="{ThemeResource McTimelineForegroundBrush}"/>
-                <Setter Property="TimeScaleStyle"
-                        Value="{StaticResource DefaultTimeScaleStyle}"/>
-                <Setter Property="LegendStyle"
-                        Value="{StaticResource DefaultLegendStyle}"/>
-                <Setter Property="LegendCaptionStyle"
-                        Value="{StaticResource DefaultLegendCaptionStyle}"/>
-                <Setter Property="LegendItemStyle"
-                        Value="{StaticResource DefaultLegendItemStyle}"/>
-                <Setter Property="TimelineScrollStyle"
-                        Value="{StaticResource DefaultTimelineScrollStyle}"/>
-                <Setter Property="TimelineCanvasStyle"
-                        Value="{StaticResource DefaultTimelineCanvasStyle}"/>
-                <Setter Property="LegendItemTemplate"
-                        Value="{StaticResource DefaultLegendItemTemplate}"/>
-                <Setter Property="BorderBrush"
-                        Value="{ThemeResource McTimelineBorderBrush}"/>
-                <Setter Property="BorderThickness"
-                        Value="{ThemeResource McTimelineBorderThickness}"/>
-                <Setter Property="CornerRadius"
-                        Value="{ThemeResource McTimelineCornerRadius}"/>
+	<!-- Main McTimeline Style -->
+	<Style TargetType="local:McTimeline">
+		<Setter Property="Background"
+				Value="{ThemeResource McTimelineBackgroundBrush}" />
+		<Setter Property="Foreground"
+				Value="{ThemeResource McTimelineForegroundBrush}" />
+		<Setter Property="TimeScaleStyle"
+				Value="{StaticResource DefaultTimeScaleStyle}" />
+		<Setter Property="LegendStyle"
+				Value="{StaticResource DefaultLegendStyle}" />
+		<Setter Property="LegendCaptionStyle"
+				Value="{StaticResource DefaultLegendCaptionStyle}" />
+		<Setter Property="LegendItemStyle"
+				Value="{StaticResource DefaultLegendItemStyle}" />
+		<Setter Property="TimelineScrollStyle"
+				Value="{StaticResource DefaultTimelineScrollStyle}" />
+		<Setter Property="TimelineCanvasStyle"
+				Value="{StaticResource DefaultTimelineCanvasStyle}" />
+		<Setter Property="LegendItemTemplate"
+				Value="{StaticResource DefaultLegendItemTemplate}" />
+		<Setter Property="BorderBrush"
+				Value="{ThemeResource McTimelineBorderBrush}" />
+		<Setter Property="BorderThickness"
+				Value="{ThemeResource McTimelineBorderThickness}" />
+		<Setter Property="CornerRadius"
+				Value="{ThemeResource McTimelineCornerRadius}" />
+		<Setter Property="ScaleHeight"
+				Value="{ThemeResource McTimelineDefaultTimeScaleHeight}" />
+		<Setter Property="LegendWidth"
+				Value="{ThemeResource McTimelineDefaultLegendWidth}" />
 
-                <Setter Property="Template">
+		<Setter Property="Template">
 
-                        <Setter.Value>
+			<Setter.Value>
 
-                                <ControlTemplate TargetType="local:McTimeline">
+				<ControlTemplate TargetType="local:McTimeline">
 
-                                        <Grid x:Name="PART_Container"
-                                              Height="{TemplateBinding Height}"
-                                              Width="{TemplateBinding Width}"
-                                              BorderThickness="{TemplateBinding BorderThickness}"
-                                              BorderBrush="{TemplateBinding BorderBrush}"
-                                              CornerRadius="{TemplateBinding CornerRadius}"
-                                              Background="{TemplateBinding Background}">
+					<Grid x:Name="PART_Container"
+						  Height="{TemplateBinding Height}"
+						  Width="{TemplateBinding Width}"
+						  BorderThickness="{TemplateBinding BorderThickness}"
+						  BorderBrush="{TemplateBinding BorderBrush}"
+						  CornerRadius="{TemplateBinding CornerRadius}"
+						  Background="{TemplateBinding Background}">
 
-                                                <Grid.RowDefinitions>
-                                                        <!-- legend caption / time scale -->
-                                                        <RowDefinition Height="{ThemeResource McTimelineTimeScaleHeight}"/>
-                                                        <!-- legend items / timeline / vertical scrollbar -->
-                                                        <RowDefinition Height="*"/>
-                                                        <!-- horizontal scrollbar -->
-                                                        <RowDefinition Height="auto"/>
-                                                </Grid.RowDefinitions>
+						<Grid.RowDefinitions>
+							<!-- legend caption / time scale -->
+							<RowDefinition Height="{TemplateBinding ScaleHeight}" />
+							<!-- legend items / timeline / vertical scrollbar -->
+							<RowDefinition Height="*" />
+							<!-- horizontal scrollbar -->
+							<RowDefinition Height="auto" />
+						</Grid.RowDefinitions>
 
-                                                <Grid.ColumnDefinitions>
-                                                        <!-- caption and legend -->
-                                                        <ColumnDefinition Width="{ThemeResource McTimelineDefaultSeriesLabelWidth}"/>
-                                                        <!-- timeline scale and bars -->
-                                                        <ColumnDefinition Width="*"/>
-                                                        <!-- vertical scrollbar -->
-                                                        <ColumnDefinition Width="auto"/>
-                                                </Grid.ColumnDefinitions>
+						<Grid.ColumnDefinitions>
+							<!-- caption and legend -->
+							<ColumnDefinition Width="{TemplateBinding LegendWidth}" />
+							<!-- timeline scale and bars -->
+							<ColumnDefinition Width="*" />
+							<!-- vertical scrollbar -->
+							<ColumnDefinition Width="auto" />
+						</Grid.ColumnDefinitions>
 
-                                                <!-- Legend caption -->
-                                                <Border Grid.Row="0"
-                                                        Grid.Column="0"
-                                                        BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-                                                        BorderThickness="0,0,1,0">
+						<!-- legend caption -->
+						<Border Grid.Row="0"
+								Grid.Column="0"
+								BorderBrush="{ThemeResource McTimelineGridLineBrush}"
+								BorderThickness="0,0,1,1">
 
-                                                        <TextBlock x:Name="PART_LegendCaption"
-                                                                   Text="{TemplateBinding LegendCaption}"
-                                                                   Style="{TemplateBinding LegendCaptionStyle}"/>
+							<TextBlock x:Name="PART_LegendCaption"
+									   Text="{TemplateBinding LegendCaption}"
+									   Style="{TemplateBinding LegendCaptionStyle}" />
 
-                                                </Border>
+						</Border>
 
-                                                <!-- Time Scale -->
-                                                <Grid x:Name="PART_TimeScaleGrid"
-                                                      Grid.Row="0"
-                                                      Grid.Column="1"
-                                                      Style="{TemplateBinding TimeScaleStyle}">
-                                                        <Grid.RowDefinitions>
-                                                                <!-- Dates / Days -->
-                                                                <RowDefinition Height="*"/>
-                                                                <!-- Hours -->
-                                                                <RowDefinition Height="*"/>
-                                                        </Grid.RowDefinitions>
+						<!-- Time Scale -->
+						<Grid x:Name="PART_TimeScaleGrid"
+							  Grid.Row="0"
+							  Grid.Column="1">
+							<Grid.RowDefinitions>
+								<!-- Dates / Days -->
+								<RowDefinition Height="*" />
+								<!-- Hours -->
+								<RowDefinition Height="*" />
+							</Grid.RowDefinitions>
+							
+							<!--Border overlay for both rows-->
+							<Border BorderBrush="{ThemeResource McTimelineGridLineBrush}"
+									Style="{TemplateBinding TimeScaleStyle}"
+									BorderThickness="0,0,0,1"
+									Grid.RowSpan="2" />
 
-                                                        <!-- Time Scale Days -->
-                                                        <Canvas x:Name="PART_TimeScaleDays"
-                                                                Grid.Row="0"/>
+							<!-- Time Scale Days -->
+							<Canvas x:Name="PART_TimeScaleDays"
+									Grid.Row="0" />
 
-                                                        <!-- Time Scale Hours -->
-                                                        <Canvas x:Name="PART_TimeScaleHours"
-                                                                Grid.Row="1"/>
-                                                </Grid>
+							<!-- Time Scale Hours -->
+							<Canvas x:Name="PART_TimeScaleHours"
+									Grid.Row="1" />
+						</Grid>
 
-                                                <!--Blank column -->
-                                                <Border Grid.Row="0"
-                                                        Grid.Column="2"
-                                                        BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-                                                        BorderThickness="0,0,0,1"/>
+						<!--Blank-->
+						<Border Grid.Row="0"
+								Grid.Column="2"
+								Style="{TemplateBinding TimeScaleStyle}"
+								BorderBrush="{ThemeResource McTimelineGridLineBrush}"
+								BorderThickness="0,0,0,1" />
 
-                                                <!-- Legend -->
-                                                <Border x:Name="PART_LegendBorder"
-                                                        Grid.Row="1"
-                                                        Grid.RowSpan="2"
-                                                        Grid.Column="0"
-                                                        Style="{TemplateBinding LegendStyle}">
+						<!-- Legend -->
+						<Border x:Name="PART_LegendBorder"
+								Grid.Row="1"
+								Grid.Column="0"
+								BorderBrush="{ThemeResource McTimelineGridLineBrush}"
+								BorderThickness="0,0,1,0">
 
-                                                        <Canvas x:Name="PART_LegendCanvas"/>
-                                                </Border>
+							<Canvas x:Name="PART_LegendCanvas"
+									Style="{TemplateBinding LegendStyle}" />
+						</Border>
 
-                                                <!-- Timeline Canvas -->
-                                                <Canvas x:Name="PART_TimelineCanvas"
-                                                        Grid.Row="1"
-                                                        Grid.Column="1"
-                                                        Style="{TemplateBinding TimelineCanvasStyle}"/>
+						<!-- Timeline Canvas -->
+					    <Canvas x:Name="PART_TimelineCanvas"
+								Grid.Row="1"
+								Grid.Column="1"
+								Style="{TemplateBinding TimelineCanvasStyle}" />
 
-                                                <!-- Vertical ScrollBar -->
-                                                <ScrollBar x:Name="PART_VScroll"
-                                                           Grid.Row="1"
-                                                           Grid.Column="2"
-                                                           Orientation="Vertical"
-                                                           Minimum="0"
-                                                           Maximum="0"
-                                                           VerticalAlignment="Stretch"
-                                                           IndicatorMode="MouseIndicator"/>
+						<!-- Vertical ScrollBar -->
+						<ScrollBar x:Name="PART_VScroll"
+								   Grid.Row="1"
+								   Grid.Column="2"
+								   Orientation="Vertical"
+								   Minimum="0"
+								   Maximum="0"
+								   VerticalAlignment="Stretch"
+								   IndicatorMode="MouseIndicator" />
 
-                                                <!-- Horizontal ScrollBar -->
-                                                <ScrollBar x:Name="PART_HScroll"
-                                                           Grid.Row="2"
-                                                           Grid.Column="1"
-                                                           Orientation="Horizontal"
-                                                           Minimum="0"
-                                                           Maximum="0"
-                                                           VerticalAlignment="Stretch"
-                                                           IndicatorMode="MouseIndicator"/>
+						<!--Blank column below legend, share same style -->
+						<Border Grid.Row="2"
+								Grid.Column="0"
+								Style="{TemplateBinding LegendStyle}"
+								BorderBrush="{ThemeResource McTimelineGridLineBrush}"
+								BorderThickness="0,0,1,0" />
 
-                                        </Grid>
+						<!-- Horizontal ScrollBar -->
+						<ScrollBar x:Name="PART_HScroll"
+								   Grid.Row="2"
+								   Grid.Column="1"
+								   Orientation="Horizontal"
+								   Minimum="0"
+								   Maximum="0"
+								   VerticalAlignment="Stretch"
+								   IndicatorMode="MouseIndicator" />
 
-                                </ControlTemplate>
+					</Grid>
 
-                        </Setter.Value>
+				</ControlTemplate>
 
-                </Setter>
+			</Setter.Value>
 
-        </Style>
+		</Setter>
+
+	</Style>
 
 </ResourceDictionary>

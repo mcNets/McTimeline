@@ -1,4 +1,4 @@
-namespace McTimeline;
+namespace McTimeline.Viewport;
 
 /// <summary>
 /// 1D axis based on time (DateTime). 

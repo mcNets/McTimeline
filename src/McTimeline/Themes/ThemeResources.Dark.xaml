@@ -11,25 +11,28 @@
 	<Color x:Key="McTimelineHoverColor">#2D4F6E</Color>
 	<Color x:Key="McTimelineSelectionColor">#1E3A5F</Color>
 	<Color x:Key="McTimelineBorderColor">#303030</Color>
-	
+	<Color x:Key="McTimelineScaleBackgroundColor">#1E1E1E</Color>
+
 	<!-- Brushes -->
 	<SolidColorBrush x:Key="McTimelineAccentBrush"
-					 Color="{StaticResource McTimelineAccentColor}" />
+					 Color="{StaticResource McTimelineAccentColor}"/>
 	<SolidColorBrush x:Key="McTimelineBackgroundBrush"
-					 Color="{StaticResource McTimelineBackgroundColor}" />
+					 Color="{StaticResource McTimelineBackgroundColor}"/>
 	<SolidColorBrush x:Key="McTimelineForegroundBrush"
-					 Color="{StaticResource McTimelineForegroundColor}" />
+					 Color="{StaticResource McTimelineForegroundColor}"/>
 	<SolidColorBrush x:Key="McTimelineGridLineBrush"
-					 Color="{StaticResource McTimelineGridLineColor}" />
+					 Color="{StaticResource McTimelineGridLineColor}"/>
 	<SolidColorBrush x:Key="McTimelineLegendBackgroundBrush"
-					 Color="{StaticResource McTimelineLegendBackgroundColor}" />
+					 Color="{StaticResource McTimelineLegendBackgroundColor}"/>
 	<SolidColorBrush x:Key="McTimelineMinimapBackgroundBrush"
-					 Color="{StaticResource McTimelineMinimapBackgroundColor}" />
+					 Color="{StaticResource McTimelineMinimapBackgroundColor}"/>
 	<SolidColorBrush x:Key="McTimelineHoverBrush"
-					 Color="{StaticResource McTimelineHoverColor}" />
+					 Color="{StaticResource McTimelineHoverColor}"/>
 	<SolidColorBrush x:Key="McTimelineSelectionBrush"
-					 Color="{StaticResource McTimelineSelectionColor}" />
+					 Color="{StaticResource McTimelineSelectionColor}"/>
 	<SolidColorBrush x:Key="McTimelineBorderBrush"
 					 Color="{StaticResource McTimelineBorderColor}" />
+	<SolidColorBrush x:Key="McTimelineScaleBackgroundBrush"
+					 Color="{StaticResource McTimelineScaleBackgroundColor}" />
 
 </ResourceDictionary>

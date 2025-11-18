@@ -33,4 +33,8 @@
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Series\" />
+	</ItemGroup>
+
 </Project>

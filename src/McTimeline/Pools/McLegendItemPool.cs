@@ -1,4 +1,4 @@
-namespace McTimeline;
+namespace McTimeline.Pools;
 
 /// <summary>
 /// Manages a pool of reusable UI elements for legend items to improve performance.

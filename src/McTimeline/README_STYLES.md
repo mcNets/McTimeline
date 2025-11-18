@@ -37,11 +37,11 @@ The McTimeline control automatically responds to theme changes through WinUI's `
 | Resource | Value | Description |
 |--------|-------|------------|
 | `McTimelineDefaultRowHeight` | `40` | Default row height |
-| `McTimelineDefaultSeriesLabelWidth` | `200` | Legend width |
+| `McTimelineDefaultLegendWidth` | `200` | Legend width |
 | `McTimelineDefaultPixelsPerHour` | `60` | Pixels per hour (zoom) |
 | `McTimelineMinPixelsPerHour` | `5` | Minimum zoom |
 | `McTimelineMaxPixelsPerHour` | `300` | Maximum zoom |
-| `McTimelineTimeScaleHeight` | `50` | Time scale height |
+| `McTimelineDefaultTimeScaleHeight` | `50` | Time scale height |
 | `McTimelineMinimapHeight` | `80` | Minimap height |
 
 ## Thickness

@@ -1,4 +1,4 @@
-namespace McTimeline;
+namespace McTimeline.Viewport;
 
 /// <summary>
 /// 1D vertical axis for managing vertical positioning and visibility.

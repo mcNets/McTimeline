@@ -106,6 +106,46 @@ public sealed partial class McTimeline {
         }
     }
 
+    /// <summary>
+    /// Gets or sets the vertical scaling factor applied to the content.
+    /// </summary>
+    public double ScaleHeight {
+        get { return (double)GetValue(ScaleHeightProperty); }
+        set { SetValue(ScaleHeightProperty, value); }
+    }
+
+    public static readonly DependencyProperty ScaleHeightProperty =
+        DependencyProperty.Register(nameof(ScaleHeight), 
+                                    typeof(double), 
+                                    typeof(McTimeline), 
+                                    new PropertyMetadata(0, OnScaleHeightChanged));
+
+    private static void OnScaleHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs args) {
+        if (d is McTimeline timeline) {
+            timeline.InvalidateTimeline();
+        }
+    }
+
+    /// <summary>
+    /// Gets or sets the width of the legend
+    /// </summary>
+    public double LegendWidth {
+        get { return (double)GetValue(LegendWidthProperty); }
+        set { SetValue(LegendWidthProperty, value); }
+    }
+
+    public static readonly DependencyProperty LegendWidthProperty =
+        DependencyProperty.Register(nameof(LegendWidth), 
+                                    typeof(double), 
+                                    typeof(McTimeline), 
+                                    new PropertyMetadata(0, OnLegendWidthChanged));
+
+    private static void OnLegendWidthChanged(DependencyObject d, DependencyPropertyChangedEventArgs args) {
+        if (d is McTimeline timeline) {
+            timeline.InvalidateTimeline();
+        }
+    }
+
     #endregion
 
     #region Layout Dependency Properties
@@ -162,7 +202,7 @@ public sealed partial class McTimeline {
             new PropertyMetadata(null));
 
     /// <summary>
-    /// Gets or sets the style for the legend border (left section).
+    /// Gets or sets the style for the legend canvas
     /// </summary>
     public Style? LegendStyle {
         get => (Style?)GetValue(LegendStyleProperty);

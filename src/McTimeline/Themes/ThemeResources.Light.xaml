@@ -2,7 +2,8 @@
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
 	<!-- Light theme Colors -->
-	<Color x:Key="McTimelineAccentColor">#003c6a</Color>
+	<!--<Color x:Key="McTimelineAccentColor">#003c6a</Color>-->
+	<Color x:Key="McTimelineAccentColor">#5e0808</Color>
 	<Color x:Key="McTimelineBackgroundColor">#FFFFFF</Color>
 	<Color x:Key="McTimelineForegroundColor">#000000</Color>
 	<Color x:Key="McTimelineGridLineColor">#E0E0E0</Color>
@@ -11,6 +12,7 @@
 	<Color x:Key="McTimelineHoverColor">#E5F3FF</Color>
 	<Color x:Key="McTimelineSelectionColor">#CCE8FF</Color>
 	<Color x:Key="McTimelineBorderColor">#CCCCCC</Color>
+	<Color x:Key="McTimelineScaleBackgroundColor">#FFFFFF</Color>
 
 	<!-- Brushes -->
 	<SolidColorBrush x:Key="McTimelineAccentBrush"
@@ -31,5 +33,7 @@
 					 Color="{StaticResource McTimelineSelectionColor}" />
 	<SolidColorBrush x:Key="McTimelineBorderBrush"
 					 Color="{StaticResource McTimelineBorderColor}" />
+	<SolidColorBrush x:Key="McTimelineScaleBackgroundBrush"
+					 Color="{StaticResource McTimelineScaleBackgroundColor}" />
 
 </ResourceDictionary>

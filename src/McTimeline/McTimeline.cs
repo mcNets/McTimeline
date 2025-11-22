@@ -1,4 +1,5 @@
 using Windows.Foundation;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
@@ -28,6 +29,7 @@ public sealed partial class McTimeline : Control {
     private GridLength _timeScaleLegendColumnWidth;
 
     private readonly McTimelineViewport _viewport;
+    private readonly Dictionary<int, Border> _visibleLegendItems = new();
 
     #endregion
 
@@ -98,6 +100,7 @@ public sealed partial class McTimeline : Control {
         if (_legendCanvas != null) {
             _viewport.SeriesAxis.ViewportPixels = _legendCanvas.ActualHeight;
         }
+        _viewport.RefreshVisibleSeriesRange();
 
         UpdateHScroll();
         UpdateVScroll();
@@ -116,6 +119,7 @@ public sealed partial class McTimeline : Control {
     private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
         // Update vertical axis viewport pixels when legend canvas size changes
         _viewport.SeriesAxis.ViewportPixels = e.NewSize.Height;
+        _viewport.RefreshVisibleSeriesRange();
         UpdateVScroll();
         InvalidateTimeline();
     }
@@ -157,6 +161,7 @@ public sealed partial class McTimeline : Control {
                 series.Items.CollectionChanged += OnSeriesItemsChanged;
             }
         }
+        SyncSeriesAxisWithCollection();
         InvalidateTimeline();
     }
 
@@ -171,7 +176,7 @@ public sealed partial class McTimeline : Control {
                 series.Items.CollectionChanged += OnSeriesItemsChanged;
             }
         }
-        _viewport.SeriesAxis.ContentUnits = SeriesCollection.Count;
+        SyncSeriesAxisWithCollection();
         InvalidateTimeline();
     }
 
@@ -179,28 +184,95 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    private void SyncSeriesAxisWithCollection() {
+        _viewport.SeriesAxis.ContentUnits = SeriesCollection?.Count ?? 0;
+        _viewport.RefreshVisibleSeriesRange();
+    }
+
     /// <summary>
     /// Draws the legend for the series in the legend area.
+    /// Only visible series within the viewport are rendered.
     /// </summary>
     private void DrawLegend() {
-        if (_legendCanvas != null) {
-            _legendCanvas.Children.Clear();
-            double y = 0;
-            foreach (var series in SeriesCollection) {
-                var border = new Border {
-                    Width = _legendCanvas.ActualWidth,
-                    Height = _viewport.SeriesHeight,
-                    Style = LegendItemStyle
-                };
-                border.Child =  new TextBlock {
-                    Text = series.Title,
-                    VerticalAlignment = VerticalAlignment.Center,
-                    HorizontalAlignment = HorizontalAlignment.Center,
-                };
-                Canvas.SetTop(border, y);
+        if (_legendCanvas == null) {
+            _visibleLegendItems.Clear();
+            return;
+        }
+
+        if (SeriesCollection == null || SeriesCollection.Count == 0) {
+            ClearLegendVisuals();
+            return;
+        }
+
+        int startIndex = _viewport.VisibleSeriesStartIndex;
+        int endIndex = _viewport.VisibleSeriesEndIndex;
+
+        if (startIndex > endIndex) {
+            ClearLegendVisuals();
+            return;
+        }
+
+        RemoveLegendItemsOutsideRange(startIndex, endIndex);
+
+        double width = _legendCanvas.ActualWidth;
+        double itemHeight = _viewport.SeriesHeight;
+
+        for (int index = startIndex; index <= endIndex; index++) {
+            Border? border;
+            if (!_visibleLegendItems.TryGetValue(index, out border) || border == null) {
+                border = CreateLegendItem(SeriesCollection[index]);
+                _visibleLegendItems[index] = border;
                 _legendCanvas.Children.Add(border);
-                y += _viewport.SeriesHeight;
+            } else {
+                UpdateLegendItem(border, SeriesCollection[index]);
             }
+
+            border.Width = width;
+            border.Height = itemHeight;
+            Canvas.SetTop(border, _viewport.SeriesAxis.UnitsToScreen(index));
+        }
+    }
+
+    private void RemoveLegendItemsOutsideRange(int startIndex, int endIndex) {
+        if (_legendCanvas == null) {
+            return;
+        }
+
+        List<int> keysToRemove = new();
+        foreach (var key in _visibleLegendItems.Keys) {
+            if (key < startIndex || key > endIndex) {
+                keysToRemove.Add(key);
+            }
+        }
+
+        foreach (int key in keysToRemove) {
+            if (_visibleLegendItems.TryGetValue(key, out var element)) {
+                _legendCanvas.Children.Remove(element);
+                _visibleLegendItems.Remove(key);
+            }
+        }
+    }
+
+    private void ClearLegendVisuals() {
+        _legendCanvas?.Children.Clear();
+        _visibleLegendItems.Clear();
+    }
+
+    private Border CreateLegendItem(McTimelineSeries series) {
+        var border = new Border {
+            Style = LegendItemStyle
+        };
+        border.Child = new TextBlock {
+            Text = series.Title,
+            VerticalAlignment = VerticalAlignment.Center,
+            HorizontalAlignment = HorizontalAlignment.Center
+        };
+        return border;
+    }
+
+    private static void UpdateLegendItem(Border border, McTimelineSeries series) {
+        if (border.Child is TextBlock textBlock) {
+            textBlock.Text = series.Title;
         }
     }
 
@@ -216,12 +288,18 @@ public sealed partial class McTimeline : Control {
     }
 
     private void OnHScrollValueChanged(object? sender, RangeBaseValueChangedEventArgs e) {
-        _viewport.OnScrollChanged(e.NewValue, _vScroll?.Value ?? 0);
+        double horizontalOffsetPx = e.NewValue * _viewport.TimeAxis.PixelsPerHour;
+        double verticalUnits = _vScroll?.Value ?? 0;
+        double verticalOffsetPx = verticalUnits * _viewport.SeriesAxis.SeriesHeight;
+        _viewport.OnScrollChanged(horizontalOffsetPx, verticalOffsetPx);
         InvalidateTimeline();
     }
 
     private void OnVScrollValueChanged(object? sender, RangeBaseValueChangedEventArgs e) {
-        _viewport.OnScrollChanged(_hScroll?.Value ?? 0, e.NewValue);
+        double verticalOffsetPx = e.NewValue * _viewport.SeriesAxis.SeriesHeight;
+        double horizontalHours = _hScroll?.Value ?? 0;
+        double horizontalOffsetPx = horizontalHours * _viewport.TimeAxis.PixelsPerHour;
+        _viewport.OnScrollChanged(horizontalOffsetPx, verticalOffsetPx);
         InvalidateTimeline();
     }
 
@@ -265,8 +343,8 @@ public sealed partial class McTimeline : Control {
             _vScroll.Maximum = _viewport.SeriesAxis.MaxOffsetUnits;
             _vScroll.Value = _viewport.SeriesAxis.OffsetUnits;
             _vScroll.ViewportSize = _viewport.SeriesAxis.ViewportUnits;
-            _vScroll.LargeChange = _viewport.SeriesAxis.ViewportUnits;
-            _vScroll.SmallChange = _viewport.SeriesAxis.ViewportUnits / 10;
+            _vScroll.LargeChange = 1;
+            _vScroll.SmallChange = 1;
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using Windows.Foundation;
 
 namespace McTimeline.Viewport;
@@ -8,6 +9,9 @@ namespace McTimeline.Viewport;
 /// Provides methods for generating ticks, checking series visibility, and calculating item positions.
 /// </summary>
 public sealed class McTimelineViewport {
+    private int _visibleSeriesStartIndex;
+    private int _visibleSeriesEndIndex = -1;
+
     /// <summary>
     /// Gets the time axis for horizontal positioning and time-based calculations.
     /// </summary>
@@ -23,8 +27,28 @@ public sealed class McTimelineViewport {
     /// </summary>
     public double SeriesHeight {
         get => SeriesAxis.SeriesHeight;
-        set => SeriesAxis.SeriesHeight = value;
+        set {
+            SeriesAxis.SeriesHeight = value;
+            UpdateVisibleSeriesRange();
+        }
     }
+
+    /// <summary>
+    /// Gets the first visible series index within the viewport.
+    /// Returns 0 when no series are available.
+    /// </summary>
+    public int VisibleSeriesStartIndex => _visibleSeriesStartIndex;
+
+    /// <summary>
+    /// Gets the last visible series index within the viewport.
+    /// Returns -1 when no series are available.
+    /// </summary>
+    public int VisibleSeriesEndIndex => _visibleSeriesEndIndex;
+
+    /// <summary>
+    /// Occurs when the visible series range changes.
+    /// </summary>
+    public event EventHandler? VisibleSeriesRangeChanged;
 
     /// <summary>
     /// Updates the viewport sizes when the canvas or container size changes.
@@ -33,6 +57,7 @@ public sealed class McTimelineViewport {
     public void OnSizeChanged(Size newSize) {
         TimeAxis.ViewportPixels = newSize.Width;
         SeriesAxis.ViewportPixels = newSize.Height;
+        UpdateVisibleSeriesRange();
     }
 
     /// <summary>
@@ -43,6 +68,7 @@ public sealed class McTimelineViewport {
     public void OnScrollChanged(double horizontalOffset, double verticalOffset) {
         TimeAxis.OffsetHours = horizontalOffset / TimeAxis.PixelsPerHour;
         SeriesAxis.OffsetUnits = verticalOffset / SeriesAxis.SeriesHeight;
+        UpdateVisibleSeriesRange();
     }
 
     /// <summary>
@@ -61,6 +87,7 @@ public sealed class McTimelineViewport {
     /// <param name="maxUnits">The maximum units.</param>
     public void SetSeriesRange(double minUnits, double maxUnits) {
         SeriesAxis.SetRange(minUnits, maxUnits);
+        UpdateVisibleSeriesRange();
     }
 
     /// <summary>
@@ -72,6 +99,33 @@ public sealed class McTimelineViewport {
     /// Gets the visible vertical range as a tuple of start and end units.
     /// </summary>
     public (double Start, double End) VisibleSeriesRange => SeriesAxis.VisibleUnitsRange;
+
+    /// <summary>
+    /// Forces a recalculation of the visible series index range.
+    /// Call this after external changes to the axis that the viewport does not track directly.
+    /// </summary>
+    public void RefreshVisibleSeriesRange() => UpdateVisibleSeriesRange();
+
+    private void UpdateVisibleSeriesRange() {
+        var (topUnits, bottomUnits) = SeriesAxis.VisibleUnitsRange;
+        int minIndex = (int)Math.Floor(SeriesAxis.MinUnits);
+        int totalSeries = (int)Math.Max(0, Math.Floor(SeriesAxis.ContentUnits + 1e-6));
+        int maxIndex = totalSeries > 0 ? minIndex + totalSeries - 1 : minIndex - 1;
+
+        int newStart = totalSeries == 0
+            ? minIndex
+            : (int)Math.Clamp(Math.Floor(topUnits), minIndex, maxIndex);
+
+        int newEnd = totalSeries == 0
+            ? minIndex - 1
+            : (int)Math.Clamp((int)Math.Ceiling(bottomUnits) - 1, minIndex, maxIndex);
+
+        if (newStart != _visibleSeriesStartIndex || newEnd != _visibleSeriesEndIndex) {
+            _visibleSeriesStartIndex = newStart;
+            _visibleSeriesEndIndex = newEnd;
+            VisibleSeriesRangeChanged?.Invoke(this, EventArgs.Empty);
+        }
+    }
 
     /// <summary>
     /// Determines whether a series at the specified index is visible in the viewport.

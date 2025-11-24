@@ -106,6 +106,14 @@ public sealed class McTimelineViewport {
     /// </summary>
     public void RefreshVisibleSeriesRange() => UpdateVisibleSeriesRange();
 
+    /// <summary>
+    /// Adjusts the series axis so all content fits within the viewport height, and updates visible range state.
+    /// </summary>
+    public void ZoomSeriesToFit() {
+        SeriesAxis.ZoomToFit();
+        UpdateVisibleSeriesRange();
+    }
+
     private void UpdateVisibleSeriesRange() {
         var (topUnits, bottomUnits) = SeriesAxis.VisibleUnitsRange;
         int minIndex = (int)Math.Floor(SeriesAxis.MinUnits);

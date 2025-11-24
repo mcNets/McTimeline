@@ -19,41 +19,71 @@
   </Page.Resources>
 
   <Grid utu:SafeArea.Insets="VisibleBounds"
-        ColumnDefinitions="Auto,*"
         RowSpacing="10">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition x:Name="ConfigColumn"
+                        Width="Auto" />
+      <ColumnDefinition Width="Auto" />
+      <ColumnDefinition Width="*" />
+    </Grid.ColumnDefinitions>
 
-    <StackPanel Padding="20"
-                Grid.Column="0"
-                Spacing="20"
-                HorizontalAlignment="Center"
-                Margin="10">
+    <Border x:Name="ConfigPanelContainer"
+            Grid.Column="0"
+            Background="{ThemeResource SolidBackgroundFillColorTertiaryBrush}"
+            Margin="10"
+            MinWidth="200">
 
-      <Button Content="Change theme"
-              Click="ThemeButton_Click" />
+      <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-      <Button Content="New collection"
-              Command="{x:Bind ViewModel.GenerarNovaCollecioCommand}" />
+        <StackPanel x:Name="ConfigPanel"
+                    Padding="20"
+                    Spacing="20"
+                    HorizontalAlignment="Center">
 
-      <CheckBox IsChecked="{x:Bind ViewModel.IsLegendVisible, Mode=TwoWay}"
-                Content="Show legend" />
+          <Button Content="Change theme"
+                  Click="ThemeButton_Click" />
 
-      <NumberBox Header="Legend width"
-                 SpinButtonPlacementMode="Inline"
-                 Minimum="100"
-                 Maximum="300"
-                 SmallChange="10"
-                 Value="{x:Bind ViewModel.LegendWidth, Mode=TwoWay}" />
+          <Button Content="New collection"
+                  Command="{x:Bind ViewModel.GenerarNovaCollecioCommand}" />
 
-      <NumberBox Header="Scale height"
-                 SpinButtonPlacementMode="Inline"
-                 Minimum="50"
-                 Maximum="200"
-                 SmallChange="10"
-                 Value="{x:Bind ViewModel.ScaleHeight, Mode=TwoWay}" />
+          <CheckBox IsChecked="{x:Bind ViewModel.IsLegendVisible, Mode=TwoWay}"
+                    Content="Show legend" />
 
-    </StackPanel>
+          <NumberBox Header="Legend width"
+                     SpinButtonPlacementMode="Inline"
+                     Minimum="100"
+                     Maximum="300"
+                     SmallChange="10"
+                     Value="{x:Bind ViewModel.LegendWidth, Mode=TwoWay}" />
 
-    <mctl:McTimeline Grid.Column="1"
+          <NumberBox Header="Scale height"
+                     SpinButtonPlacementMode="Inline"
+                     Minimum="50"
+                     Maximum="200"
+                     SmallChange="10"
+                     Value="{x:Bind ViewModel.ScaleHeight, Mode=TwoWay}" />
+
+          <Button Content="Zoom series to fit"
+                  Click="ZoomSeriesToFitButton_Click" />
+
+        </StackPanel>
+
+      </ScrollViewer>
+
+    </Border>
+
+    <Button x:Name="ConfigToggleButton"
+            Grid.Column="1"
+            Width="32"
+            Height="32"
+            Margin="0,10,10,0"
+            VerticalAlignment="Top"
+            Background="{ThemeResource AccentAcrylicBackgroundFillColorBaseBrush}"
+            Content="⟪"
+            Click="ConfigToggleButton_Click" />
+
+    <mctl:McTimeline Grid.Column="2"
+                     x:Name="TimelineControl"
                      LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=OneWay}"
                      ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=OneWay}"
                      SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"

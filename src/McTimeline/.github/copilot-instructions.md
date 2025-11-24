@@ -14,6 +14,12 @@ The goal: a high-performance horizontal timeline/Gantt-style control with legend
 
 ---
 
+## Compilation Targets
+
+When building the control library use this target only:
+
+* `-f net10.0-desktop`
+
 ## Control Purpose
 
 Visualize time intervals across multiple series (rows):

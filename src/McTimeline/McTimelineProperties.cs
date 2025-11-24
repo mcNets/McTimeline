@@ -102,6 +102,9 @@ public sealed partial class McTimeline {
 
     private static void OnSeriesHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is McTimeline timeline) {
+            timeline._viewport.SeriesHeight = timeline.SeriesHeight;
+            timeline._viewport.RefreshVisibleSeriesRange();
+            timeline.UpdateVScroll();
             timeline.InvalidateTimeline();
         }
     }

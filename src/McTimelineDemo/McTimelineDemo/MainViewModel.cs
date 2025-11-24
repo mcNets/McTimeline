@@ -1,4 +1,3 @@
-using System;
 using McTimeline;
 
 namespace McTimelineDemo;
@@ -33,4 +32,5 @@ public partial class MainViewModel : ObservableObject
         }
         Series = series;
     }
+
 }

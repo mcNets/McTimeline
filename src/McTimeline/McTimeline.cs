@@ -340,11 +340,18 @@ public sealed partial class McTimeline : Control {
     private void UpdateVScroll() {
         if (_vScroll != null) {
             _vScroll.Minimum = 0;
-            _vScroll.Maximum = _viewport.SeriesAxis.MaxOffsetUnits;
+            _vScroll.Maximum = _viewport.SeriesAxis.MaxOffsetSteps;
             _vScroll.Value = _viewport.SeriesAxis.OffsetUnits;
             _vScroll.ViewportSize = _viewport.SeriesAxis.ViewportUnits;
             _vScroll.LargeChange = 1;
             _vScroll.SmallChange = 1;
         }
+    }
+
+    public void ZoomSeriesToFit() {
+        _viewport.ZoomSeriesToFit();
+        SeriesHeight = _viewport.SeriesAxis.SeriesHeight;
+        UpdateVScroll();
+        InvalidateTimeline();
     }
 }

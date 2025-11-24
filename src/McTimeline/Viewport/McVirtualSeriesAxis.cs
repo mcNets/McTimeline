@@ -10,7 +10,7 @@ public sealed class McVirtualSeriesAxis {
     #region Private fields
     
     private double _offsetUnits;          // world units (series indices, above the viewport)
-    private double _seriesHeight = 30.0; // screen px per series (>0)
+    private double _seriesHeight = 30.0;  // screen px per series (>0)
     private double _viewportPx;           // height of the viewport in pixels
     private double _contentUnits;         // total number of series
 
@@ -29,13 +29,13 @@ public sealed class McVirtualSeriesAxis {
     /// <remarks>
     /// The offset determines the starting series index visible at the top of the viewport.
     /// For example, an offset of 5 means series 5, 6, 7, etc. are visible.
-    /// The value is automatically clamped to the valid range [MinUnits, MinUnits + MaxOffsetUnits]
+    /// The value is automatically clamped to the valid range [MinUnits, MinUnits + MaxOffsetSteps]
     /// and floored to ensure only whole series are displayed, preventing partial series visibility.
     /// Setting this property triggers a re-clamping of the offset if the viewport or content changes.
     /// </remarks>
     public double OffsetUnits {
         get => _offsetUnits;
-        set => _offsetUnits = Math.Floor(Math.Clamp(value, MinUnits, MinUnits + MaxOffsetUnits));
+        set => _offsetUnits = Math.Floor(Math.Clamp(value, MinUnits, MinUnits + MaxOffsetSteps));
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ public sealed class McVirtualSeriesAxis {
         get => _seriesHeight;
         set {
             _seriesHeight = Math.Max(1e-6, value); // avoids 0 or negatives
-            OffsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
+            ClampOffsetIntoRange();
         }
     }
 
@@ -69,7 +69,7 @@ public sealed class McVirtualSeriesAxis {
         get => _viewportPx;
         set {
             _viewportPx = Math.Max(0, value);
-            OffsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
+            ClampOffsetIntoRange();
         }
     }
 
@@ -81,7 +81,7 @@ public sealed class McVirtualSeriesAxis {
         get => _contentUnits;
         set {
             _contentUnits = Math.Max(0, value);
-            OffsetUnits = Math.Clamp(_offsetUnits, 0, MaxOffsetUnits);
+            ClampOffsetIntoRange();
         }
     }
 
@@ -97,6 +97,20 @@ public sealed class McVirtualSeriesAxis {
     /// difference between the total content units and the viewport units. If the content fits entirely within the
     /// viewport, the value is zero.</remarks>
     public double MaxOffsetUnits => Math.Max(0, _contentUnits - ViewportUnits);
+
+    /// <summary>
+    /// Gets the maximum offset in whole-series steps, ensuring every series can be scrolled to the top.
+    /// </summary>
+    public double MaxOffsetSteps {
+        get {
+            var raw = MaxOffsetUnits;
+            if (raw <= 0) {
+                return 0;
+            }
+            const double epsilon = 1e-9;
+            return Math.Ceiling(raw - epsilon);
+        }
+    }
 
     /// <summary>
     /// Converts a unit value to its corresponding position in screen pixels.
@@ -156,10 +170,10 @@ public sealed class McVirtualSeriesAxis {
     /// range. The value is clamped to the range [0, 1] when read.</remarks>
     public double ScrollNormalized {
         get {
-            var denom = Math.Max(MaxOffsetUnits, 1e-6);
+            var denom = Math.Max(MaxOffsetSteps, 1e-6);
             return Math.Clamp(_offsetUnits / denom, 0, 1);
         }
-        set => OffsetUnits = value * MaxOffsetUnits;
+        set => OffsetUnits = value * MaxOffsetSteps;
     }
 
     /// <summary>
@@ -175,7 +189,7 @@ public sealed class McVirtualSeriesAxis {
         MinUnits = min;
         ContentUnits = max - min;
         // re-clamp in case the offset is out of bounds
-        OffsetUnits = Math.Clamp(_offsetUnits, MinUnits, MinUnits + MaxOffsetUnits);
+        ClampOffsetIntoRange();
     }
 
     /// <summary>
@@ -192,5 +206,9 @@ public sealed class McVirtualSeriesAxis {
         if (ContentUnits > 0 && ViewportPixels > 0) {
             SeriesHeight = ViewportPixels / ContentUnits;
         }
+    }
+
+    private void ClampOffsetIntoRange() {
+        _offsetUnits = Math.Floor(Math.Clamp(_offsetUnits, MinUnits, MinUnits + MaxOffsetSteps));
     }
 }

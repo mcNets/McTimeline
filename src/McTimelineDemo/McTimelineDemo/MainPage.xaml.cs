@@ -10,7 +10,7 @@ public sealed partial class MainPage : Page
     {
         this.InitializeComponent();
         UpdateConfigPanelState();
-        Task.Run(async () => await ViewModel.GenerarNovaCollecio());
+        Task.Run(async () => await ViewModel.AddNewSeries());
     }
 
     private void ThemeButton_Click(object sender, RoutedEventArgs e)

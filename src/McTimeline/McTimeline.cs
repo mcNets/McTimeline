@@ -1,5 +1,3 @@
-using Windows.Foundation;
-using System.Collections.Generic;
 using System.Collections.Specialized;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
@@ -70,9 +68,9 @@ public sealed partial class McTimeline : Control {
             _timelineCanvas.PointerWheelChanged += OnCanvasPointerWheelChanged;
         }
 
-        if (_legendCanvas != null) {
-            _legendCanvas.SizeChanged += OnLegendCanvasSizeChanged;
-        }
+        // if (_legendCanvas != null) {
+        //     _legendCanvas.SizeChanged += OnLegendCanvasSizeChanged;
+        // }
 
         // Subscribe to scroll changes
         if (_timelineScroll != null) {
@@ -94,7 +92,7 @@ public sealed partial class McTimeline : Control {
             _viewport.TimeAxis.ViewportPixels = _timelineCanvas.ActualWidth;
         }
 
-        // Initialize vertical axis
+        // Initialize series axis
         _viewport.SeriesHeight = SeriesHeight;
         _viewport.SeriesAxis.ContentUnits = SeriesCollection?.Count ?? 0;
         if (_legendCanvas != null) {
@@ -102,8 +100,8 @@ public sealed partial class McTimeline : Control {
         }
         _viewport.RefreshVisibleSeriesRange();
 
-        UpdateHScroll();
-        UpdateVScroll();
+        UpdateHScrollBar();
+        UpdateVScrollBar();
 
         UpdateLegendVisibility();
     }
@@ -111,18 +109,19 @@ public sealed partial class McTimeline : Control {
     private void OnTimelineCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
         // Update viewport size when canvas size changes
         _viewport.OnSizeChanged(e.NewSize);
-        UpdateHScroll();
-        UpdateVScroll();
+        _viewport.RefreshVisibleSeriesRange();
+        UpdateHScrollBar();
+        UpdateVScrollBar();
         InvalidateTimeline();
     }
 
-    private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
-        // Update vertical axis viewport pixels when legend canvas size changes
-        _viewport.SeriesAxis.ViewportPixels = e.NewSize.Height;
-        _viewport.RefreshVisibleSeriesRange();
-        UpdateVScroll();
-        InvalidateTimeline();
-    }
+    // private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
+    //     // Update vertical axis viewport pixels when legend canvas size changes
+    //     _viewport.SeriesAxis.ViewportPixels = e.NewSize.Height;
+    //     _viewport.RefreshVisibleSeriesRange();
+    //     UpdateVScrollBar();
+    //     InvalidateTimeline();
+    // }
 
     private void OnTimelineScrollViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) {
         // Update scroll offsets when user scrolls
@@ -218,12 +217,12 @@ public sealed partial class McTimeline : Control {
         double itemHeight = _viewport.SeriesHeight;
 
         for (int index = startIndex; index <= endIndex; index++) {
-            Border? border;
-            if (!_visibleLegendItems.TryGetValue(index, out border) || border == null) {
+            if (!_visibleLegendItems.TryGetValue(index, out Border? border) || border == null) {
                 border = CreateLegendItem(SeriesCollection[index]);
                 _visibleLegendItems[index] = border;
                 _legendCanvas.Children.Add(border);
-            } else {
+            }
+            else {
                 UpdateLegendItem(border, SeriesCollection[index]);
             }
 
@@ -314,19 +313,26 @@ public sealed partial class McTimeline : Control {
             var pointerX = e.GetCurrentPoint(_timelineCanvas).Position.X;
             var hoursAtCursor = _viewport.TimeAxis.ScreenToHours(pointerX);
             _viewport.TimeAxis.OffsetHours = hoursAtCursor - (pointerX / _viewport.TimeAxis.PixelsPerHour);
-            UpdateHScroll();
+            UpdateHScrollBar();
             InvalidateTimeline();
-        } else {
+        } else if ((e.KeyModifiers & VirtualKeyModifiers.Shift) != 0) {
             // Scroll horizontal
             double scrollDelta = delta > 0 ? -50 : 50; // Adjust step
             _viewport.TimeAxis.ScrollByPixels(scrollDelta);
-            UpdateHScroll();
+            UpdateHScrollBar();
+            InvalidateTimeline();
+        } else {
+            // Scroll vertical
+            double scrollDelta = delta > 0 ? -1 : 1; // Adjust step
+            _viewport.SeriesAxis.OffsetUnits += scrollDelta;
+            UpdateVScrollBar();
             InvalidateTimeline();
         }
+
         e.Handled = true;
     }
 
-    private void UpdateHScroll() {
+    private void UpdateHScrollBar() {
         if (_hScroll != null) {
             _hScroll.Minimum = 0;
             _hScroll.Maximum = _viewport.TimeAxis.MaxOffsetHours;
@@ -337,7 +343,7 @@ public sealed partial class McTimeline : Control {
         }
     }
 
-    private void UpdateVScroll() {
+    private void UpdateVScrollBar() {
         if (_vScroll != null) {
             _vScroll.Minimum = 0;
             _vScroll.Maximum = _viewport.SeriesAxis.MaxOffsetSteps;
@@ -351,7 +357,7 @@ public sealed partial class McTimeline : Control {
     public void ZoomSeriesToFit() {
         _viewport.ZoomSeriesToFit();
         SeriesHeight = _viewport.SeriesAxis.SeriesHeight;
-        UpdateVScroll();
+        UpdateVScrollBar();
         InvalidateTimeline();
     }
 }

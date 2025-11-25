@@ -44,7 +44,7 @@
                   Click="ThemeButton_Click" />
 
           <Button Content="New collection"
-                  Command="{x:Bind ViewModel.GenerarNovaCollecioCommand}" />
+                  Command="{x:Bind ViewModel.AddNewSeriesCommand}" />
 
           <CheckBox IsChecked="{x:Bind ViewModel.IsLegendVisible, Mode=TwoWay}"
                     Content="Show legend" />

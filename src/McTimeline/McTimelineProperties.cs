@@ -104,7 +104,7 @@ public sealed partial class McTimeline {
         if (d is McTimeline timeline) {
             timeline._viewport.SeriesHeight = timeline.SeriesHeight;
             timeline._viewport.RefreshVisibleSeriesRange();
-            timeline.UpdateVScroll();
+            timeline.UpdateVScrollBar();
             timeline.InvalidateTimeline();
         }
     }

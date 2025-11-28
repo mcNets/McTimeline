@@ -7,6 +7,8 @@ public record McTimelineItem {
         Description = description;
         Start = start;
         End = end;
+        Visible = false;
+        Selected = false;
     }
 
     public string IdKey { get; private set; } = string.Empty;
@@ -14,4 +16,6 @@ public record McTimelineItem {
     public string Description { get; private set; } = string.Empty;
     public DateTime Start { get; set; }
     public DateTime End { get; set; }
+    public bool Visible { get; set; } = false;
+    public bool Selected { get; set; } = false;
 }

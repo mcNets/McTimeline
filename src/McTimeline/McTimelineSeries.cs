@@ -5,11 +5,9 @@ using System.ComponentModel;
 namespace McTimeline;
 
 public partial class McTimelineSeries : INotifyPropertyChanged, IEnumerable<McTimelineItem> {
-    private string? _title;
-
     public McTimelineSeries(string title) {
         Title = title;
-        Items = new ObservableCollection<McTimelineItem>();
+        Items = [];
         ReadOnlyItems = new ReadOnlyObservableCollection<McTimelineItem>(Items);
     }
 
@@ -20,11 +18,13 @@ public partial class McTimelineSeries : INotifyPropertyChanged, IEnumerable<McTi
         ReadOnlyItems = new ReadOnlyObservableCollection<McTimelineItem>(Items);
     }
 
+    public bool Visible { get; set; } = false;
+
     public string? Title {
-        get => _title;
+        get;
         set {
-            if (_title != value) {
-                _title = value;
+            if (field != value) {
+                field = value;
                 PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(Title)));
             }
         }

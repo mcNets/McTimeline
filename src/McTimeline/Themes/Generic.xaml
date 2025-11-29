@@ -1,13 +1,14 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-					xmlns:local="using:McTimeline">
+					xmlns:local="using:McTimeline"
+					xmlns:controls="using:McTimeline.Controls">
 
 	<!-- Merge all resource dictionaries -->
 	<ResourceDictionary.MergedDictionaries>
 		<ResourceDictionary Source="ms-appx:///McTimeline/Themes/McTimelineResources.xaml" />
 	</ResourceDictionary.MergedDictionaries>
 
-	<!-- Main McTimeline Style -->
+	<!-- McTimeline Template -->
 	<Style TargetType="local:McTimeline">
 		<Setter Property="Background"
 				Value="{ThemeResource McTimelineBackgroundBrush}" />
@@ -167,6 +168,46 @@
 
 		</Setter>
 
+	</Style>
+
+	<!-- McLegend Template -->
+	<Style TargetType="controls:McLegend">
+		<Setter Property="Background" Value="{ThemeResource McTimelineLegendBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{ThemeResource McTimelineBorderBrush}" />
+		<Setter Property="BorderThickness" Value="{ThemeResource McTimelineBorderThickness}" />
+		<Setter Property="Padding" Value="{ThemeResource McTimelineDefaultPadding}" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Foreground" Value="{ThemeResource McTimelineForegroundBrush}" />
+
+		<Setter Property="Template">
+
+			<Setter.Value>
+
+				<ControlTemplate TargetType="controls:McLegend">
+
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{TemplateBinding CornerRadius}"
+						Padding="{TemplateBinding Padding}">
+
+						<TextBlock
+							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							Text="{TemplateBinding LegendText}"
+							TextAlignment="Center"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							Foreground="{TemplateBinding Foreground}" />
+
+					</Border>
+
+				</ControlTemplate>
+
+			</Setter.Value>
+
+		</Setter>
+		
 	</Style>
 
 </ResourceDictionary>

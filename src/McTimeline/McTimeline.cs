@@ -3,6 +3,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
 using McTimeline.Viewport;
+using McTimeline.Controls;
+using McTimeline.Pools;
 
 namespace McTimeline;
 
@@ -27,13 +29,15 @@ public sealed partial class McTimeline : Control {
     private GridLength _timeScaleLegendColumnWidth;
 
     private readonly McTimelineViewport _viewport;
-    private readonly Dictionary<int, Border> _visibleLegendItems = new();
+    private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = new();
+    private readonly IMcLegendItemPool _legendItemPool;
 
     #endregion
 
     public McTimeline() {
         this.DefaultStyleKey = typeof(McTimeline);
         _viewport = new McTimelineViewport();
+        _legendItemPool = new McLegendItemPool(LegendStyle);
     }
 
     protected override void OnApplyTemplate() {
@@ -217,18 +221,21 @@ public sealed partial class McTimeline : Control {
         double itemHeight = _viewport.SeriesHeight;
 
         for (int index = startIndex; index <= endIndex; index++) {
-            if (!_visibleLegendItems.TryGetValue(index, out Border? border) || border == null) {
-                border = CreateLegendItem(SeriesCollection[index]);
-                _visibleLegendItems[index] = border;
-                _legendCanvas.Children.Add(border);
+            if (!_visibleLegendItems.TryGetValue(index, out FrameworkElement? element) || element == null) {
+                //element = CreateLegendItem(SeriesCollection[index]);
+                element = _legendItemPool.GetLegendItem(SeriesCollection[index].Title ?? string.Empty);
+                element.Style = LegendItemStyle;
+                _visibleLegendItems[index] = element;
+                _legendCanvas.Children.Add(element);
             }
             else {
-                UpdateLegendItem(border, SeriesCollection[index]);
+                //UpdateLegendItem(element, SeriesCollection[index]);
+                element.Style = LegendItemStyle;
             }
 
-            border.Width = width;
-            border.Height = itemHeight;
-            Canvas.SetTop(border, _viewport.SeriesAxis.UnitsToScreen(index));
+            element.Width = width;
+            element.Height = itemHeight;
+            Canvas.SetTop(element, _viewport.SeriesAxis.UnitsToScreen(index));
         }
     }
 
@@ -237,43 +244,52 @@ public sealed partial class McTimeline : Control {
             return;
         }
 
-        List<int> keysToRemove = new();
+        //List<int> keysToRemove = new();
         foreach (var key in _visibleLegendItems.Keys) {
             if (key < startIndex || key > endIndex) {
-                keysToRemove.Add(key);
+                //keysToRemove.Add(key);
+                if (_visibleLegendItems.TryGetValue(key, out var element)) {
+                    _legendCanvas.Children.Remove(element);
+                    _visibleLegendItems.Remove(key);
+                    _legendItemPool.RecycleLegendItem(element);
+                }
             }
         }
 
-        foreach (int key in keysToRemove) {
-            if (_visibleLegendItems.TryGetValue(key, out var element)) {
-                _legendCanvas.Children.Remove(element);
-                _visibleLegendItems.Remove(key);
-            }
-        }
+        // foreach (int key in keysToRemove) {
+        //     if (_visibleLegendItems.TryGetValue(key, out var element)) {
+        //         _legendCanvas.Children.Remove(element);
+        //         _visibleLegendItems.Remove(key);
+        //     }
+        // }
     }
 
     private void ClearLegendVisuals() {
         _legendCanvas?.Children.Clear();
+        foreach (var element in _visibleLegendItems.Values) {
+            _legendItemPool.RecycleLegendItem(element);
+        }
         _visibleLegendItems.Clear();
     }
 
-    private Border CreateLegendItem(McTimelineSeries series) {
-        var border = new Border {
-            Style = LegendItemStyle
-        };
-        border.Child = new TextBlock {
-            Text = series.Title,
-            VerticalAlignment = VerticalAlignment.Center,
-            HorizontalAlignment = HorizontalAlignment.Center
-        };
-        return border;
+    private FrameworkElement CreateLegendItem(McTimelineSeries series) {
+        // var border = new Border {
+        //     Style = LegendItemStyle
+        // };
+        // border.Child = new TextBlock {
+        //     Text = series.Title,
+        //     VerticalAlignment = VerticalAlignment.Center,
+        //     HorizontalAlignment = HorizontalAlignment.Center
+        // };
+        // return border;
+        return _legendItemPool.GetLegendItem(series.Title ?? string.Empty);
     }
 
-    private static void UpdateLegendItem(Border border, McTimelineSeries series) {
-        if (border.Child is TextBlock textBlock) {
-            textBlock.Text = series.Title;
-        }
-    }
+    // private static void UpdateLegendItem(Border border, McTimelineSeries series) {
+    //     if (border.Child is TextBlock textBlock) {
+    //         textBlock.Text = series.Title;
+    //     }
+    // }
 
     /// <summary>
     /// Invalidates the current timeline, signaling that it should be refreshed or repainted.
@@ -315,13 +331,15 @@ public sealed partial class McTimeline : Control {
             _viewport.TimeAxis.OffsetHours = hoursAtCursor - (pointerX / _viewport.TimeAxis.PixelsPerHour);
             UpdateHScrollBar();
             InvalidateTimeline();
-        } else if ((e.KeyModifiers & VirtualKeyModifiers.Shift) != 0) {
+        }
+        else if ((e.KeyModifiers & VirtualKeyModifiers.Shift) != 0) {
             // Scroll horizontal
             double scrollDelta = delta > 0 ? -50 : 50; // Adjust step
             _viewport.TimeAxis.ScrollByPixels(scrollDelta);
             UpdateHScrollBar();
             InvalidateTimeline();
-        } else {
+        }
+        else {
             // Scroll vertical
             double scrollDelta = delta > 0 ? -1 : 1; // Adjust step
             _viewport.SeriesAxis.OffsetUnits += scrollDelta;

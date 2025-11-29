@@ -1,64 +1,63 @@
+using McTimeline.Controls;
+
 namespace McTimeline.Pools;
 
 /// <summary>
-/// Manages a pool of reusable UI elements for legend items to improve performance.
-/// Each legend item consists of a UIElement (typically a Border containing a TextBlock).
+/// Manages a pool of reusable <see cref="McLegend"/> controls for legend items to improve performance.
 /// </summary>
-public sealed class McLegendItemPool : IDisposable, IMcLegendItemPool {
-    private readonly Queue<UIElement> _availableItems = new();
-    private readonly Style? _legendBorderStyle;
-    private readonly Style? _legendTextStyle;
+public sealed partial class McLegendItemPool : IDisposable, IMcLegendItemPool {
+    private readonly Queue<McLegend> _availableItems = new();
     private bool _disposed;
 
     /// <summary>
     /// Initializes a new instance of the McLegendItemPool class.
+    /// And pre-populates the pool with a set number of McLegend controls.
     /// </summary>
-    /// <param name="legendBorderStyle">The style to apply to the Border elements.</param>
-    /// <param name="legendTextStyle">The style to apply to the TextBlock elements.</param>
-    public McLegendItemPool(Style? legendBorderStyle, Style? legendTextStyle) {
-        _legendBorderStyle = legendBorderStyle;
-        _legendTextStyle = legendTextStyle;
+    /// <param name="legendStyle">The style to apply to the McLegend control.</param>
+    public McLegendItemPool(Style? legendStyle) {
+        LegendStyle = legendStyle;
+
+        for (int i = 0; i < 5; i++) {
+            _availableItems.Enqueue(CreateLegend());
+        }
     }
 
     /// <summary>
-    /// Gets a reusable UIElement for a legend item.
+    /// Gets or sets the style applied to each McLegend control.
+    /// </summary>
+    public Style? LegendStyle { get; set; }
+
+    /// <summary>
+    /// Gets a reusable FrameworkElement for a legend item.
     /// If no items are available in the pool, creates a new one.
     /// </summary>
     /// <param name="text">The text to display in the legend item.</param>
-    /// <returns>A UIElement configured for the legend item.</returns>
-    public UIElement GetLegendItem(string text) {
-        Border border;
-        if (_availableItems.Count > 0) {
-            border = (Border)_availableItems.Dequeue();
-            border.Style = _legendBorderStyle;
-            // Update the text
-            if (border.Child is TextBlock textBlock) {
-                textBlock.Text = text;
-                textBlock.Style = _legendTextStyle; // Ensure style is applied
-            }
-        }
-        else {
-            // Create new
-            border = new Border {
-                Style = _legendBorderStyle
-            };
-            var textBlock = new TextBlock {
-                Text = text,
-                VerticalAlignment = VerticalAlignment.Center,
-                Style = _legendTextStyle
-            };
-            border.Child = textBlock;
-        }
-        return border;
+    /// <returns>A McLegend control configured for the legend item.</returns>
+    public FrameworkElement GetLegendItem(string text) {
+        var legend = _availableItems.Count > 0 ? _availableItems.Dequeue() : CreateLegend();
+        legend.Style = LegendStyle;
+        legend.LegendText = text;
+        return legend;
     }
 
     /// <summary>
-    /// Returns a UIElement to the pool for reuse.
+    /// Returns a FrameworkElement to the pool for reuse.
     /// </summary>
-    /// <param name="element">The UIElement to recycle.</param>
-    public void RecycleLegendItem(UIElement element) {
-        // Clear any bindings or reset state if needed
-        _availableItems.Enqueue(element);
+    /// <param name="element">The FrameworkElement to recycle.</param>
+    public void RecycleLegendItem(FrameworkElement element) {
+        if (element is McLegend legend) {
+            legend.LegendText = string.Empty;
+            _availableItems.Enqueue(legend);
+        }
+    }
+
+    /// <summary>
+    /// Creates a new McLegend control with the current LegendStyle.
+    /// </summary>
+    private McLegend CreateLegend() {
+        return new McLegend {
+            Style = LegendStyle
+        };
     }
 
     /// <summary>
@@ -77,4 +76,5 @@ public sealed class McLegendItemPool : IDisposable, IMcLegendItemPool {
             _disposed = true;
         }
     }
+
 }

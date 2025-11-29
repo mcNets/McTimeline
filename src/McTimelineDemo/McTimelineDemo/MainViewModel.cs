@@ -21,6 +21,9 @@ public partial class MainViewModel : ObservableObject
     public partial double ScaleHeight { get; set; } = 50;
 
     [ObservableProperty]
+    public partial double SeriesHeight { get; set; } = 30;
+
+    [ObservableProperty]
     public partial bool IsLegendVisible { get; set; } = true;
 
     [RelayCommand]

@@ -4,17 +4,16 @@
       xmlns:local="using:McTimelineDemo"
       xmlns:utu="using:Uno.Toolkit.UI"
       xmlns:mctl="using:McTimeline"
+      xmlns:mctlc="using:McTimeline.Controls"
       Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
   <Page.Resources>
     <Style x:Key="MyLegendStyle"
-           TargetType="Border">
+           TargetType="mctlc:McLegend">
       <Setter Property="BorderBrush"
-              Value="{ThemeResource McTimelineGridLineBrush}" />
+              Value="Red" />
       <Setter Property="BorderThickness"
-              Value="0,0,1,0" />
-      <Setter Property="Background"
-              Value="DarkSlateGray" />
+              Value="0,0,0,1" />
     </Style>
   </Page.Resources>
 
@@ -43,7 +42,7 @@
           <Button Content="Change theme"
                   Click="ThemeButton_Click" />
 
-          <Button Content="New collection"
+          <Button Content="Add new series"
                   Command="{x:Bind ViewModel.AddNewSeriesCommand}" />
 
           <CheckBox IsChecked="{x:Bind ViewModel.IsLegendVisible, Mode=TwoWay}"
@@ -55,6 +54,13 @@
                      Maximum="300"
                      SmallChange="10"
                      Value="{x:Bind ViewModel.LegendWidth, Mode=TwoWay}" />
+
+          <NumberBox Header="Series height"
+                     SpinButtonPlacementMode="Inline"
+                     Minimum="30"
+                     Maximum="300"
+                     SmallChange="10"
+                     Value="{x:Bind ViewModel.SeriesHeight, Mode=TwoWay}" />
 
           <NumberBox Header="Scale height"
                      SpinButtonPlacementMode="Inline"
@@ -87,9 +93,11 @@
                      LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=OneWay}"
                      ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=OneWay}"
                      SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"
+                     SeriesHeight="{x:Bind ViewModel.SeriesHeight, Mode=OneWay}"
                      LegendCaption="Timeline Graph"
                      LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
                      IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=OneWay}"
+                     LegendItemStyle="{StaticResource MyLegendStyle}"
                      Margin="30" />
   </Grid>
 

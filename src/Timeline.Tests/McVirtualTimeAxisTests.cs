@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using McTimeline;
+using McTimeline.Viewport;
 
 namespace Timeline.Tests;
 

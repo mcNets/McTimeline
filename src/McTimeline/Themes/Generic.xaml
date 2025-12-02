@@ -210,4 +210,45 @@
 		
 	</Style>
 
+	<!-- McTimelineBar Template -->
+	<Style TargetType="controls:McTimelineBar">
+		<Setter Property="Background" Value="{ThemeResource McTimelineItemBackgroundBrush}" />
+		<Setter Property="BorderBrush" Value="{ThemeResource McTimelineBorderBrush}" />
+		<Setter Property="BorderThickness" Value="{ThemeResource McTimelineBorderThickness}" />
+		<Setter Property="Padding" Value="{ThemeResource McTimelineDefaultPadding}" />
+		<Setter Property="HorizontalContentAlignment" Value="Center" />
+		<Setter Property="VerticalContentAlignment" Value="Center" />
+		<Setter Property="Foreground" Value="{ThemeResource McTimelineForegroundBrush}" />
+
+		<Setter Property="Template">
+
+			<Setter.Value>
+
+				<ControlTemplate TargetType="controls:McTimelineBar">
+
+					<Border
+						Background="{TemplateBinding Background}"
+						BorderBrush="{TemplateBinding BorderBrush}"
+						BorderThickness="{TemplateBinding BorderThickness}"
+						CornerRadius="{TemplateBinding CornerRadius}"
+						Padding="{TemplateBinding Padding}"
+						ToolTipService.ToolTip="{TemplateBinding ItemToolTip}">
+
+						<TextBlock
+							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+							Text="{TemplateBinding ItemText}"
+							TextAlignment="Center"
+							VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+							Foreground="{TemplateBinding Foreground}" />
+
+					</Border>
+
+				</ControlTemplate>
+
+			</Setter.Value>
+
+		</Setter>
+		
+	</Style>
+
 </ResourceDictionary>

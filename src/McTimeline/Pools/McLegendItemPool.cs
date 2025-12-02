@@ -1,11 +1,11 @@
-using McTimeline.Controls;
-
 namespace McTimeline.Pools;
 
 /// <summary>
 /// Manages a pool of reusable <see cref="McLegend"/> controls for legend items to improve performance.
 /// </summary>
-public sealed partial class McLegendItemPool : IDisposable, IMcLegendItemPool {
+public sealed partial class McLegendItemPool : IMcLegendItemPool, IDisposable {
+    const int INITIAL_POOL_SIZE = 5;
+
     private readonly Queue<McLegend> _availableItems = new();
     private bool _disposed;
 
@@ -14,10 +14,10 @@ public sealed partial class McLegendItemPool : IDisposable, IMcLegendItemPool {
     /// And pre-populates the pool with a set number of McLegend controls.
     /// </summary>
     /// <param name="legendStyle">The style to apply to the McLegend control.</param>
-    public McLegendItemPool(Style? legendStyle) {
+    public McLegendItemPool(Style? legendStyle, int initialPoolSize = INITIAL_POOL_SIZE) {
         LegendStyle = legendStyle;
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < initialPoolSize; i++) {
             _availableItems.Enqueue(CreateLegend());
         }
     }

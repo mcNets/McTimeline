@@ -1,11 +1,3 @@
-using System.Collections.Specialized;
-using Microsoft.UI.Xaml.Controls.Primitives;
-using Microsoft.UI.Xaml.Input;
-using Windows.System;
-using McTimeline.Viewport;
-using McTimeline.Controls;
-using McTimeline.Pools;
-
 namespace McTimeline;
 
 public sealed partial class McTimeline : Control {

@@ -7,6 +7,7 @@
 	<Color x:Key="McTimelineForegroundColor">#FFFFFF</Color>
 	<Color x:Key="McTimelineGridLineColor">#3F3F3F</Color>
 	<Color x:Key="McTimelineLegendBackgroundColor">#2D2D2D</Color>
+	<Color x:Key="McTimelineItemBackgroundColor">#3B5998</Color>
 	<Color x:Key="McTimelineMinimapBackgroundColor">#252525</Color>
 	<Color x:Key="McTimelineHoverColor">#2D4F6E</Color>
 	<Color x:Key="McTimelineSelectionColor">#1E3A5F</Color>
@@ -24,6 +25,8 @@
 					 Color="{StaticResource McTimelineGridLineColor}"/>
 	<SolidColorBrush x:Key="McTimelineLegendBackgroundBrush"
 					 Color="{StaticResource McTimelineLegendBackgroundColor}"/>
+	<SolidColorBrush x:Key="McTimelineItemBackgroundBrush"
+					 Color="{StaticResource McTimelineItemBackgroundColor}"/>
 	<SolidColorBrush x:Key="McTimelineMinimapBackgroundBrush"
 					 Color="{StaticResource McTimelineMinimapBackgroundColor}"/>
 	<SolidColorBrush x:Key="McTimelineHoverBrush"

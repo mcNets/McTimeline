@@ -2,9 +2,6 @@ using System.Collections.Specialized;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
-using McTimeline.Viewport;
-using McTimeline.Controls;
-using McTimeline.Pools;
 
 namespace McTimeline;
 
@@ -118,14 +115,6 @@ public sealed partial class McTimeline : Control {
         UpdateVScrollBar();
         InvalidateTimeline();
     }
-
-    // private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
-    //     // Update vertical axis viewport pixels when legend canvas size changes
-    //     _viewport.SeriesAxis.ViewportPixels = e.NewSize.Height;
-    //     _viewport.RefreshVisibleSeriesRange();
-    //     UpdateVScrollBar();
-    //     InvalidateTimeline();
-    // }
 
     private void OnTimelineScrollViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) {
         // Update scroll offsets when user scrolls

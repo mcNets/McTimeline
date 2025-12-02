@@ -5,6 +5,9 @@ using Windows.System;
 
 namespace McTimeline;
 
+/// <summary>
+/// Represents a timeline control that displays time-based series data with interactive navigation.
+/// </summary>
 public sealed partial class McTimeline : Control {
 
     #region Private fields
@@ -31,12 +34,18 @@ public sealed partial class McTimeline : Control {
 
     #endregion
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="McTimeline"/> class.
+    /// </summary>
     public McTimeline() {
         this.DefaultStyleKey = typeof(McTimeline);
         _viewport = new McTimelineViewport();
         _legendItemPool = new McLegendItemPool(LegendStyle);
     }
 
+    /// <summary>
+    /// Called when the template is applied to the control.
+    /// </summary>
     protected override void OnApplyTemplate() {
         base.OnApplyTemplate();
 
@@ -107,6 +116,10 @@ public sealed partial class McTimeline : Control {
         UpdateLegendVisibility();
     }
 
+    /// <summary>
+    /// Handles the size changed event of the timeline canvas.
+    /// Updates the viewport dimensions and refreshes the display.
+    /// </summary>
     private void OnTimelineCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
         // Update viewport size when canvas size changes
         _viewport.OnSizeChanged(e.NewSize);
@@ -116,6 +129,10 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Handles the scroll view changed event.
+    /// Synchronizes the viewport with the current scroll position.
+    /// </summary>
     private void OnTimelineScrollViewChanged(object? sender, ScrollViewerViewChangedEventArgs e) {
         // Update scroll offsets when user scrolls
         if (_timelineScroll != null) {
@@ -124,22 +141,22 @@ public sealed partial class McTimeline : Control {
         }
     }
 
+    /// <summary>
+    /// Updates the visibility of the legend based on the <see cref="IsLegendVisible"/> property.
+    /// </summary>
     private void UpdateLegendVisibility() {
         bool isVisible = IsLegendVisible;
 
-        if (_legendBorder is not null) {
-            _legendBorder.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
-        }
+        _legendBorder?.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
 
-        if (_legendColumn is not null) {
-            _legendColumn.Width = isVisible ? _legendColumnWidth : new GridLength(0);
-        }
+        _legendColumn?.Width = isVisible ? _legendColumnWidth : new GridLength(0);
 
-        if (_timeScaleLegendColumn is not null) {
-            _timeScaleLegendColumn.Width = isVisible ? _timeScaleLegendColumnWidth : new GridLength(0);
-        }
+        _timeScaleLegendColumn?.Width = isVisible ? _timeScaleLegendColumnWidth : new GridLength(0);
     }
 
+    /// <summary>
+    /// Handles changes to the series collection when the collection is replaced.
+    /// </summary>
     private void OnSeriesCollectionChanged(McTimelineSeriesCollection oldValue, McTimelineSeriesCollection newValue) {
         if (oldValue != null) {
             oldValue.CollectionChanged -= OnSeriesCollectionChanged;
@@ -157,6 +174,9 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Handles changes to the series collection when items are added or removed.
+    /// </summary>
     private void OnSeriesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         if (e.OldItems != null) {
             foreach (McTimelineSeries series in e.OldItems) {
@@ -172,10 +192,16 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Handles changes to items within a series.
+    /// </summary>
     private void OnSeriesItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Synchronizes the series axis with the current series collection count.
+    /// </summary>
     private void SyncSeriesAxisWithCollection() {
         _viewport.SeriesAxis.ContentUnits = SeriesCollection?.Count ?? 0;
         _viewport.RefreshVisibleSeriesRange();
@@ -192,6 +218,9 @@ public sealed partial class McTimeline : Control {
         // TODO: Implement timeline drawing
     }
 
+    /// <summary>
+    /// Handles the horizontal scrollbar value changed event.
+    /// </summary>
     private void OnHScrollValueChanged(object? sender, RangeBaseValueChangedEventArgs e) {
         double horizontalOffsetPx = e.NewValue * _viewport.TimeAxis.PixelsPerHour;
         double verticalUnits = _vScroll?.Value ?? 0;
@@ -200,6 +229,9 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Handles the vertical scrollbar value changed event.
+    /// </summary>
     private void OnVScrollValueChanged(object? sender, RangeBaseValueChangedEventArgs e) {
         double verticalOffsetPx = e.NewValue * _viewport.SeriesAxis.SeriesHeight;
         double horizontalHours = _hScroll?.Value ?? 0;
@@ -208,6 +240,10 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Handles the mouse wheel event for zooming and scrolling.
+    /// Control+Wheel: Horizontal zoom, Shift+Wheel: Horizontal scroll, Wheel: Vertical scroll.
+    /// </summary>
     private void OnCanvasPointerWheelChanged(object? sender, PointerRoutedEventArgs e) {
         var delta = e.GetCurrentPoint(_timelineCanvas).Properties.MouseWheelDelta;
         if ((e.KeyModifiers & VirtualKeyModifiers.Control) != 0) {
@@ -240,6 +276,9 @@ public sealed partial class McTimeline : Control {
         e.Handled = true;
     }
 
+    /// <summary>
+    /// Updates the horizontal scrollbar properties based on the current viewport state.
+    /// </summary>
     private void UpdateHScrollBar() {
         if (_hScroll != null) {
             _hScroll.Minimum = 0;
@@ -251,6 +290,9 @@ public sealed partial class McTimeline : Control {
         }
     }
 
+    /// <summary>
+    /// Updates the vertical scrollbar properties based on the current viewport state.
+    /// </summary>
     private void UpdateVScrollBar() {
         if (_vScroll != null) {
             _vScroll.Minimum = 0;
@@ -262,6 +304,9 @@ public sealed partial class McTimeline : Control {
         }
     }
 
+    /// <summary>
+    /// Adjusts the series height to fit all series within the current viewport.
+    /// </summary>
     public void ZoomSeriesToFit() {
         _viewport.ZoomSeriesToFit();
         SeriesHeight = _viewport.SeriesAxis.SeriesHeight;

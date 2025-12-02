@@ -2,6 +2,7 @@ using System.Collections.Specialized;
 using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
+using Windows.Foundation;
 
 namespace McTimeline;
 
@@ -31,6 +32,7 @@ public sealed partial class McTimeline : Control {
     private readonly McTimelineViewport _viewport;
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = new();
     private readonly IMcLegendItemPool _legendItemPool;
+    private readonly IMcSeriesItemPool _seriesItemPool;
 
     #endregion
 
@@ -41,6 +43,7 @@ public sealed partial class McTimeline : Control {
         this.DefaultStyleKey = typeof(McTimeline);
         _viewport = new McTimelineViewport();
         _legendItemPool = new McLegendItemPool(LegendStyle);
+        _seriesItemPool = new McSeriesItemPool(TimelineItemStyle);
     }
 
     /// <summary>
@@ -76,6 +79,10 @@ public sealed partial class McTimeline : Control {
         if (_timelineCanvas != null) {
             _timelineCanvas.SizeChanged += OnTimelineCanvasSizeChanged;
             _timelineCanvas.PointerWheelChanged += OnCanvasPointerWheelChanged;
+        }
+
+        if (_legendCanvas != null) {
+            _legendCanvas.SizeChanged += OnLegendCanvasSizeChanged;
         }
 
         // if (_legendCanvas != null) {
@@ -126,7 +133,24 @@ public sealed partial class McTimeline : Control {
         _viewport.RefreshVisibleSeriesRange();
         UpdateHScrollBar();
         UpdateVScrollBar();
+        
+        // Update clipping to prevent overflow
+        if (_timelineCanvas != null) {
+            _timelineCanvas.Clip = new RectangleGeometry {
+                Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height)
+            };
+        }
+        
         InvalidateTimeline();
+    }
+
+    private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
+        // Update clipping for legend canvas
+        if (_legendCanvas != null) {
+            _legendCanvas.Clip = new RectangleGeometry {
+                Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height)
+            };
+        }
     }
 
     /// <summary>
@@ -215,7 +239,7 @@ public sealed partial class McTimeline : Control {
     /// implementation.</remarks>
     private void InvalidateTimeline() {
         DrawLegend();
-        // TODO: Implement timeline drawing
+        DrawTimeline();
     }
 
     /// <summary>

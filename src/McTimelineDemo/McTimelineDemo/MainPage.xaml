@@ -98,6 +98,8 @@
                      LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
                      IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=OneWay}"
                      LegendItemStyle="{StaticResource MyLegendStyle}"
+                     MinDate="{x:Bind ViewModel.DataInici, Mode=OneWay}"
+                     MaxDate="{x:Bind ViewModel.DataFinal, Mode=OneWay}"        
                      Margin="30" />
   </Grid>
 

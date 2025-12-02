@@ -26,6 +26,8 @@
 				Value="{StaticResource DefaultTimelineScrollStyle}" />
 		<Setter Property="TimelineCanvasStyle"
 				Value="{StaticResource DefaultTimelineCanvasStyle}" />
+		<Setter Property="TimelineItemStyle"
+				Value="{StaticResource DefaultTimelineItemStyle}" />
 		<Setter Property="LegendItemTemplate"
 				Value="{StaticResource DefaultLegendItemTemplate}" />
 		<Setter Property="BorderBrush"
@@ -121,27 +123,23 @@
 								Grid.Row="1"
 								Grid.Column="0"
 								BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-								BorderThickness="0,0,1,0">
+							    BorderThickness="0,0,1,0">
 
-							<Canvas x:Name="PART_LegendCanvas"
-									Style="{TemplateBinding LegendStyle}" />
-						</Border>
+						<Canvas x:Name="PART_LegendCanvas"
+								Style="{TemplateBinding LegendStyle}" />
+					</Border>
 
-						<!-- Timeline Canvas -->
-					    <Canvas x:Name="PART_TimelineCanvas"
-								Grid.Row="1"
-								Grid.Column="1"
-								Style="{TemplateBinding TimelineCanvasStyle}" />
+					<!-- Timeline Canvas -->
+				    <Canvas x:Name="PART_TimelineCanvas"
+							Grid.Row="1"
+							Grid.Column="1"
+							Style="{TemplateBinding TimelineCanvasStyle}" />
 
-						<!-- Vertical ScrollBar -->
-						<ScrollBar x:Name="PART_VScroll"
-								   Grid.Row="1"
-								   Grid.Column="2"
-								   Orientation="Vertical"
-								   Minimum="0"
-								   Maximum="0"
-								   VerticalAlignment="Stretch"
-								   IndicatorMode="MouseIndicator" />
+					<!-- Vertical ScrollBar -->
+					<ScrollBar x:Name="PART_VScroll"
+							   Grid.Row="1"
+							   Grid.Column="2"
+							   IndicatorMode="MouseIndicator" />
 
 						<!--Blank column below legend, share same style -->
 						<Border Grid.Row="2"
@@ -214,8 +212,8 @@
 	<Style TargetType="controls:McTimelineBar">
 		<Setter Property="Background" Value="{ThemeResource McTimelineItemBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{ThemeResource McTimelineBorderBrush}" />
-		<Setter Property="BorderThickness" Value="{ThemeResource McTimelineBorderThickness}" />
-		<Setter Property="Padding" Value="{ThemeResource McTimelineDefaultPadding}" />
+		<Setter Property="BorderThickness" Value="{StaticResource McTimelineBorderThickness}" />
+		<Setter Property="Padding" Value="{StaticResource McTimelineDefaultPadding}" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
 		<Setter Property="VerticalContentAlignment" Value="Center" />
 		<Setter Property="Foreground" Value="{ThemeResource McTimelineForegroundBrush}" />
@@ -232,7 +230,8 @@
 						BorderThickness="{TemplateBinding BorderThickness}"
 						CornerRadius="{TemplateBinding CornerRadius}"
 						Padding="{TemplateBinding Padding}"
-						ToolTipService.ToolTip="{TemplateBinding ItemToolTip}">
+						ToolTipService.ToolTip="{TemplateBinding ItemToolTip}"
+						Margin="0,5,0,5">
 
 						<TextBlock
 							HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"

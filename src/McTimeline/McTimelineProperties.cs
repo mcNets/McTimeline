@@ -280,6 +280,21 @@ public sealed partial class McTimeline {
             new PropertyMetadata(null));
 
     /// <summary>
+    /// Gets or sets the style for timeline item bars.
+    /// </summary>
+    public Style? TimelineItemStyle {
+        get => (Style?)GetValue(TimelineItemStyleProperty);
+        set => SetValue(TimelineItemStyleProperty, value);
+    }
+
+    public static readonly DependencyProperty TimelineItemStyleProperty =
+        DependencyProperty.Register(
+            nameof(TimelineItemStyle),
+            typeof(Style),
+            typeof(McTimeline),
+            new PropertyMetadata(null));
+
+    /// <summary>
     /// Gets or sets the custom DataTemplate for legend items.
     /// </summary>
     public DataTemplate? LegendItemTemplate {

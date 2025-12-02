@@ -27,6 +27,7 @@
 	<Thickness x:Key="McTimelineDefaultPadding">8</Thickness>
 	<Thickness x:Key="McTimelineItemPadding">4,2</Thickness>
 	<Thickness x:Key="McTimelineBorderThickness">1</Thickness>
+	<Thickness x:Key="McTimelineItemMargin">0,3,0,3</Thickness>
 
 	<CornerRadius x:Key="McTimelineCornerRadius">8</CornerRadius>
 

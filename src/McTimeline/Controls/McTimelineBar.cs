@@ -48,4 +48,14 @@ public sealed class McTimelineBar : Control {
             typeof(object),
             typeof(McTimelineBar),
             new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the series index this bar belongs to.
+    /// </summary>
+    public int SeriesIndex { get; set; } = -1;
+
+    /// <summary>
+    /// Gets or sets the item key this bar represents.
+    /// </summary>
+    public string ItemKey { get; set; } = string.Empty;
 }

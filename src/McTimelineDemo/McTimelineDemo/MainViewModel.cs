@@ -26,16 +26,17 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial bool IsLegendVisible { get; set; } = true;
 
+    [ObservableProperty]
+    public partial DateTime DataInici { get; set; } = DateTime.Now.AddMonths(-6);
+
+    [ObservableProperty]
+    public partial DateTime DataFinal { get; set; } = DateTime.Now;
+
     [RelayCommand]
     public async Task AddNewSeries()
     {
-        var dataInici = DateTime.Now.AddMonths(-6);
-        var dataFinal = DateTime.Now;
         var itemsCount = 500;
-
-        //var series = new McTimelineSeriesCollection();
-        Series.Add(new McTimelineSeries($"Serie {_numeradorSeries++}", [.. MockTimelineItemsSeries.Generate(itemsCount, dataInici, dataFinal)]));
-        //Series = series;
+        Series.Add(new McTimelineSeries($"Serie {_numeradorSeries++}", [.. MockTimelineItemsSeries.Generate(itemsCount, DataInici, DataFinal)]));
     }
    
 

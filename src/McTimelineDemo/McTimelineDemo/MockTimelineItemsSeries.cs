@@ -21,7 +21,7 @@ internal class MockTimelineItemsSeries
             var item = new McTimelineItem
             (
                 Guid.NewGuid().ToString(),
-                $"Item {items.Count() + 1}",
+                $"Item {items.Count + 1}",
                 $"Description for item {items.Count + 1}",
                 currentStartDate,
                 itemEndDate

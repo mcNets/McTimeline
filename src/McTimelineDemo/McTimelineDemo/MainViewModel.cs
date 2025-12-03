@@ -36,8 +36,7 @@ public partial class MainViewModel : ObservableObject
     public async Task AddNewSeries()
     {
         var itemsCount = 500;
-        Series.Add(new McTimelineSeries($"Serie {_numeradorSeries++}", [.. MockTimelineItemsSeries.Generate(itemsCount, DataInici, DataFinal)]));
+        Series.Add(new McTimelineSeries($"Serie {_numeradorSeries++}", 
+            [.. MockTimelineItemsSeries.Generate(itemsCount, DataInici, DataFinal)]));
     }
-   
-
 }

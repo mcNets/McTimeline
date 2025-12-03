@@ -175,7 +175,7 @@ public sealed partial class McTimeline : Control {
         var (x, y, width) = _viewport.GetItemPosition(item, seriesIndex);
 
         if (element is McTimelineBar bar) {
-            bar.ItemText = item.Title;
+            //bar.ItemText = item.Title;
             bar.ItemToolTip = CreateItemToolTip(item);
             bar.Style = TimelineItemStyle;
             

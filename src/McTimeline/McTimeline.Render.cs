@@ -1,3 +1,6 @@
+using McTimeline.Controls;
+using McTimeline.Pools;
+
 namespace McTimeline;
 
 public sealed partial class McTimeline : Control {
@@ -32,12 +35,17 @@ public sealed partial class McTimeline : Control {
 
         for (int index = startIndex; index <= endIndex; index++) {
             if (!_visibleLegendItems.TryGetValue(index, out FrameworkElement? element) || element == null) {
-                element = _legendItemPool.GetLegendItem(SeriesCollection[index].Title ?? string.Empty);
-                element.Style = LegendItemStyle;
+                var legend = _legendItemPool.GetElement();
+                legend.LegendText = SeriesCollection[index].Title ?? string.Empty;
+                legend.Style = LegendItemStyle;
+                element = legend;
                 _visibleLegendItems[index] = element;
                 _legendCanvas.Children.Add(element);
             }
             else {
+                if (element is McLegend legend) {
+                    legend.LegendText = SeriesCollection[index].Title ?? string.Empty;
+                }
                 element.Style = LegendItemStyle;
             }
 
@@ -67,7 +75,9 @@ public sealed partial class McTimeline : Control {
             if (_visibleLegendItems.TryGetValue(key, out var element)) {
                 _legendCanvas.Children.Remove(element);
                 _visibleLegendItems.Remove(key);
-                _legendItemPool.RecycleLegendItem(element);
+                if (element is McLegend legend) {
+                    _legendItemPool.RecycleElement(legend);
+                }
             }
         }
     }
@@ -75,7 +85,9 @@ public sealed partial class McTimeline : Control {
     private void ClearLegendVisuals() {
         _legendCanvas?.Children.Clear();
         foreach (var element in _visibleLegendItems.Values) {
-            _legendItemPool.RecycleLegendItem(element);
+            if (element is McLegend legend) {
+                _legendItemPool.RecycleElement(legend);
+            }
         }
         _visibleLegendItems.Clear();
     }
@@ -126,12 +138,10 @@ public sealed partial class McTimeline : Control {
                 // Find existing element or create new one
                 McTimelineBar? bar = FindTimelineBar(seriesIndex, item.IdKey);
                 if (bar == null) {
-                    bar = _seriesItemPool.GetSeriesItem(series.Title ?? string.Empty) as McTimelineBar;
-                    if (bar != null) {
-                        bar.SeriesIndex = seriesIndex;
-                        bar.ItemKey = item.IdKey;
-                        _timelineCanvas.Children.Add(bar);
-                    }
+                    bar = _seriesItemPool.GetElement();
+                    bar.SeriesIndex = seriesIndex;
+                    bar.ItemKey = item.IdKey;
+                    _timelineCanvas.Children.Add(bar);
                 }
 
                 if (bar != null) {
@@ -212,7 +222,7 @@ public sealed partial class McTimeline : Control {
         for (int i = _timelineCanvas.Children.Count - 1; i >= 0; i--) {
             if (_timelineCanvas.Children[i] is McTimelineBar bar && bar.Tag is bool visible && !visible) {
                 _timelineCanvas.Children.RemoveAt(i);
-                _seriesItemPool.RecycleSeriesItem(bar);
+                _seriesItemPool.RecycleElement(bar);
             }
         }
     }
@@ -227,7 +237,7 @@ public sealed partial class McTimeline : Control {
 
         for (int i = _timelineCanvas.Children.Count - 1; i >= 0; i--) {
             if (_timelineCanvas.Children[i] is McTimelineBar bar) {
-                _seriesItemPool.RecycleSeriesItem(bar);
+                _seriesItemPool.RecycleElement(bar);
             }
         }
         _timelineCanvas.Children.Clear();

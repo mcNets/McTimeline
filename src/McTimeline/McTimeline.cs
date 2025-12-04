@@ -3,6 +3,8 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
 using Windows.Foundation;
+using McTimeline.Controls;
+using McTimeline.Pools;
 
 namespace McTimeline;
 
@@ -31,8 +33,8 @@ public sealed partial class McTimeline : Control {
 
     private readonly McTimelineViewport _viewport;
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = new();
-    private readonly IMcLegendItemPool _legendItemPool;
-    private readonly IMcSeriesItemPool _seriesItemPool;
+    private readonly McElementPool<McLegend> _legendItemPool;
+    private readonly McElementPool<McTimelineBar> _seriesItemPool;
 
     #endregion
 
@@ -42,8 +44,8 @@ public sealed partial class McTimeline : Control {
     public McTimeline() {
         this.DefaultStyleKey = typeof(McTimeline);
         _viewport = new McTimelineViewport();
-        _legendItemPool = new McLegendItemPool(LegendStyle);
-        _seriesItemPool = new McSeriesItemPool(TimelineItemStyle);
+        _legendItemPool = new McElementPool<McLegend>(LegendStyle);
+        _seriesItemPool = new McElementPool<McTimelineBar>(TimelineItemStyle);
     }
 
     /// <summary>

@@ -1,6 +1,3 @@
-using McTimeline.Controls;
-using McTimeline.Pools;
-
 namespace McTimeline;
 
 public sealed partial class McTimeline : Control {
@@ -186,7 +183,7 @@ public sealed partial class McTimeline : Control {
 
         if (element is McTimelineBar bar) {
             //bar.ItemText = item.Title;
-            bar.ItemToolTip = CreateItemToolTip(item);
+            bar.ItemToolTip = McTimeline.CreateItemToolTip(item);
             bar.Style = TimelineItemStyle;
             
             // Calculate height considering margins from style
@@ -207,7 +204,7 @@ public sealed partial class McTimeline : Control {
     /// </summary>
     /// <param name="item">The timeline item.</param>
     /// <returns>The tooltip content as a string.</returns>
-    private string CreateItemToolTip(McTimelineItem item) {
+    private static string CreateItemToolTip(McTimelineItem item) {
         return $"{item.Title}\n{item.Description}\n{item.Start:g} - {item.End:g}";
     }
 

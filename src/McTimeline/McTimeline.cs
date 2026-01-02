@@ -3,8 +3,6 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
 using Windows.Foundation;
-using McTimeline.Controls;
-using McTimeline.Pools;
 
 namespace McTimeline;
 
@@ -172,11 +170,8 @@ public sealed partial class McTimeline : Control {
     /// </summary>
     private void UpdateLegendVisibility() {
         bool isVisible = IsLegendVisible;
-
         _legendBorder?.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
-
         _legendColumn?.Width = isVisible ? _legendColumnWidth : new GridLength(0);
-
         _timeScaleLegendColumn?.Width = isVisible ? _timeScaleLegendColumnWidth : new GridLength(0);
     }
 

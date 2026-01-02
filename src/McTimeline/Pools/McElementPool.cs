@@ -5,17 +5,25 @@ namespace McTimeline.Pools;
 /// and improve rendering performance.
 /// </summary>
 /// <typeparam name="T">The type of element to pool. Must be a FrameworkElement with a parameterless constructor.</typeparam>
-public class McElementPool<T> : IDisposable where T : FrameworkElement, new()
-{
-    private const int INITIAL_POOL_SIZE = 10;
-    
+public class McElementPool<T> : IDisposable where T : FrameworkElement, new() {
+    private const int INITIAL_POOL_SIZE = 50;
+
     private readonly Stack<T> _pool;
     private bool _disposed;
+    private Style? _itemStyle;
 
     /// <summary>
     /// Gets or sets the style to apply to pooled elements.
     /// </summary>
-    public Style? ItemStyle { get; set; }
+    public Style? ItemStyle {
+        get => _itemStyle;
+        set {
+            if (value != null && value.TargetType != null && !value.TargetType.IsAssignableFrom(typeof(T))) {
+                throw new ArgumentException($"Style TargetType '{value.TargetType.Name}' is not compatible with element type '{typeof(T).Name}'.");
+            }
+            _itemStyle = value;
+        }
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="McElementPool{T}"/> class.
@@ -25,10 +33,19 @@ public class McElementPool<T> : IDisposable where T : FrameworkElement, new()
     public McElementPool(Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE) {
         _pool = new Stack<T>(initialSize);
         ItemStyle = itemStyle;
-        
+
         for (int i = 0; i < initialSize; i++) {
             _pool.Push(CreateElement());
         }
+    }
+
+    /// <summary>
+    /// Creates a new element instance.
+    /// </summary>
+    private T CreateElement() {
+        T element = new();
+        element.Style ??= ItemStyle;
+        return element;
     }
 
     /// <summary>
@@ -36,7 +53,15 @@ public class McElementPool<T> : IDisposable where T : FrameworkElement, new()
     /// </summary>
     /// <returns>A reusable element instance.</returns>
     public T GetElement() {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+
         T element = _pool.Count > 0 ? _pool.Pop() : CreateElement();
+
+        // Ensure the element has the current style (in case ItemStyle changed)
+        if (ItemStyle != null && element.Style != ItemStyle) {
+            element.Style = ItemStyle;
+        }
+
         return element;
     }
 
@@ -46,11 +71,11 @@ public class McElementPool<T> : IDisposable where T : FrameworkElement, new()
     /// <param name="element">The element to recycle.</param>
     public void RecycleElement(T element) {
         if (element == null) return;
-        
+
         // Reset common properties
         element.Tag = null;
         element.DataContext = null;
-        
+
         _pool.Push(element);
     }
 
@@ -59,19 +84,6 @@ public class McElementPool<T> : IDisposable where T : FrameworkElement, new()
     /// </summary>
     public void Clear() {
         _pool.Clear();
-    }
-
-    /// <summary>
-    /// Creates a new element instance.
-    /// </summary>
-    private T CreateElement() {
-        T element = new();
-        
-        if (ItemStyle != null) {
-            element.Style = ItemStyle;
-        }
-        
-        return element;
     }
 
     /// <summary>

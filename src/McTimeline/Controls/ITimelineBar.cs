@@ -6,6 +6,11 @@ namespace McTimeline.Controls;
 /// </summary>
 public interface ITimelineBar {
     /// <summary>
+    /// Gets or sets the text displayed on the timeline bar.
+    /// </summary>
+    string ItemText { get; set; }
+
+    /// <summary>
     /// Gets or sets the series index this bar belongs to.
     /// Used for identifying which series row the bar should be rendered in.
     /// </summary>

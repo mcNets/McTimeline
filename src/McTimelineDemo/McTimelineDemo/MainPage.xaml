@@ -26,6 +26,7 @@
                         <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
+                <!-- Configuration panel -->
                 <Border x:Name="ConfigPanelContainer"
                         Grid.Column="0"
                         Background="{ThemeResource SolidBackgroundFillColorTertiaryBrush}"
@@ -60,7 +61,7 @@
                                                    Minimum="30"
                                                    Maximum="300"
                                                    SmallChange="10"
-                                                   Value="{x:Bind ViewModel.SeriesHeight, Mode=TwoWay}"/>
+                                                   Value="{Binding ElementName=TimelineControl, Path=SeriesHeight, Mode=TwoWay}"/>
 
                                         <NumberBox Header="Scale height"
                                                    SpinButtonPlacementMode="Inline"
@@ -78,6 +79,7 @@
 
                 </Border>
 
+                <!-- Config panel toggle button -->
                 <Button x:Name="ConfigToggleButton"
                         Grid.Column="1"
                         Width="32"
@@ -88,7 +90,7 @@
                         Content="⟪"
                         Click="ConfigToggleButton_Click"/>
 
-
+                <!-- Timeline control -->
                 <Grid Grid.Column="2">
                         <Grid.RowDefinitions>
                                 <RowDefinition Height="Auto"/>
@@ -99,23 +101,35 @@
                                     Grid.Row="0"
                                     Spacing="10"
                                     Margin="30,10">
-                                <TextBlock Text="Horizontal scroll: Mouse wheel"/>
-                                <TextBlock Text="Vertical scroll: Shift + Mouse wheel"/>
-                                <TextBlock Text="Horizontal zoom: Ctrl + Mouse wheel"/>
+                                <TextBlock>
+<Run Text="Horizontal scroll: "/>
+<Run Text="Mouse wheel"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                </TextBlock>
+                                <TextBlock>
+<Run Text="Vertical scroll: "/>
+<Run Text="Mouse wheel + Shift"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                </TextBlock>
+                                <TextBlock>
+<Run Text="Zoom in/out: "/>
+<Run Text="Ctrl + Mouse wheel"
+                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
+                                </TextBlock>
                         </StackPanel>
-                        
+
                         <mctl:McTimeline Grid.Row="1"
-                                        x:Name="TimelineControl"
-                                        LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=OneWay}"
-                                        ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=OneWay}"
-                                        SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"
-                                        SeriesHeight="{x:Bind ViewModel.SeriesHeight, Mode=OneWay}"
-                                        LegendCaption="Timeline Graph"
-                                        LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
-                                        IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=OneWay}"
-                                        MinDate="{x:Bind ViewModel.DataInici, Mode=OneWay}"
-                                        MaxDate="{x:Bind ViewModel.DataFinal, Mode=OneWay}"
-                                        Margin="30"/>
+                                         x:Name="TimelineControl"
+                                         LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=OneWay}"
+                                         ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=OneWay}"
+                                         SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"
+                                         SeriesHeight="{x:Bind ViewModel.SeriesHeight, Mode=OneWay}"
+                                         LegendCaption="Timeline Graph"
+                                         LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
+                                         IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=OneWay}"
+                                         MinDate="{x:Bind ViewModel.DataInici, Mode=OneWay}"
+                                         MaxDate="{x:Bind ViewModel.DataFinal, Mode=OneWay}"
+                                         Margin="30"/>
                 </Grid>
         </Grid>
 

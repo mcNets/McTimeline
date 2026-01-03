@@ -1,6 +1,4 @@
-; This file is for unifying the coding style for different editors and IDEs.
-; More information at http://editorconfig.org
-
+# EditorConfig is awesome: https://EditorConfig.org
 # This file is the top-most EditorConfig file
 root = true
 
@@ -45,21 +43,21 @@ indent_size = 2
 charset = utf-8-bom
 
 [*.xml]
-indent_size = 2
+indent_size = 4
 end_of_line = lf
 
 [*.plist]
-indent_size = 2
+indent_size = 4
 indent_style = tab
 end_of_line = lf
 
 [*.manifest]
-indent_size = 2
+indent_size = 4
 
 [*.appxmanifest]
-indent_size = 2
+indent_size = 4
 
-[*.{json,css,webmanifest}]
+[*.{css,webmanifest}]
 indent_size = 2
 end_of_line = lf
 
@@ -71,6 +69,11 @@ end_of_line = lf
 indent_size = 2
 end_of_line = lf
 
+[*.sql]
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+
 [*.cs]
 # EOL should be normalized by Git. See https://github.com/dotnet/format/issues/1099
 end_of_line = unset
@@ -80,6 +83,8 @@ trim_trailing_whitespace = false
 
 tab_width = 4
 indent_size = 4
+insert_final_newline = true
+charset = utf-8
 
 # Sort using and Import directives with System.* appearing first
 dotnet_sort_system_directives_first = true
@@ -132,10 +137,7 @@ dotnet_naming_style.pascal_case.required_suffix =
 dotnet_naming_style.pascal_case.word_separator =
 dotnet_naming_style.pascal_case.capitalization = pascal_case
 
-dotnet_naming_style.pascal_case.required_prefix =
-dotnet_naming_style.pascal_case.required_suffix =
-dotnet_naming_style.pascal_case.word_separator =
-dotnet_naming_style.pascal_case.capitalization = pascal_case
+# Code style preferences
 dotnet_style_operator_placement_when_wrapping = beginning_of_line
 dotnet_style_coalesce_expression = true:suggestion
 dotnet_style_null_propagation = true:suggestion
@@ -149,6 +151,8 @@ dotnet_style_prefer_conditional_expression_over_return = true:silent
 dotnet_style_explicit_tuple_names = true:suggestion
 dotnet_style_prefer_inferred_tuple_names = true:suggestion
 
+# C# code style: keep open brackets on the same line
+csharp_new_line_before_open_brace = none
 csharp_indent_labels = one_less_than_current
 csharp_using_directive_placement = outside_namespace:silent
 csharp_prefer_simple_using_statement = true:suggestion

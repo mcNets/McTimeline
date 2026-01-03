@@ -32,7 +32,7 @@ public sealed partial class McTimeline : Control {
     private readonly McTimelineViewport _viewport;
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = new();
     private readonly McElementPool<McLegend> _legendItemPool;
-    private readonly McElementPool<McTimelineBar> _seriesItemPool;
+    private McElementPool<FrameworkElement> _seriesItemPool;
 
     #endregion
 
@@ -43,7 +43,7 @@ public sealed partial class McTimeline : Control {
         this.DefaultStyleKey = typeof(McTimeline);
         _viewport = new McTimelineViewport();
         _legendItemPool = new McElementPool<McLegend>(LegendStyle);
-        _seriesItemPool = new McElementPool<McTimelineBar>(TimelineItemStyle);
+        _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
     }
 
     /// <summary>
@@ -281,16 +281,16 @@ public sealed partial class McTimeline : Control {
         }
         else if ((e.KeyModifiers & VirtualKeyModifiers.Shift) != 0) {
             // Scroll horizontal
-            double scrollDelta = delta > 0 ? -50 : 50; // Adjust step
-            _viewport.TimeAxis.ScrollByPixels(scrollDelta);
-            UpdateHScrollBar();
+            double scrollDelta = delta > 0 ? -1 : 1; // Adjust step
+            _viewport.SeriesAxis.OffsetUnits += scrollDelta;
+            UpdateVScrollBar();
             InvalidateTimeline();
         }
         else {
             // Scroll vertical
-            double scrollDelta = delta > 0 ? -1 : 1; // Adjust step
-            _viewport.SeriesAxis.OffsetUnits += scrollDelta;
-            UpdateVScrollBar();
+            double scrollDelta = delta > 0 ? -50 : 50; // Adjust step
+            _viewport.TimeAxis.ScrollByPixels(scrollDelta);
+            UpdateHScrollBar();
             InvalidateTimeline();
         }
 

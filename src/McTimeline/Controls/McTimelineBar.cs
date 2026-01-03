@@ -1,13 +1,10 @@
-using Microsoft.UI.Xaml;
-using Microsoft.UI.Xaml.Controls;
-
 namespace McTimeline.Controls;
 
 /// <summary>
 /// Represents a visual bar element that can be displayed on the timeline.
 /// This control is used to render individual timeline items with text and tooltip support.
 /// </summary>
-public sealed class McTimelineBar : Control {
+public sealed class McTimelineBar : Control, ITimelineBar {
     public McTimelineBar() {
         this.DefaultStyleKey = typeof(McTimelineBar);
     }

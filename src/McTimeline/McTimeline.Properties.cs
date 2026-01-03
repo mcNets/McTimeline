@@ -151,6 +151,66 @@ public sealed partial class McTimeline {
 
     #endregion
 
+    #region Customization Properties
+
+    /// <summary>
+    /// Gets or sets the type of control to use for timeline bars.
+    /// The type must implement <see cref="Controls.ITimelineBar"/> and derive from <see cref="FrameworkElement"/>.
+    /// </summary>
+    public Type TimelineBarType {
+        get => (Type)GetValue(TimelineBarTypeProperty);
+        set => SetValue(TimelineBarTypeProperty, value);
+    }
+
+    public static readonly DependencyProperty TimelineBarTypeProperty =
+        DependencyProperty.Register(
+            nameof(TimelineBarType),
+            typeof(Type),
+            typeof(McTimeline),
+            new PropertyMetadata(typeof(Controls.McTimelineBar), OnTimelineBarTypeChanged));
+
+    private static void OnTimelineBarTypeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is McTimeline timeline) {
+            timeline.ValidateAndUpdateBarType((Type)e.NewValue);
+        }
+    }
+
+    /// <summary>
+    /// Validates the timeline bar type and recreates the element pool.
+    /// </summary>
+    /// <param name="type">The type to validate.</param>
+    /// <exception cref="ArgumentException">Thrown if the type doesn't implement ITimelineBar or derive from FrameworkElement.</exception>
+    private void ValidateAndUpdateBarType(Type type) {
+        if (type == null) {
+            throw new ArgumentNullException(nameof(type));
+        }
+
+        if (!typeof(Controls.ITimelineBar).IsAssignableFrom(type)) {
+            throw new ArgumentException($"TimelineBarType must implement {nameof(Controls.ITimelineBar)}.", nameof(type));
+        }
+
+        if (!typeof(FrameworkElement).IsAssignableFrom(type)) {
+            throw new ArgumentException($"TimelineBarType must derive from {nameof(FrameworkElement)}.", nameof(type));
+        }
+
+        // Recreate the pool with the new type
+        _seriesItemPool?.Dispose();
+        _seriesItemPool = new Pools.McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
+        
+        ClearTimelineVisuals();
+        InvalidateTimeline();
+    }
+
+    /// <summary>
+    /// Creates a new instance of the timeline bar control.
+    /// </summary>
+    /// <returns>A new timeline bar instance.</returns>
+    private FrameworkElement CreateTimelineBarInstance() {
+        return (FrameworkElement)Activator.CreateInstance(TimelineBarType)!;
+    }
+
+    #endregion
+
     #region Layout Dependency Properties
 
     /// <summary>

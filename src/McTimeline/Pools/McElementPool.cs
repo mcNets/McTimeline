@@ -4,11 +4,12 @@ namespace McTimeline.Pools;
 /// Provides a generic object pool for reusable UI elements to minimize allocations
 /// and improve rendering performance.
 /// </summary>
-/// <typeparam name="T">The type of element to pool. Must be a FrameworkElement with a parameterless constructor.</typeparam>
-public class McElementPool<T> : IDisposable where T : FrameworkElement, new() {
+/// <typeparam name="T">The type of element to pool. Must be a FrameworkElement.</typeparam>
+public class McElementPool<T> : IDisposable where T : FrameworkElement {
     private const int INITIAL_POOL_SIZE = 50;
 
     private readonly Stack<T> _pool;
+    private readonly Func<T> _factory;
     private bool _disposed;
     private Style? _itemStyle;
 
@@ -26,11 +27,13 @@ public class McElementPool<T> : IDisposable where T : FrameworkElement, new() {
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="McElementPool{T}"/> class.
+    /// Initializes a new instance of the <see cref="McElementPool{T}"/> class with a factory function.
     /// </summary>
+    /// <param name="factory">A function that creates new instances of T.</param>
     /// <param name="itemStyle">The style to apply to created elements.</param>
     /// <param name="initialSize">The initial number of elements to pre-create in the pool.</param>
-    public McElementPool(Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE) {
+    public McElementPool(Func<T> factory, Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE) {
+        _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         _pool = new Stack<T>(initialSize);
         ItemStyle = itemStyle;
 
@@ -40,10 +43,20 @@ public class McElementPool<T> : IDisposable where T : FrameworkElement, new() {
     }
 
     /// <summary>
+    /// Initializes a new instance of the <see cref="McElementPool{T}"/> class.
+    /// Only works if T has a parameterless constructor.
+    /// </summary>
+    /// <param name="itemStyle">The style to apply to created elements.</param>
+    /// <param name="initialSize">The initial number of elements to pre-create in the pool.</param>
+    public McElementPool(Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE) 
+        : this(() => Activator.CreateInstance<T>(), itemStyle, initialSize) {
+    }
+
+    /// <summary>
     /// Creates a new element instance.
     /// </summary>
     private T CreateElement() {
-        T element = new();
+        T element = _factory();
         element.Style ??= ItemStyle;
         return element;
     }

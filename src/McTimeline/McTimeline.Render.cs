@@ -52,6 +52,11 @@ public sealed partial class McTimeline : Control {
         }
     }
 
+    /// <summary>
+    /// Removes legend items that fall outside the specified visible range.
+    /// </summary>
+    /// <param name="startIndex">The start index of the visible range.</param>
+    /// <param name="endIndex">The end index of the visible range.</param>
     private void RemoveLegendItemsOutsideRange(int startIndex, int endIndex) {
         if (_legendCanvas == null) {
             return;
@@ -79,6 +84,9 @@ public sealed partial class McTimeline : Control {
         }
     }
 
+    /// <summary>
+    /// Clears all legend visuals from the canvas and recycles them to the pool.
+    /// </summary>
     private void ClearLegendVisuals() {
         _legendCanvas?.Children.Clear();
         foreach (var element in _visibleLegendItems.Values) {
@@ -108,10 +116,14 @@ public sealed partial class McTimeline : Control {
 
         var (visibleStart, visibleEnd) = _viewport.VisibleTimeRange;
 
-        // Mark all existing items as potentially removable
+        // Mark all existing items as potentially removable.
+        // This implements a "Mark and Sweep" strategy for virtualization:
+        // 1. Mark all current visual elements as candidates for removal (Tag = false).
+        // 2. Iterate through the visible data range; if an element is reused, mark it as kept (Tag = true).
+        // 3. Any element remaining with Tag = false is removed in RemoveInvisibleTimelineItems().
         for (int i = _timelineCanvas.Children.Count - 1; i >= 0; i--) {
-            if (_timelineCanvas.Children[i] is McTimelineBar bar) {
-                bar.Tag = false; // Mark as not visible
+            if (_timelineCanvas.Children[i] is FrameworkElement element) {
+               element.Tag = false;
             }
         }
 
@@ -133,17 +145,20 @@ public sealed partial class McTimeline : Control {
                 }
 
                 // Find existing element or create new one
-                McTimelineBar? bar = FindTimelineBar(seriesIndex, item.IdKey);
+                Controls.ITimelineBar? bar = FindTimelineBar(seriesIndex, item.IdKey);
                 if (bar == null) {
-                    bar = _seriesItemPool.GetElement();
-                    bar.SeriesIndex = seriesIndex;
-                    bar.ItemKey = item.IdKey;
-                    _timelineCanvas.Children.Add(bar);
+                    var element = _seriesItemPool.GetElement();
+                    bar = element as Controls.ITimelineBar;
+                    if (bar != null) {
+                        bar.SeriesIndex = seriesIndex;
+                        bar.ItemKey = item.IdKey;
+                        _timelineCanvas.Children.Add(element);
+                    }
                 }
 
-                if (bar != null) {
-                    bar.Tag = true; // Mark as visible
-                    UpdateTimelineItemVisual(bar, item, seriesIndex);
+                if (bar != null && bar is FrameworkElement barElement) {
+                    barElement.Tag = true; // Mark as visible
+                    UpdateTimelineItemVisual(barElement, bar, item, seriesIndex);
                 }
             }
         }
@@ -155,11 +170,14 @@ public sealed partial class McTimeline : Control {
     /// <summary>
     /// Finds an existing timeline bar for a specific series and item.
     /// </summary>
-    private McTimelineBar? FindTimelineBar(int seriesIndex, string itemKey) {
+    /// <param name="seriesIndex">The series index to search for.</param>
+    /// <param name="itemKey">The item key to search for.</param>
+    /// <returns>The found timeline bar, or null if not found.</returns>
+    private Controls.ITimelineBar? FindTimelineBar(int seriesIndex, string itemKey) {
         if (_timelineCanvas == null) return null;
 
         for (int i = 0; i < _timelineCanvas.Children.Count; i++) {
-            if (_timelineCanvas.Children[i] is McTimelineBar bar &&
+            if (_timelineCanvas.Children[i] is Controls.ITimelineBar bar &&
                 bar.SeriesIndex == seriesIndex &&
                 bar.ItemKey == itemKey) {
                 return bar;
@@ -172,29 +190,30 @@ public sealed partial class McTimeline : Control {
     /// Updates the visual properties of a timeline item element.
     /// </summary>
     /// <param name="element">The framework element to update.</param>
+    /// <param name="bar">The timeline bar interface.</param>
     /// <param name="item">The timeline item data.</param>
     /// <param name="seriesIndex">The index of the series containing the item.</param>
-    private void UpdateTimelineItemVisual(FrameworkElement element, McTimelineItem item, int seriesIndex) {
+    private void UpdateTimelineItemVisual(FrameworkElement element, Controls.ITimelineBar bar, McTimelineItem item, int seriesIndex) {
         if (_timelineCanvas == null) {
             return;
         }
 
         var (x, y, width) = _viewport.GetItemPosition(item, seriesIndex);
 
-        if (element is McTimelineBar bar) {
-            //bar.ItemText = item.Title;
-            bar.ItemToolTip = McTimeline.CreateItemToolTip(item);
-            bar.Style = TimelineItemStyle;
-            
-            // Calculate height considering margins from style
-            double totalHeight = _viewport.SeriesHeight;
-            if (bar.Margin.Top > 0 || bar.Margin.Bottom > 0) {
-                totalHeight = Math.Max(0, _viewport.SeriesHeight);
-            }
-            bar.Height = totalHeight;
+        // Set common ITimelineBar properties
+        bar.ItemToolTip = McTimeline.CreateItemToolTip(item);
+        
+        // Apply style
+        element.Style = TimelineItemStyle;
+        
+        // Calculate height considering margins from style
+        double totalHeight = _viewport.SeriesHeight;
+        if (element.Margin.Top > 0 || element.Margin.Bottom > 0) {
+            totalHeight = Math.Max(0, _viewport.SeriesHeight);
         }
-
+        element.Height = totalHeight;
         element.Width = Math.Max(0, width);
+        
         Canvas.SetLeft(element, x);
         Canvas.SetTop(element, y);
     }
@@ -217,9 +236,10 @@ public sealed partial class McTimeline : Control {
         }
 
         for (int i = _timelineCanvas.Children.Count - 1; i >= 0; i--) {
-            if (_timelineCanvas.Children[i] is McTimelineBar bar && bar.Tag is bool visible && !visible) {
+            if (_timelineCanvas.Children[i] is FrameworkElement element && 
+                element.Tag is bool visible && !visible) {
                 _timelineCanvas.Children.RemoveAt(i);
-                _seriesItemPool.RecycleElement(bar);
+                _seriesItemPool.RecycleElement(element);
             }
         }
     }
@@ -233,8 +253,8 @@ public sealed partial class McTimeline : Control {
         }
 
         for (int i = _timelineCanvas.Children.Count - 1; i >= 0; i--) {
-            if (_timelineCanvas.Children[i] is McTimelineBar bar) {
-                _seriesItemPool.RecycleElement(bar);
+            if (_timelineCanvas.Children[i] is FrameworkElement element) {
+                _seriesItemPool.RecycleElement(element);
             }
         }
         _timelineCanvas.Children.Clear();

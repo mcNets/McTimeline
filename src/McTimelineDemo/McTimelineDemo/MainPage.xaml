@@ -129,6 +129,8 @@
                                          IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=OneWay}"
                                          MinDate="{x:Bind ViewModel.DataInici, Mode=OneWay}"
                                          MaxDate="{x:Bind ViewModel.DataFinal, Mode=OneWay}"
+                                         VerticalAlignment="Top"
+                                         Height="300"
                                          Margin="30"/>
                 </Grid>
         </Grid>

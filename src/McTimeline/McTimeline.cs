@@ -70,37 +70,26 @@ public sealed partial class McTimeline : Control {
             _legendColumnWidth = _legendColumn.Width;
         }
 
+        // Adjust time scale legend column widths
         if (_timeScaleGrid?.ColumnDefinitions.Count > 0) {
             _timeScaleLegendColumn = _timeScaleGrid.ColumnDefinitions[0];
             _timeScaleLegendColumnWidth = _timeScaleLegendColumn.Width;
         }
 
         // Subscribe to canvas size changes
-        if (_timelineCanvas != null) {
-            _timelineCanvas.SizeChanged += OnTimelineCanvasSizeChanged;
-            _timelineCanvas.PointerWheelChanged += OnCanvasPointerWheelChanged;
-        }
+        _timelineCanvas?.SizeChanged += OnTimelineCanvasSizeChanged;
+        _timelineCanvas?.PointerWheelChanged += OnCanvasPointerWheelChanged;
 
-        if (_legendCanvas != null) {
-            _legendCanvas.SizeChanged += OnLegendCanvasSizeChanged;
-        }
+        _legendCanvas?.SizeChanged += OnLegendCanvasSizeChanged;
 
         // if (_legendCanvas != null) {
         //     _legendCanvas.SizeChanged += OnLegendCanvasSizeChanged;
         // }
 
         // Subscribe to scroll changes
-        if (_timelineScroll != null) {
-            _timelineScroll.ViewChanged += OnTimelineScrollViewChanged;
-        }
-
-        if (_hScroll != null) {
-            _hScroll.ValueChanged += OnHScrollValueChanged;
-        }
-
-        if (_vScroll != null) {
-            _vScroll.ValueChanged += OnVScrollValueChanged;
-        }
+        _timelineScroll?.ViewChanged += OnTimelineScrollViewChanged;
+        _hScroll?.ValueChanged += OnHScrollValueChanged;
+        _vScroll?.ValueChanged += OnVScrollValueChanged;
 
         // Initialize time axis
         _viewport.TimeAxis.SetRange(MinDate, MaxDate);
@@ -135,22 +124,21 @@ public sealed partial class McTimeline : Control {
         UpdateVScrollBar();
         
         // Update clipping to prevent overflow
-        if (_timelineCanvas != null) {
-            _timelineCanvas.Clip = new RectangleGeometry {
+        _timelineCanvas?.Clip = new RectangleGeometry {
                 Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height)
             };
-        }
         
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Handles the size changed event of the legend canvas.
+    /// Updates the clipping region to match the new size.
+    /// </summary>
     private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
-        // Update clipping for legend canvas
-        if (_legendCanvas != null) {
-            _legendCanvas.Clip = new RectangleGeometry {
+        _legendCanvas?.Clip = new RectangleGeometry {
                 Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height)
             };
-        }
     }
 
     /// <summary>

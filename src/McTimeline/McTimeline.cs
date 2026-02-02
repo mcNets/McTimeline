@@ -94,16 +94,13 @@ public sealed partial class McTimeline : Control {
         // Initialize time axis
         _viewport.TimeAxis.SetRange(MinDate, MaxDate);
         _viewport.TimeAxis.PixelsPerHour = PixelsPerHour;
-        if (_timelineCanvas != null) {
-            _viewport.TimeAxis.ViewportPixels = _timelineCanvas.ActualWidth;
-        }
+        _viewport.TimeAxis.ViewportPixels = _timelineCanvas?.ActualWidth ?? 0;
 
         // Initialize series axis
         _viewport.SeriesHeight = SeriesHeight;
         _viewport.SeriesAxis.ContentUnits = SeriesCollection?.Count ?? 0;
-        if (_legendCanvas != null) {
-            _viewport.SeriesAxis.ViewportPixels = _legendCanvas.ActualHeight;
-        }
+        _viewport.SeriesAxis.ViewportPixels = _legendCanvas?.ActualHeight ?? 0;
+
         _viewport.RefreshVisibleSeriesRange();
 
         UpdateHScrollBar();

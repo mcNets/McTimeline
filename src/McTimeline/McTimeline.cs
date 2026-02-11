@@ -3,6 +3,7 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
 using Windows.Foundation;
+using Microsoft.UI.Xaml.Shapes;
 
 namespace McTimeline;
 
@@ -35,6 +36,9 @@ public sealed partial class McTimeline : Control {
     private McElementPool<FrameworkElement> _seriesItemPool;
     private readonly McElementPool<TextBlock> _dayTextBlockPool;
     private readonly List<TextBlock> _visibleDayLabels = new();
+    private readonly McElementPool<TextBlock> _hourTextBlockPool;
+    private readonly McElementPool<Rectangle> _hourTickPool;
+    private readonly List<FrameworkElement> _visibleHourElements = new();
 
     #endregion
 
@@ -47,6 +51,8 @@ public sealed partial class McTimeline : Control {
         _legendItemPool = new McElementPool<McLegend>(LegendStyle);
         _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
         _dayTextBlockPool = new McElementPool<TextBlock>(TimeScaleStyle);
+        _hourTextBlockPool = new McElementPool<TextBlock>(TimeScaleStyle);
+        _hourTickPool = new McElementPool<Rectangle>(() => new Rectangle());
     }
 
     /// <summary>
@@ -220,6 +226,7 @@ public sealed partial class McTimeline : Control {
     /// implementation.</remarks>
     private void InvalidateTimeline() {
         DrawDays();
+        DrawHours();
         DrawLegend();
         DrawTimeline();
     }

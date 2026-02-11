@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.UI.Xaml.Shapes;
 using Windows.Foundation;
 
 namespace McTimeline;
@@ -71,6 +72,93 @@ public sealed partial class McTimeline : Control {
 
             // Move to next day
             currentDay = currentDay.AddDays(1);
+        }
+    }
+
+    /// <summary>
+    /// Draws the hour labels and tick marks in the PART_TimeScaleHours canvas.
+    /// Always renders tick marks for each hour. Only renders hour labels when there is enough space.
+    /// </summary>
+    private void DrawHours() {
+        if (_timeScaleHours == null) {
+            return;
+        }
+
+        // Clear existing hour elements
+        _timeScaleHours.Children.Clear();
+        foreach (var element in _visibleHourElements) {
+            if (element is TextBlock textBlock) {
+                _hourTextBlockPool.RecycleElement(textBlock);
+            }
+            else if (element is Rectangle rectangle) {
+                _hourTickPool.RecycleElement(rectangle);
+            }
+        }
+        _visibleHourElements.Clear();
+
+        // Calculate the width of the canvas
+        double canvasWidth = _timeScaleHours.ActualWidth;
+        double canvasHeight = _timeScaleHours.ActualHeight;
+
+        // Apply clipping to prevent overflow
+        _timeScaleHours.Clip = new RectangleGeometry {
+            Rect = new Rect(0, 0, canvasWidth, canvasHeight)
+        };
+
+        // Get visible hours range from viewport
+        var (leftHours, rightHours) = _viewport.TimeAxis.VisibleHoursRange;
+
+        // Start from the beginning of the first visible hour
+        int startHour = (int)Math.Floor(leftHours);
+        int endHour = (int)Math.Ceiling(rightHours);
+
+        // Calculate minimum space needed to show hour labels (in pixels)
+        const double minPixelsForLabel = 40;
+        double pixelsPerHour = _viewport.TimeAxis.PixelsPerHour;
+        bool showLabels = pixelsPerHour >= minPixelsForLabel;
+
+        // Tick dimensions
+        const double tickWidth = 1;
+        double tickHeight = canvasHeight * 0.3; // 30% of canvas height
+
+        // Render each hour within the visible range
+        for (int hour = startHour; hour <= endHour; hour++) {
+            // Calculate position for this hour
+            double x = _viewport.TimeAxis.HoursToScreen(hour);
+
+            // Only render if within canvas bounds (with buffer)
+            if (x >= -50 && x <= canvasWidth + 50) {
+                // Always draw tick mark
+                Rectangle tick = _hourTickPool.GetElement();
+                tick.Width = tickWidth;
+                tick.Height = tickHeight;
+                tick.Fill = Foreground;
+                
+                Canvas.SetLeft(tick, x);
+                Canvas.SetTop(tick, canvasHeight - tickHeight);
+                
+                _timeScaleHours.Children.Add(tick);
+                _visibleHourElements.Add(tick);
+
+                // Draw hour label only if there's enough space
+                if (showLabels) {
+                    DateTime hourTime = _viewport.TimeAxis.HoursToDate(hour);
+                    
+                    TextBlock hourLabel = _hourTextBlockPool.GetElement();
+                    hourLabel.Text = hourTime.ToString("HH", CultureInfo.CurrentCulture);
+                    hourLabel.Style = TimeScaleStyle;
+                    hourLabel.TextAlignment = TextAlignment.Center;
+                    hourLabel.VerticalAlignment = VerticalAlignment.Top;
+                    hourLabel.FontSize = 8;
+                    
+                    // Position label above the tick
+                    Canvas.SetLeft(hourLabel, x - 20); // Center the label (approximate)
+                    Canvas.SetTop(hourLabel, 2);
+                    
+                    _timeScaleHours.Children.Add(hourLabel);
+                    _visibleHourElements.Add(hourLabel);
+                }
+            }
         }
     }
 

@@ -33,6 +33,8 @@ public sealed partial class McTimeline : Control {
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = new();
     private readonly McElementPool<McLegend> _legendItemPool;
     private McElementPool<FrameworkElement> _seriesItemPool;
+    private readonly McElementPool<TextBlock> _dayTextBlockPool;
+    private readonly List<TextBlock> _visibleDayLabels = new();
 
     #endregion
 
@@ -44,6 +46,7 @@ public sealed partial class McTimeline : Control {
         _viewport = new McTimelineViewport();
         _legendItemPool = new McElementPool<McLegend>(LegendStyle);
         _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
+        _dayTextBlockPool = new McElementPool<TextBlock>(TimeScaleStyle);
     }
 
     /// <summary>
@@ -64,13 +67,13 @@ public sealed partial class McTimeline : Control {
         _vScroll = GetTemplateChild("PART_VScroll") as ScrollBar;
         _legendCanvas = GetTemplateChild("PART_LegendCanvas") as Canvas;
 
-        // Adjust legend column widths
+        // Adjust legend column width
         if (_legendBorder?.Parent is Grid legendHost && legendHost.ColumnDefinitions.Count > 0) {
             _legendColumn = legendHost.ColumnDefinitions[0];
             _legendColumnWidth = _legendColumn.Width;
         }
 
-        // Adjust time scale legend column widths
+        // Adjust time scale legend column width
         if (_timeScaleGrid?.ColumnDefinitions.Count > 0) {
             _timeScaleLegendColumn = _timeScaleGrid.ColumnDefinitions[0];
             _timeScaleLegendColumnWidth = _timeScaleLegendColumn.Width;
@@ -81,10 +84,6 @@ public sealed partial class McTimeline : Control {
         _timelineCanvas?.PointerWheelChanged += OnCanvasPointerWheelChanged;
 
         _legendCanvas?.SizeChanged += OnLegendCanvasSizeChanged;
-
-        // if (_legendCanvas != null) {
-        //     _legendCanvas.SizeChanged += OnLegendCanvasSizeChanged;
-        // }
 
         // Subscribe to scroll changes
         _timelineScroll?.ViewChanged += OnTimelineScrollViewChanged;
@@ -220,6 +219,7 @@ public sealed partial class McTimeline : Control {
     /// method does not immediately trigger a repaint; the actual update may be deferred depending on the
     /// implementation.</remarks>
     private void InvalidateTimeline() {
+        DrawDays();
         DrawLegend();
         DrawTimeline();
     }

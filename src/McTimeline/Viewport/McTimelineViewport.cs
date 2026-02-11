@@ -13,12 +13,12 @@ public sealed class McTimelineViewport {
     private int _visibleSeriesEndIndex = -1;
 
     /// <summary>
-    /// Gets the time axis for horizontal positioning and time-based calculations.
+    /// Time axis for horizontal positioning and time-based calculations.
     /// </summary>
     public McVirtualTimeAxis TimeAxis { get; } = new();
 
     /// <summary>
-    /// Gets the vertical axis for vertical positioning and visibility calculations.
+    /// Vertical axis for vertical positioning and visibility calculations.
     /// </summary>
     public McVirtualSeriesAxis SeriesAxis { get; } = new();
 

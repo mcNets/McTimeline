@@ -1,6 +1,78 @@
+using System.Globalization;
+using Windows.Foundation;
+
 namespace McTimeline;
 
 public sealed partial class McTimeline : Control {
+
+    /// <summary>
+    /// Draws the day labels in the PART_TimeScaleDays canvas.
+    /// Only renders days visible in the current viewport to optimize performance.
+    /// </summary>
+    private void DrawDays() {
+        if (_timeScaleDays == null) {
+            return;
+        }
+
+        // Clear existing day labels
+        _timeScaleDays.Children.Clear();
+        foreach (var label in _visibleDayLabels) {
+            _dayTextBlockPool.RecycleElement(label);
+        }
+        _visibleDayLabels.Clear();
+
+        // Calculate the width of the canvas
+        double canvasWidth = _timeScaleDays.ActualWidth;
+        double canvasHeight = _timeScaleDays.ActualHeight;
+
+        // Apply clipping to prevent overflow
+        _timeScaleDays.Clip = new RectangleGeometry {
+            Rect = new Rect(0, 0, canvasWidth, canvasHeight)
+        };
+
+        // Get visible date range from viewport
+        var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;
+
+        // Start from the beginning of the first visible day
+        DateTime currentDay = visibleStart.Date;
+        DateTime endDay = visibleEnd.Date.AddDays(1);
+
+        // Render each day within the visible range
+        while (currentDay < endDay) {
+            // Calculate position for this day
+            double hoursFromMin = _viewport.TimeAxis.DateToHours(currentDay);
+            double x = _viewport.TimeAxis.HoursToScreen(hoursFromMin);
+
+            // Only render if within canvas bounds (with buffer)
+            if (x < canvasWidth + 200 && x > -200) {
+                // Calculate the width for this day (distance to next day)
+                DateTime nextDay = currentDay.AddDays(1);
+                double nextHours = _viewport.TimeAxis.DateToHours(nextDay);
+                double nextX = _viewport.TimeAxis.HoursToScreen(nextHours);
+                double dayWidth = nextX - x;
+
+                // Create or reuse TextBlock for day label
+                TextBlock dayLabel = _dayTextBlockPool.GetElement();
+                dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
+                dayLabel.Style = TimeScaleStyle;
+                dayLabel.Width = dayWidth;
+                dayLabel.Height = canvasHeight;
+                dayLabel.TextAlignment = TextAlignment.Center;
+                dayLabel.VerticalAlignment = VerticalAlignment.Center;
+
+                // Position the label
+                Canvas.SetLeft(dayLabel, x);
+                Canvas.SetTop(dayLabel, 0);
+
+                // Add to canvas
+                _timeScaleDays.Children.Add(dayLabel);
+                _visibleDayLabels.Add(dayLabel);
+            }
+
+            // Move to next day
+            currentDay = currentDay.AddDays(1);
+        }
+    }
 
     /// <summary>
     /// Draws the legend for the series in the legend area.

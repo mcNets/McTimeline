@@ -7,7 +7,7 @@ The goal: a high-performance horizontal timeline/Gantt-style control with legend
 
 ## Technology Stack
 
-* **Platform:** WinUI 3 or Uno Platform
+* **Platform:** Uno Platform/WinUI3 (cross-platform, but focus on Windows desktop)
 * **Language:** C# + XAML
 * **Rendering:** Canvas + manual virtualization (not Win2D yet)
 * **Editor:** VS Code + GitHub Copilot or Visual Studio with Copilot
@@ -28,6 +28,8 @@ Visualize time intervals across multiple series (rows):
 * Top dual time axis (days + hours)
 * Scrollable bars timeline
 * Smooth zoom (Ctrl + mouse wheel)
+* Vertical scroll (Shift + mouse wheel or scrollbar)
+* Horizontal scroll (mouse wheel or scrollbar)
 * API to scroll to item or time
 * Virtualized rectangle pooling
 
@@ -41,7 +43,9 @@ public record McTimelineItem(
     string Title,
     string Description,
     DateTime Start,
-    DateTime End
+    DateTime End,
+    bool Visible,
+    bool Selected
 );
 ```
 
@@ -85,7 +89,8 @@ Layout:
 ```
 Time Scale
 ┌────Legend──────┬────────Timeline─────────┐
-| Legend Caption | Days canvas             |
+|                | Days canvas             |
+| Legend Caption |-------------------------|
 |                | Hours canvas            |
 |----------------|-------------------------|
 | Legend         | Timeline Canvas         |

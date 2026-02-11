@@ -193,8 +193,7 @@ public sealed class McVirtualTimeAxis {
     /// than MaxDate, MaxDate is returned.</param>
     /// <returns>A DateTime value within the inclusive range of MinDate and MaxDate. If dt is within the range, dt is returned
     /// unchanged.</returns>
-    public DateTime ClampDate(DateTime dt)
-        => dt < MinDate ? MinDate : (dt > MaxDate ? MaxDate : dt);
+    public DateTime ClampDate(DateTime dt) => dt < MinDate ? MinDate : (dt > MaxDate ? MaxDate : dt);
 
     /// <summary>
     /// Calculates the total number of hours between the specified date and the minimum allowed date.
@@ -203,8 +202,7 @@ public sealed class McVirtualTimeAxis {
     /// date, it will be clamped to the minimum.</param>
     /// <returns>The number of hours between the specified date and the minimum allowed date. Returns 0 if the date is equal to
     /// or earlier than the minimum date.</returns>
-    public double DateToHours(DateTime dt)
-        => (ClampDate(dt) - MinDate).TotalHours;
+    public double DateToHours(DateTime dt) => (ClampDate(dt) - MinDate).TotalHours;
 
     /// <summary>
     /// Converts the specified number of hours to a <see cref="DateTime"/> value by adding the hours to the minimum
@@ -212,8 +210,7 @@ public sealed class McVirtualTimeAxis {
     /// </summary>
     /// <param name="hours">The number of hours to add to the minimum date. Can be negative, zero, or positive.</param>
     /// <returns>A <see cref="DateTime"/> that represents the minimum date plus the specified number of hours.</returns>
-    public DateTime HoursToDate(double hours)
-        => MinDate.AddHours(hours);
+    public DateTime HoursToDate(double hours) => MinDate.AddHours(hours);
 
     /// <summary>
     /// Converts a time duration to its equivalent length in pixels based on the current pixels-per-hour setting.
@@ -223,8 +220,7 @@ public sealed class McVirtualTimeAxis {
     /// <param name="span">The time interval to convert to pixels. Represents the duration to be mapped.</param>
     /// <returns>A double value representing the number of pixels corresponding to the specified duration. The value is
     /// proportional to the total hours in the duration.</returns>
-    public double DurationToPixels(TimeSpan span)
-        => span.TotalHours * PixelsPerHour;
+    public double DurationToPixels(TimeSpan span) => span.TotalHours * PixelsPerHour;
 
     /// <summary>
     /// Gets the range of world hours currently visible in the view.

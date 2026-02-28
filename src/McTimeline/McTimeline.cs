@@ -262,12 +262,12 @@ public sealed partial class McTimeline : Control {
         if ((e.KeyModifiers & VirtualKeyModifiers.Control) != 0) {
             // Zoom horizontal
             double zoomFactor = delta > 0 ? 1.2 : 0.8;
+            var pointerX = e.GetCurrentPoint(_timelineCanvas).Position.X;
+            // Keep the world hour under the cursor fixed while zooming.
+            var hoursAtCursorBeforeZoom = _viewport.TimeAxis.ScreenToHours(pointerX);
             var oldPixelsPerHour = _viewport.TimeAxis.PixelsPerHour;
             _viewport.TimeAxis.PixelsPerHour = Math.Clamp(oldPixelsPerHour * zoomFactor, 5, 300);
-            // Adjust offset to keep cursor position
-            var pointerX = e.GetCurrentPoint(_timelineCanvas).Position.X;
-            var hoursAtCursor = _viewport.TimeAxis.ScreenToHours(pointerX);
-            _viewport.TimeAxis.OffsetHours = hoursAtCursor - (pointerX / _viewport.TimeAxis.PixelsPerHour);
+            _viewport.TimeAxis.OffsetHours = hoursAtCursorBeforeZoom - (pointerX / _viewport.TimeAxis.PixelsPerHour);
             UpdateHScrollBar();
             InvalidateTimeline();
         }

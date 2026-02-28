@@ -58,7 +58,7 @@ public sealed partial class McTimeline : Control {
                 dayLabel.Style = TimeScaleStyle;
                 dayLabel.Width = dayWidth;
                 dayLabel.Height = canvasHeight;
-                dayLabel.TextAlignment = TextAlignment.Center;
+                dayLabel.TextAlignment = TextAlignment.Left;
                 dayLabel.VerticalAlignment = VerticalAlignment.Center;
 
                 // Position the label
@@ -105,12 +105,28 @@ public sealed partial class McTimeline : Control {
             Rect = new Rect(0, 0, canvasWidth, canvasHeight)
         };
 
-        // Get visible hours range from viewport
-        var (leftHours, rightHours) = _viewport.TimeAxis.VisibleHoursRange;
+        // Get visible date range from viewport so ticks align with real hour boundaries (:00).
+        var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;
 
-        // Start from the beginning of the first visible hour
-        int startHour = (int)Math.Floor(leftHours);
-        int endHour = (int)Math.Ceiling(rightHours);
+        // Start from the current hour boundary and include one hour before for smooth panning.
+        DateTime currentHour = new DateTime(
+            visibleStart.Year,
+            visibleStart.Month,
+            visibleStart.Day,
+            visibleStart.Hour,
+            0,
+            0,
+            visibleStart.Kind).AddHours(-1);
+
+        // Include one extra hour beyond the visible end for smooth panning.
+        DateTime endHour = new DateTime(
+            visibleEnd.Year,
+            visibleEnd.Month,
+            visibleEnd.Day,
+            visibleEnd.Hour,
+            0,
+            0,
+            visibleEnd.Kind).AddHours(1);
 
         // Calculate minimum space needed to show hour labels (in pixels)
         const double minPixelsForLabel = 40;
@@ -121,10 +137,11 @@ public sealed partial class McTimeline : Control {
         const double tickWidth = 1;
         double tickHeight = canvasHeight * 0.3; // 30% of canvas height
 
-        // Render each hour within the visible range
-        for (int hour = startHour; hour <= endHour; hour++) {
-            // Calculate position for this hour
-            double x = _viewport.TimeAxis.HoursToScreen(hour);
+        // Render each clock hour within the visible range.
+        while (currentHour <= endHour) {
+            // Calculate position for this hour boundary.
+            double hourValue = _viewport.TimeAxis.DateToHours(currentHour);
+            double x = _viewport.TimeAxis.HoursToScreen(hourValue);
 
             // Only render if within canvas bounds (with buffer)
             if (x >= -50 && x <= canvasWidth + 50) {
@@ -142,23 +159,24 @@ public sealed partial class McTimeline : Control {
 
                 // Draw hour label only if there's enough space
                 if (showLabels) {
-                    DateTime hourTime = _viewport.TimeAxis.HoursToDate(hour);
-                    
                     TextBlock hourLabel = _hourTextBlockPool.GetElement();
-                    hourLabel.Text = hourTime.ToString("HH", CultureInfo.CurrentCulture);
+                    hourLabel.Text = currentHour.ToString("HH", CultureInfo.CurrentCulture);
                     hourLabel.Style = TimeScaleStyle;
+                    hourLabel.Width = pixelsPerHour;
                     hourLabel.TextAlignment = TextAlignment.Center;
                     hourLabel.VerticalAlignment = VerticalAlignment.Top;
-                    hourLabel.FontSize = 8;
+                    hourLabel.FontSize = 10;
                     
-                    // Position label above the tick
-                    Canvas.SetLeft(hourLabel, x - 20); // Center the label (approximate)
+                    // Center the label around the tick and keep it within the hour cell.
+                    Canvas.SetLeft(hourLabel, x - (pixelsPerHour / 2));
                     Canvas.SetTop(hourLabel, 2);
                     
                     _timeScaleHours.Children.Add(hourLabel);
                     _visibleHourElements.Add(hourLabel);
                 }
             }
+
+            currentHour = currentHour.AddHours(1);
         }
     }
 

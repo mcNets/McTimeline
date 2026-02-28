@@ -38,6 +38,8 @@
 				Value="{ThemeResource McTimelineCornerRadius}" />
 		<Setter Property="ScaleHeight"
 				Value="{ThemeResource McTimelineDefaultTimeScaleHeight}" />
+		<Setter Property="PixelsPerHour"
+				Value="{ThemeResource McTimelineDefaultPixelsPerHour}" />
 		<Setter Property="LegendWidth"
 				Value="{ThemeResource McTimelineDefaultLegendWidth}" />
 

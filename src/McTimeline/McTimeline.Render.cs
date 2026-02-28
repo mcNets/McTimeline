@@ -128,10 +128,14 @@ public sealed partial class McTimeline : Control {
             0,
             visibleEnd.Kind).AddHours(1);
 
-        // Calculate minimum space needed to show hour labels (in pixels)
-        const double minPixelsForLabel = 40;
         double pixelsPerHour = _viewport.TimeAxis.PixelsPerHour;
-        bool showLabels = pixelsPerHour >= minPixelsForLabel;
+        int hourLabelStep = pixelsPerHour switch {
+            >= 36 => 1,
+            >= 18 => 2,
+            >= 9 => 4,
+            _ => 8
+        };
+        double labelSlotWidth = pixelsPerHour * hourLabelStep;
 
         // Tick dimensions
         const double tickWidth = 1;
@@ -157,18 +161,18 @@ public sealed partial class McTimeline : Control {
                 _timeScaleHours.Children.Add(tick);
                 _visibleHourElements.Add(tick);
 
-                // Draw hour label only if there's enough space
-                if (showLabels) {
+                // Draw labels at an adaptive cadence to avoid overlap when zoomed out.
+                if (currentHour.Hour % hourLabelStep == 0) {
                     TextBlock hourLabel = _hourTextBlockPool.GetElement();
                     hourLabel.Text = currentHour.ToString("HH", CultureInfo.CurrentCulture);
                     hourLabel.Style = TimeScaleStyle;
-                    hourLabel.Width = pixelsPerHour;
+                    hourLabel.Width = labelSlotWidth;
                     hourLabel.TextAlignment = TextAlignment.Center;
                     hourLabel.VerticalAlignment = VerticalAlignment.Top;
                     hourLabel.FontSize = 10;
                     
                     // Center the label around the tick and keep it within the hour cell.
-                    Canvas.SetLeft(hourLabel, x - (pixelsPerHour / 2));
+                    Canvas.SetLeft(hourLabel, x - (labelSlotWidth / 2));
                     Canvas.SetTop(hourLabel, 2);
                     
                     _timeScaleHours.Children.Add(hourLabel);

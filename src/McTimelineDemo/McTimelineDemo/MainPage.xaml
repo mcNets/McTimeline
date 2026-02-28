@@ -102,20 +102,80 @@
                                     Spacing="10"
                                     Margin="30,10">
                                 <TextBlock>
-<Run Text="Horizontal scroll: "/>
-<Run Text="Mouse wheel"
+                                        <Run Text="Horizontal scroll: "/>
+                                        <Run Text="Mouse wheel"
                                         Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
                                 </TextBlock>
                                 <TextBlock>
-<Run Text="Vertical scroll: "/>
-<Run Text="Mouse wheel + Shift"
+                                        <Run Text="Vertical scroll: "/>
+                                        <Run Text="Mouse wheel + Shift"
                                         Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
                                 </TextBlock>
                                 <TextBlock>
-<Run Text="Zoom in/out: "/>
-<Run Text="Ctrl + Mouse wheel"
+                                        <Run Text="Zoom in/out: "/>
+                                        <Run Text="Ctrl + Mouse wheel"
                                         Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"/>
                                 </TextBlock>
+
+                                <Border Padding="8"
+                                        CornerRadius="6"
+                                        Background="{ThemeResource ControlFillColorSecondaryBrush}">
+
+                                        <Grid RowSpacing="4"
+                                              ColumnSpacing="10">
+
+                                                <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                        <ColumnDefinition Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="Auto"/>
+                                                        <RowDefinition Height="*"/>
+                                                </Grid.RowDefinitions>
+
+                                                <TextBlock Text="Last item selected:"
+                                                        Grid.Row="0"
+                                                        Grid.Column="0"
+                                                        Grid.ColumnSpan="2"
+                                                        FontWeight="Bold"/>
+                                                
+                                                <TextBlock Grid.Row="1" 
+                                                        Grid.Column="0"
+                                                        Foreground="{ThemeResource AccentTextFillColorPrimaryBrush}"
+                                                        Text="{x:Bind ViewModel.LastClickedItemId, Mode=OneWay}"/>
+
+                                                <TextBlock Grid.Row="1" 
+                                                        Grid.Column="1"
+                                                        Text="{x:Bind ViewModel.LastClickedItemTitle, Mode=OneWay}"/>
+
+                                                <TextBlock Grid.Row="2" 
+                                                        Grid.Column="0"
+                                                        Text="{x:Bind ViewModel.LastClickedItemDescription, Mode=OneWay}"/>
+
+                                                <TextBlock Grid.Row="2" 
+                                                        Grid.Column="1"
+                                                        Text="{x:Bind ViewModel.LastClickedItemRange, Mode=OneWay}"/>
+
+                                                <TextBlock Grid.Row="3" 
+                                                        Grid.Column="0"
+                                                        Text="{x:Bind ViewModel.LastClickedSeries, Mode=OneWay}"/>
+
+                                                <TextBlock Grid.Row="3" 
+                                                        Grid.Column="1"
+                                                        Text="{x:Bind ViewModel.LastClickedButton, Mode=OneWay}"/>
+
+                                                <TextBlock Grid.Row="4"
+                                                        Grid.Column="0"
+                                                        Text="{x:Bind ViewModel.LastClickedSeriesTitle, Mode=OneWay}"/>
+
+                                                <TextBlock Grid.Row="4"
+                                                        Grid.Column="1"
+                                                        Text="{x:Bind ViewModel.LastClickedSeriesButton, Mode=OneWay}"/>
+                                        </Grid>
+                                </Border>
                         </StackPanel>
 
                         <mctl:McTimeline Grid.Row="1"

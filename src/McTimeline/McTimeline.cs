@@ -12,6 +12,16 @@ namespace McTimeline;
 /// </summary>
 public sealed partial class McTimeline : Control {
 
+    /// <summary>
+    /// Raised when a timeline item bar is clicked.
+    /// </summary>
+    public event EventHandler<McTimelineItemClickedEventArgs>? ItemClicked;
+
+    /// <summary>
+    /// Raised when a legend series is clicked.
+    /// </summary>
+    public event EventHandler<McTimelineSeriesClickedEventArgs>? SeriesClicked;
+
     #region Private fields
 
     private Grid? _container;
@@ -325,5 +335,93 @@ public sealed partial class McTimeline : Control {
         SeriesHeight = _viewport.SeriesAxis.SeriesHeight;
         UpdateVScrollBar();
         InvalidateTimeline();
+    }
+
+    private void OnTimelineItemPointerPressed(object sender, PointerRoutedEventArgs e) {
+        if (sender is not Controls.ITimelineBar bar) {
+            return;
+        }
+
+        if (!TryResolveClickedItem(bar, out McTimelineItem? clickedItem) || clickedItem == null) {
+            return;
+        }
+
+        ItemClicked?.Invoke(this, new McTimelineItemClickedEventArgs(clickedItem, bar.SeriesIndex, GetPointerButton(e)));
+    }
+
+    private void OnLegendItemPointerPressed(object sender, PointerRoutedEventArgs e) {
+        if (sender is not FrameworkElement legendElement) {
+            return;
+        }
+
+        if (!TryResolveClickedSeries(legendElement, out int seriesIndex, out McTimelineSeries? clickedSeries) || clickedSeries == null) {
+            return;
+        }
+
+        SeriesClicked?.Invoke(this, new McTimelineSeriesClickedEventArgs(clickedSeries, seriesIndex, GetPointerButton(e)));
+    }
+
+    private bool TryResolveClickedItem(Controls.ITimelineBar bar, out McTimelineItem? item) {
+        item = null;
+
+        if (SeriesCollection == null || bar.SeriesIndex < 0 || bar.SeriesIndex >= SeriesCollection.Count) {
+            return false;
+        }
+
+        var series = SeriesCollection[bar.SeriesIndex];
+        if (series?.Items == null) {
+            return false;
+        }
+
+        for (int i = 0; i < series.Items.Count; i++) {
+            if (series.Items[i].IdKey == bar.ItemKey) {
+                item = series.Items[i];
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool TryResolveClickedSeries(FrameworkElement legendElement, out int seriesIndex, out McTimelineSeries? series) {
+        seriesIndex = -1;
+        series = null;
+
+        foreach (var pair in _visibleLegendItems) {
+            if (!ReferenceEquals(pair.Value, legendElement)) {
+                continue;
+            }
+
+            seriesIndex = pair.Key;
+            break;
+        }
+
+        if (seriesIndex < 0 || SeriesCollection == null || seriesIndex >= SeriesCollection.Count) {
+            return false;
+        }
+
+        series = SeriesCollection[seriesIndex];
+        return series != null;
+    }
+
+    private static McTimelinePointerButton GetPointerButton(PointerRoutedEventArgs e) {
+        var props = e.GetCurrentPoint(null).Properties;
+        if (props.IsLeftButtonPressed) {
+            return McTimelinePointerButton.Left;
+        }
+        if (props.IsRightButtonPressed) {
+            return McTimelinePointerButton.Right;
+        }
+        if (props.IsMiddleButtonPressed) {
+            return McTimelinePointerButton.Middle;
+        }
+        if (props.IsXButton1Pressed) {
+            return McTimelinePointerButton.X1;
+        }
+        if (props.IsXButton2Pressed) {
+            return McTimelinePointerButton.X2;
+        }
+
+        return McTimelinePointerButton.Unknown;
     }
 }

@@ -220,6 +220,8 @@ public sealed partial class McTimeline : Control {
                 var legend = _legendItemPool.GetElement();
                 legend.LegendText = SeriesCollection[index].Title ?? string.Empty;
                 legend.Style = LegendItemStyle;
+                legend.PointerPressed -= OnLegendItemPointerPressed;
+                legend.PointerPressed += OnLegendItemPointerPressed;
                 element = legend;
                 _visibleLegendItems[index] = element;
                 _legendCanvas.Children.Add(element);
@@ -337,6 +339,10 @@ public sealed partial class McTimeline : Control {
                     if (bar != null) {
                         bar.SeriesIndex = seriesIndex;
                         bar.ItemKey = item.IdKey;
+                        if (element is FrameworkElement barElementForEvents) {
+                            barElementForEvents.PointerPressed -= OnTimelineItemPointerPressed;
+                            barElementForEvents.PointerPressed += OnTimelineItemPointerPressed;
+                        }
                         _timelineCanvas.Children.Add(element);
                     }
                 }

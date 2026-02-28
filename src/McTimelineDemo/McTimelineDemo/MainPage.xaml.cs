@@ -1,3 +1,5 @@
+using McTimeline;
+
 namespace McTimelineDemo;
 
 public sealed partial class MainPage : Page
@@ -9,8 +11,20 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         this.InitializeComponent();
+        TimelineControl.ItemClicked += TimelineControl_ItemClicked;
+        TimelineControl.SeriesClicked += TimelineControl_SeriesClicked;
         UpdateConfigPanelState();
         Task.Run(async () => await ViewModel.AddNewSeries());
+    }
+
+    private void TimelineControl_ItemClicked(object? sender, McTimelineItemClickedEventArgs e)
+    {
+        ViewModel.UpdateLastClicked(e);
+    }
+
+    private void TimelineControl_SeriesClicked(object? sender, McTimelineSeriesClickedEventArgs e)
+    {
+        ViewModel.UpdateLastSeriesClicked(e);
     }
 
     private void ThemeButton_Click(object sender, RoutedEventArgs e)

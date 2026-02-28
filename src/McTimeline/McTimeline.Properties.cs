@@ -1,6 +1,9 @@
 namespace McTimeline;
 
 public sealed partial class McTimeline {
+    private const double MinPixelsPerHour = 10.0;
+    private const double MaxPixelsPerHour = 300.0;
+
     #region Timeline series
 
     /// <summary>
@@ -77,10 +80,19 @@ public sealed partial class McTimeline {
             nameof(PixelsPerHour),
             typeof(double),
             typeof(McTimeline),
-            new PropertyMetadata(6.0, OnPixelsPerHourChanged));
+            new PropertyMetadata(10.0, OnPixelsPerHourChanged));
 
     private static void OnPixelsPerHourChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is McTimeline timeline) {
+            double requested = (double)e.NewValue;
+            double coerced = Math.Clamp(requested, MinPixelsPerHour, MaxPixelsPerHour);
+            if (Math.Abs(requested - coerced) > double.Epsilon) {
+                timeline.SetValue(PixelsPerHourProperty, coerced);
+                return;
+            }
+
+            timeline._viewport.TimeAxis.PixelsPerHour = coerced;
+            timeline.UpdateHScrollBar();
             timeline.InvalidateTimeline();
         }
     }
@@ -260,6 +272,36 @@ public sealed partial class McTimeline {
     public static readonly DependencyProperty TimeScaleStyleProperty =
         DependencyProperty.Register(
             nameof(TimeScaleStyle),
+            typeof(Style),
+            typeof(McTimeline),
+            new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the style for day/hour labels in the time scale.
+    /// </summary>
+    public Style? TimeScaleTextStyle {
+        get => (Style?)GetValue(TimeScaleTextStyleProperty);
+        set => SetValue(TimeScaleTextStyleProperty, value);
+    }
+
+    public static readonly DependencyProperty TimeScaleTextStyleProperty =
+        DependencyProperty.Register(
+            nameof(TimeScaleTextStyle),
+            typeof(Style),
+            typeof(McTimeline),
+            new PropertyMetadata(null));
+
+    /// <summary>
+    /// Gets or sets the style for time-scale tick visuals and scale background border.
+    /// </summary>
+    public Style? TimeScaleTickStyle {
+        get => (Style?)GetValue(TimeScaleTickStyleProperty);
+        set => SetValue(TimeScaleTickStyleProperty, value);
+    }
+
+    public static readonly DependencyProperty TimeScaleTickStyleProperty =
+        DependencyProperty.Register(
+            nameof(TimeScaleTickStyle),
             typeof(Style),
             typeof(McTimeline),
             new PropertyMetadata(null));

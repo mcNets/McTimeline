@@ -16,6 +16,10 @@
 				Value="{ThemeResource McTimelineForegroundBrush}" />
 		<Setter Property="TimeScaleStyle"
 				Value="{StaticResource DefaultTimeScaleStyle}" />
+		<Setter Property="TimeScaleTextStyle"
+				Value="{StaticResource DefaultTimeScaleTextStyle}" />
+		<Setter Property="TimeScaleTickStyle"
+				Value="{StaticResource DefaultTimeScaleTickStyle}" />
 		<Setter Property="LegendStyle"
 				Value="{StaticResource DefaultLegendStyle}" />
 		<Setter Property="LegendCaptionStyle"
@@ -100,7 +104,7 @@
 							
 							<!--Border overlay for both rows-->
 							<Border BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-									Style="{TemplateBinding TimeScaleStyle}"
+									Style="{TemplateBinding TimeScaleTickStyle}"
 									BorderThickness="0,0,0,1"
 									Grid.RowSpan="2" />
 
@@ -116,7 +120,7 @@
 						<!--Blank-->
 						<Border Grid.Row="0"
 								Grid.Column="2"
-								Style="{TemplateBinding TimeScaleStyle}"
+								Style="{TemplateBinding TimeScaleTickStyle}"
 								BorderBrush="{ThemeResource McTimelineGridLineBrush}"
 								BorderThickness="0,0,0,1" />
 
@@ -174,7 +178,7 @@
 	<Style TargetType="controls:McLegend">
 		<Setter Property="Background" Value="{ThemeResource McTimelineLegendBackgroundBrush}" />
 		<Setter Property="BorderBrush" Value="{ThemeResource McTimelineBorderBrush}" />
-		<Setter Property="BorderThickness" Value="{ThemeResource McTimelineBorderThickness}" />
+		<Setter Property="BorderThickness" Value="0" />
 		<Setter Property="Padding" Value="{ThemeResource McTimelineDefaultPadding}" />
 		<Setter Property="HorizontalContentAlignment" Value="Center" />
 		<Setter Property="VerticalContentAlignment" Value="Center" />

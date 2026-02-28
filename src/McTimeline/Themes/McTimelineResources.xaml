@@ -19,7 +19,7 @@
 	<x:Double x:Key="McTimelineDefaultRowHeight">40</x:Double>
 	<x:Double x:Key="McTimelineDefaultLegendWidth">200</x:Double>
 	<x:Double x:Key="McTimelineDefaultPixelsPerHour">60</x:Double>
-	<x:Double x:Key="McTimelineMinPixelsPerHour">5</x:Double>
+	<x:Double x:Key="McTimelineMinPixelsPerHour">10</x:Double>
 	<x:Double x:Key="McTimelineMaxPixelsPerHour">300</x:Double>
 	<x:Double x:Key="McTimelineDefaultTimeScaleHeight">50</x:Double>
 

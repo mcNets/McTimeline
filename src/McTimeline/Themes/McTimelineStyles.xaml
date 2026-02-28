@@ -12,6 +12,22 @@
                 Value="{ThemeResource McTimelineScaleBackgroundBrush}" />
     </Style>
 
+    <Style x:Key="DefaultTimeScaleTextStyle"
+           TargetType="TextBlock">
+        <Setter Property="Foreground"
+                Value="{ThemeResource McTimelineForegroundBrush}" />
+        <Setter Property="FontFamily"
+                Value="{ThemeResource McTimelineFontFamily}" />
+        <Setter Property="FontSize"
+                Value="{ThemeResource McTimelineFontSize}" />
+    </Style>
+
+    <Style x:Key="DefaultTimeScaleTickStyle"
+           TargetType="Border">
+        <Setter Property="Background"
+                Value="{ThemeResource McTimelineScaleBackgroundBrush}" />
+    </Style>
+
     <!-- Default style for legend border -->
     <Style x:Key="DefaultLegendStyle"
            TargetType="Canvas">

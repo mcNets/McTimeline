@@ -37,7 +37,7 @@ public sealed partial class McTimeline : Control {
     private readonly McElementPool<TextBlock> _dayTextBlockPool;
     private readonly List<TextBlock> _visibleDayLabels = new();
     private readonly McElementPool<TextBlock> _hourTextBlockPool;
-    private readonly McElementPool<Rectangle> _hourTickPool;
+    private readonly McElementPool<Border> _hourTickPool;
     private readonly List<FrameworkElement> _visibleHourElements = new();
 
     #endregion
@@ -50,9 +50,9 @@ public sealed partial class McTimeline : Control {
         _viewport = new McTimelineViewport();
         _legendItemPool = new McElementPool<McLegend>(LegendStyle);
         _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
-        _dayTextBlockPool = new McElementPool<TextBlock>(TimeScaleStyle);
-        _hourTextBlockPool = new McElementPool<TextBlock>(TimeScaleStyle);
-        _hourTickPool = new McElementPool<Rectangle>(() => new Rectangle());
+        _dayTextBlockPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
+        _hourTextBlockPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
+        _hourTickPool = new McElementPool<Border>(() => new Border(), TimeScaleTickStyle);
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public sealed partial class McTimeline : Control {
 
         // Initialize time axis
         _viewport.TimeAxis.SetRange(MinDate, MaxDate);
-        _viewport.TimeAxis.PixelsPerHour = PixelsPerHour;
+        _viewport.TimeAxis.PixelsPerHour = Math.Clamp(PixelsPerHour, MinPixelsPerHour, MaxPixelsPerHour);
         _viewport.TimeAxis.ViewportPixels = _timelineCanvas?.ActualWidth ?? 0;
 
         // Initialize series axis
@@ -266,7 +266,7 @@ public sealed partial class McTimeline : Control {
             // Keep the world hour under the cursor fixed while zooming.
             var hoursAtCursorBeforeZoom = _viewport.TimeAxis.ScreenToHours(pointerX);
             var oldPixelsPerHour = _viewport.TimeAxis.PixelsPerHour;
-            _viewport.TimeAxis.PixelsPerHour = Math.Clamp(oldPixelsPerHour * zoomFactor, 5, 300);
+            _viewport.TimeAxis.PixelsPerHour = Math.Clamp(oldPixelsPerHour * zoomFactor, MinPixelsPerHour, MaxPixelsPerHour);
             _viewport.TimeAxis.OffsetHours = hoursAtCursorBeforeZoom - (pointerX / _viewport.TimeAxis.PixelsPerHour);
             UpdateHScrollBar();
             InvalidateTimeline();

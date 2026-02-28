@@ -41,29 +41,31 @@ public sealed partial class McTimeline : Control {
         // Render each day within the visible range
         while (currentDay < endDay) {
             // Calculate position for this day
-            double hoursFromMin = _viewport.TimeAxis.DateToHours(currentDay);
+            double hoursFromMin = (currentDay - _viewport.TimeAxis.MinDate).TotalHours;
             double x = _viewport.TimeAxis.HoursToScreen(hoursFromMin);
 
-            // Only render if within canvas bounds (with buffer)
-            if (x < canvasWidth + 200 && x > -200) {
-                // Calculate the width for this day (distance to next day)
-                DateTime nextDay = currentDay.AddDays(1);
-                double nextHours = _viewport.TimeAxis.DateToHours(nextDay);
-                double nextX = _viewport.TimeAxis.HoursToScreen(nextHours);
-                double dayWidth = nextX - x;
+            // Calculate the width for this day (distance to next day)
+            DateTime nextDay = currentDay.AddDays(1);
+            double nextHours = (nextDay - _viewport.TimeAxis.MinDate).TotalHours;
+            double nextX = _viewport.TimeAxis.HoursToScreen(nextHours);
+            double dayWidth = nextX - x;
+
+            // Render only if this day cell intersects the viewport.
+            if (nextX > 0 && x < canvasWidth) {
 
                 // Create or reuse TextBlock for day label
                 TextBlock dayLabel = _dayTextBlockPool.GetElement();
                 dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
-                dayLabel.Style = TimeScaleStyle;
+                dayLabel.Style = TimeScaleTextStyle;
                 dayLabel.Width = dayWidth;
-                dayLabel.Height = canvasHeight;
+                const double dayTopPadding = 3;
+                dayLabel.Height = Math.Max(0, canvasHeight - dayTopPadding);
                 dayLabel.TextAlignment = TextAlignment.Left;
                 dayLabel.VerticalAlignment = VerticalAlignment.Center;
 
                 // Position the label
                 Canvas.SetLeft(dayLabel, x);
-                Canvas.SetTop(dayLabel, 0);
+                Canvas.SetTop(dayLabel, dayTopPadding);
 
                 // Add to canvas
                 _timeScaleDays.Children.Add(dayLabel);
@@ -90,8 +92,8 @@ public sealed partial class McTimeline : Control {
             if (element is TextBlock textBlock) {
                 _hourTextBlockPool.RecycleElement(textBlock);
             }
-            else if (element is Rectangle rectangle) {
-                _hourTickPool.RecycleElement(rectangle);
+            else if (element is Border border) {
+                _hourTickPool.RecycleElement(border);
             }
         }
         _visibleHourElements.Clear();
@@ -144,16 +146,17 @@ public sealed partial class McTimeline : Control {
         // Render each clock hour within the visible range.
         while (currentHour <= endHour) {
             // Calculate position for this hour boundary.
-            double hourValue = _viewport.TimeAxis.DateToHours(currentHour);
+            double hourValue = (currentHour - _viewport.TimeAxis.MinDate).TotalHours;
             double x = _viewport.TimeAxis.HoursToScreen(hourValue);
 
             // Only render if within canvas bounds (with buffer)
             if (x >= -50 && x <= canvasWidth + 50) {
                 // Always draw tick mark
-                Rectangle tick = _hourTickPool.GetElement();
+                Border tick = _hourTickPool.GetElement();
+                tick.Style = TimeScaleTickStyle;
                 tick.Width = tickWidth;
                 tick.Height = tickHeight;
-                tick.Fill = Foreground;
+                tick.Background = BorderBrush ?? Foreground;
                 
                 Canvas.SetLeft(tick, x);
                 Canvas.SetTop(tick, canvasHeight - tickHeight);
@@ -165,7 +168,7 @@ public sealed partial class McTimeline : Control {
                 if (currentHour.Hour % hourLabelStep == 0) {
                     TextBlock hourLabel = _hourTextBlockPool.GetElement();
                     hourLabel.Text = currentHour.ToString("HH", CultureInfo.CurrentCulture);
-                    hourLabel.Style = TimeScaleStyle;
+                    hourLabel.Style = TimeScaleTextStyle;
                     hourLabel.Width = labelSlotWidth;
                     hourLabel.TextAlignment = TextAlignment.Center;
                     hourLabel.VerticalAlignment = VerticalAlignment.Top;

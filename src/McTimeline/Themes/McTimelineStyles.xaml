@@ -88,7 +88,7 @@
     <Style x:Key="DefaultTimelineCanvasStyle"
            TargetType="Canvas">
         <Setter Property="Background"
-                Value="Transparent" />
+                Value="{ThemeResource McTimelineCanvasBackgroundBrush}" />
     </Style>
 
     <!-- Default DataTemplate for legend items -->

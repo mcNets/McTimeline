@@ -54,6 +54,14 @@
         <Button Content="Zoom series to fit"
                 Click="ZoomSeriesToFit_Click" />
 
+        <TextBlock Text="Styling" />
+
+        <Button Content="Multicolor"
+                Click="MulticolorButton_Click" />
+
+        <Button Content="Gradients"
+                Click="GradientsButton_Click" />
+
       </StackPanel>
 
     </ScrollViewer>

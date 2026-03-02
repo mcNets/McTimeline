@@ -394,8 +394,9 @@ public sealed partial class McTimeline : Control {
         // Set common ITimelineBar properties
         bar.ItemToolTip = McTimeline.CreateItemToolTip(item);
         
-        // Apply style
-        element.Style = TimelineItemStyle;
+        // Prefer the series-specific style and fallback to the timeline default style.
+        var seriesStyle = SeriesCollection?[seriesIndex].SeriesStyle;
+        element.Style = seriesStyle ?? TimelineItemStyle;
         
         // Calculate height considering margins from style
         double totalHeight = _viewport.SeriesHeight;

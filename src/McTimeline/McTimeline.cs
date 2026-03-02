@@ -182,12 +182,14 @@ public sealed partial class McTimeline : Control {
         if (oldValue != null) {
             oldValue.CollectionChanged -= OnSeriesCollectionChanged;
             foreach (var series in oldValue) {
+                series.PropertyChanged -= OnSeriesPropertyChanged;
                 series.Items.CollectionChanged -= OnSeriesItemsChanged;
             }
         }
         if (newValue != null) {
             newValue.CollectionChanged += OnSeriesCollectionChanged;
             foreach (var series in newValue) {
+                series.PropertyChanged += OnSeriesPropertyChanged;
                 series.Items.CollectionChanged += OnSeriesItemsChanged;
             }
         }
@@ -201,11 +203,13 @@ public sealed partial class McTimeline : Control {
     private void OnSeriesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         if (e.OldItems != null) {
             foreach (McTimelineSeries series in e.OldItems) {
+                series.PropertyChanged -= OnSeriesPropertyChanged;
                 series.Items.CollectionChanged -= OnSeriesItemsChanged;
             }
         }
         if (e.NewItems != null) {
             foreach (McTimelineSeries series in e.NewItems) {
+                series.PropertyChanged += OnSeriesPropertyChanged;
                 series.Items.CollectionChanged += OnSeriesItemsChanged;
             }
         }
@@ -218,6 +222,15 @@ public sealed partial class McTimeline : Control {
     /// </summary>
     private void OnSeriesItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) {
         InvalidateTimeline();
+    }
+
+    /// <summary>
+    /// Handles visual property updates on a series (e.g. style changes).
+    /// </summary>
+    private void OnSeriesPropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e) {
+        if (e.PropertyName == nameof(McTimelineSeries.SeriesStyle) || string.IsNullOrEmpty(e.PropertyName)) {
+            InvalidateTimeline();
+        }
     }
 
     /// <summary>
@@ -334,6 +347,13 @@ public sealed partial class McTimeline : Control {
         _viewport.ZoomSeriesToFit();
         SeriesHeight = _viewport.SeriesAxis.SeriesHeight;
         UpdateVScrollBar();
+        InvalidateTimeline();
+    }
+
+    /// <summary>
+    /// Forces the timeline to redraw using current data and styles.
+    /// </summary>
+    public void Refresh() {
         InvalidateTimeline();
     }
 

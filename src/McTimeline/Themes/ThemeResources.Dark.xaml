@@ -13,6 +13,7 @@
 	<Color x:Key="McTimelineSelectionColor">#1E3A5F</Color>
 	<Color x:Key="McTimelineBorderColor">#303030</Color>
 	<Color x:Key="McTimelineScaleBackgroundColor">#1E1E1E</Color>
+	<Color x:Key="McTimelineCanvasBackgroundColor">#090909</Color>
 
 	<!-- Brushes -->
 	<SolidColorBrush x:Key="McTimelineAccentBrush"
@@ -37,5 +38,7 @@
 					 Color="{StaticResource McTimelineBorderColor}" />
 	<SolidColorBrush x:Key="McTimelineScaleBackgroundBrush"
 					 Color="{StaticResource McTimelineScaleBackgroundColor}" />
+	<SolidColorBrush x:Key="McTimelineCanvasBackgroundBrush"
+					 Color="{StaticResource McTimelineCanvasBackgroundColor}" />
 
 </ResourceDictionary>

@@ -6,6 +6,8 @@ public sealed partial class ConfigurationPanelControl : UserControl {
     }
 
     public event EventHandler<RoutedEventArgs>? ZoomSeriesToFit;
+    public event EventHandler<RoutedEventArgs>? MulticolorRequested;
+    public event EventHandler<RoutedEventArgs>? GradientsRequested;
 
     private void ThemeButton_Click(object sender, RoutedEventArgs e) {
         var theme = App.RootFrame.ActualTheme == ElementTheme.Dark ? ElementTheme.Light : ElementTheme.Dark;
@@ -54,5 +56,13 @@ public sealed partial class ConfigurationPanelControl : UserControl {
 
     private void ZoomSeriesToFit_Click(object sender, RoutedEventArgs e) {
         ZoomSeriesToFit?.Invoke(this, e);
+    }
+
+    private void MulticolorButton_Click(object sender, RoutedEventArgs e) {
+        MulticolorRequested?.Invoke(this, e);
+    }
+
+    private void GradientsButton_Click(object sender, RoutedEventArgs e) {
+        GradientsRequested?.Invoke(this, e);
     }
 }

@@ -72,7 +72,7 @@ public partial class MainViewModel : ObservableObject {
     [RelayCommand]
     public async Task AddNewSeries() {
         var itemsCount = 500;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             Series.Add(new McTimelineSeries($"Serie {_numeradorSeries++}",
                 [.. MockTimelineItemsSeries.Generate(itemsCount, DataInici, DataFinal)]));
         }

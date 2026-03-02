@@ -1,6 +1,7 @@
 ﻿<Application x:Class="McTimelineDemo.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:controls="using:McTimeline.Controls">
 
     <Application.Resources>
         <ResourceDictionary>
@@ -12,7 +13,127 @@
                 <ResourceDictionary Source="ms-appx:///McTimeline/Themes/McTimelineResources.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
-            <!-- Add resources here -->
+            <ResourceDictionary.ThemeDictionaries>
+                <ResourceDictionary x:Key="Default">
+                    <Color x:Key="TL_Color1">#1496f6</Color>
+                    <Color x:Key="TL_Color2">#67e4ad</Color>
+                    <Color x:Key="TL_Color3">#7a67f8</Color>
+                    <Color x:Key="TL_Color4">#f85977</Color>
+
+                    <Color x:Key="TL_GradStart1">#bcd4ec</Color>
+                    <Color x:Key="TL_GradStart2">#c4e6d7</Color>
+                    <Color x:Key="TL_GradStart3">#d2caef</Color>
+                    <Color x:Key="TL_GradStart4">#f0cdd7</Color>
+
+                    <Color x:Key="TL_GradBorder1">#78a9dc</Color>
+                    <Color x:Key="TL_GradBorder2">#79c9aa</Color>
+                    <Color x:Key="TL_GradBorder3">#9583d8</Color>
+                    <Color x:Key="TL_GradBorder4">#d6758c</Color>
+
+                    <Color x:Key="TL_GradEnd">#fafcff</Color>
+                </ResourceDictionary>
+
+                <ResourceDictionary x:Key="Dark">
+                    <Color x:Key="TL_Color1">#1496f6</Color>
+                    <Color x:Key="TL_Color2">#67e4ad</Color>
+                    <Color x:Key="TL_Color3">#7a67f8</Color>
+                    <Color x:Key="TL_Color4">#f85977</Color>
+
+                    <Color x:Key="TL_GradStart1">#2d4a72</Color>
+                    <Color x:Key="TL_GradStart2">#2b5a4c</Color>
+                    <Color x:Key="TL_GradStart3">#463a74</Color>
+                    <Color x:Key="TL_GradStart4">#6b3a47</Color>
+
+                    <Color x:Key="TL_GradBorder1">#7fa6db</Color>
+                    <Color x:Key="TL_GradBorder2">#8acfb2</Color>
+                    <Color x:Key="TL_GradBorder3">#a194de</Color>
+                    <Color x:Key="TL_GradBorder4">#e08a9d</Color>
+
+                    <Color x:Key="TL_GradEnd">#0a0a0a</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
+
+            <SolidColorBrush x:Key="TL_Brush1" Color="{ThemeResource TL_Color1}" />
+            <SolidColorBrush x:Key="TL_Brush2" Color="{ThemeResource TL_Color2}" />
+            <SolidColorBrush x:Key="TL_Brush3" Color="{ThemeResource TL_Color3}" />
+            <SolidColorBrush x:Key="TL_Brush4" Color="{ThemeResource TL_Color4}" />
+
+            <SolidColorBrush x:Key="TL_GradBorderBrush1" Color="{ThemeResource TL_GradBorder1}" />
+            <SolidColorBrush x:Key="TL_GradBorderBrush2" Color="{ThemeResource TL_GradBorder2}" />
+            <SolidColorBrush x:Key="TL_GradBorderBrush3" Color="{ThemeResource TL_GradBorder3}" />
+            <SolidColorBrush x:Key="TL_GradBorderBrush4" Color="{ThemeResource TL_GradBorder4}" />
+
+            <LinearGradientBrush x:Key="TL_GradientBrush1" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="{ThemeResource TL_GradStart1}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="TL_GradientBrush2" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="{ThemeResource TL_GradStart2}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="TL_GradientBrush3" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="{ThemeResource TL_GradStart3}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+            </LinearGradientBrush>
+
+            <LinearGradientBrush x:Key="TL_GradientBrush4" StartPoint="0,0" EndPoint="1,1">
+                <GradientStop Offset="0" Color="{ThemeResource TL_GradStart4}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+            </LinearGradientBrush>
+
+            <Style x:Key="TL_MulticolorSeriesStyle1"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{ThemeResource TL_Brush1}" />
+            </Style>
+
+            <Style x:Key="TL_MulticolorSeriesStyle2"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{ThemeResource TL_Brush2}" />
+            </Style>
+
+            <Style x:Key="TL_MulticolorSeriesStyle3"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{ThemeResource TL_Brush3}" />
+            </Style>
+
+            <Style x:Key="TL_MulticolorSeriesStyle4"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{ThemeResource TL_Brush4}" />
+            </Style>
+
+            <Style x:Key="TL_GradientSeriesStyle1"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{StaticResource TL_GradientBrush1}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush1}" />
+            </Style>
+
+            <Style x:Key="TL_GradientSeriesStyle2"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{StaticResource TL_GradientBrush2}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush2}" />
+            </Style>
+
+            <Style x:Key="TL_GradientSeriesStyle3"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{StaticResource TL_GradientBrush3}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush3}" />
+            </Style>
+
+            <Style x:Key="TL_GradientSeriesStyle4"
+                   TargetType="controls:McTimelineBar"
+                   BasedOn="{StaticResource DefaultTimelineItemStyle}">
+                <Setter Property="Background" Value="{StaticResource TL_GradientBrush4}" />
+                <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush4}" />
+            </Style>
 
         </ResourceDictionary>
     </Application.Resources>

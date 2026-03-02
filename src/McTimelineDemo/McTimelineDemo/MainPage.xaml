@@ -26,6 +26,8 @@
                                         LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=TwoWay}"
                                         SeriesHeight="{x:Bind ViewModel.SeriesHeight, Mode=TwoWay}"
                                         ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=TwoWay}"
+                                        GradientsRequested="GradientsRequested_Click"
+                                        MulticolorRequested="MulticolorRequested_Click"
                                         ZoomSeriesToFit="ZoomSeriesToFitButton_Click"/>
 
     <Button x:Name="ConfigToggleButton"

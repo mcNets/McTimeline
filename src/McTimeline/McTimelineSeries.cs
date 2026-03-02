@@ -95,8 +95,17 @@ public partial class McTimelineSeries : INotifyPropertyChanged, IEnumerable<McTi
 
     /// <summary>
     /// Gets or sets the style to be applied to items in this series.
+    /// Raises the <see cref="PropertyChanged"/> event when the value changes.
     /// </summary>
-    public Style? SeriesStyle { get; set; }
+    public Style? SeriesStyle {
+        get;
+        set {
+            if (!Equals(field, value)) {
+                field = value;
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(SeriesStyle)));
+            }
+        }
+    }
 
     /// <summary>
     /// Returns an enumerator that iterates through the timeline items.

@@ -46,14 +46,12 @@ public sealed partial class MainPage : Page
 
     private void UpdateConfigPanelState()
     {
-        if (_isConfigPanelExpanded)
-        {
+        if (_isConfigPanelExpanded) {
             ConfigPanelContainer.Visibility = Visibility.Visible;
             ConfigColumn.Width = GridLength.Auto;
             ConfigToggleButton.Content = "⟪";
         }
-        else
-        {
+        else {
             ConfigPanelContainer.Visibility = Visibility.Collapsed;
             ConfigColumn.Width = new GridLength(0);
             ConfigToggleButton.Content = "⟫";

@@ -55,4 +55,10 @@
       </Page>
     </ItemGroup>
 
+    <ItemGroup>
+      <Page Update="Controls\ConfigurationPanelControl.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </Page>
+    </ItemGroup>
+
 </Project>

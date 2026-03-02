@@ -2,12 +2,10 @@ using McTimeline;
 
 namespace McTimelineDemo;
 
-public partial class MainViewModel : ObservableObject
-{
+public partial class MainViewModel : ObservableObject {
     private int _numeradorSeries = 0;
 
-    public MainViewModel()
-    {
+    public MainViewModel() {
         Series.Clear();
     }
 
@@ -55,8 +53,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     public partial string SelectedSeriesTitle { get; set; } = "";
 
-    public void UpdateLastClicked(McTimelineItemClickedEventArgs args)
-    {
+    public void UpdateLastClicked(McTimelineItemClickedEventArgs args) {
         SelectedItem = new McTimelineItem(
             args.Item.IdKey,
             args.Item.Title,
@@ -67,17 +64,17 @@ public partial class MainViewModel : ObservableObject
         SelectedItemButton = args.Button.ToString() + " Button";
     }
 
-    public void UpdateLastSeriesClicked(McTimelineSeriesClickedEventArgs args)
-    {
+    public void UpdateLastSeriesClicked(McTimelineSeriesClickedEventArgs args) {
         SelectedSeriesTitle = args.Series.Title ?? "";
         SelectedSeriesButton = args.Button.ToString() + " Button";
     }
 
     [RelayCommand]
-    public async Task AddNewSeries()
-    {
+    public async Task AddNewSeries() {
         var itemsCount = 500;
-        Series.Add(new McTimelineSeries($"Serie {_numeradorSeries++}", 
-            [.. MockTimelineItemsSeries.Generate(itemsCount, DataInici, DataFinal)]));
+        for (int i = 0; i < 3; i++) {
+            Series.Add(new McTimelineSeries($"Serie {_numeradorSeries++}",
+                [.. MockTimelineItemsSeries.Generate(itemsCount, DataInici, DataFinal)]));
+        }
     }
 }

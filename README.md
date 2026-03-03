@@ -11,6 +11,10 @@ It is implemented as a multi-targeted class library in `src/McTimeline/McTimelin
 - `net10.0-android`
 - `net10.0-ios`
 
+</br>
+
+![ScreenShot](./docs/screen01.png)
+
 ## Current capabilities
 
 - Canvas-based timeline rendering with virtualized viewport math (`McTimelineViewport`, `McVirtualTimeAxis`, `McVirtualSeriesAxis`)

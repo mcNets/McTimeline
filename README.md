@@ -1,70 +1,198 @@
 # McTimeline
 
-McTimeline is a reusable WinUI/Uno Platform timeline control designed to visualize time-based data across multiple series. It ships as a multi-targeted class library (`net9.0`, `net9.0-windows10.0.26100`, `net9.0-ios`, `net9.0-android`, `net9.0-desktop`, `net9.0-browserwasm`) so it can be consumed from WinAppSDK, Uno Platform, and cross-platform projects that share XAML and C#.
+`McTimeline` is a reusable Uno/WinUI timeline control for rendering time-based items grouped by series.
 
-## Features
+It is implemented as a multi-targeted class library in `src/McTimeline/McTimeline.csproj` and currently targets:
 
-- Timeline surface rendered on a `Canvas` for precise placement of scheduled items
-- Legend column powered by `ItemsRepeater` so you can bind any collection of series labels
-- Theme-aware resource dictionaries (light and dark) that respond automatically to `RequestedTheme`
-- Customizable visual parts via dependency properties (`TimeScaleStyle`, `LegendStyle`, `LegendItemStyle`, `TimelineScrollStyle`, `TimelineCanvasStyle`, `LegendItemTemplate`)
-- Exposed template parts (`PART_*`) to enable deeper styling or custom drawing logic when overriding the default control template
+- `net10.0`
+- `net10.0-desktop`
+- `net10.0-windows10.0.26100`
+- `net10.0-browserwasm`
+- `net10.0-android`
+- `net10.0-ios`
 
-## Getting Started
+## Current capabilities
 
-1. Reference the `McTimeline` project from your app or add the published package when available.
-2. Ensure the `xmlns:mctl="using:McTimeline"` namespace is declared in your XAML.
-3. Drop the control into your page and bind it to your data:
+- Canvas-based timeline rendering with virtualized viewport math (`McTimelineViewport`, `McVirtualTimeAxis`, `McVirtualSeriesAxis`)
+- Multi-series model with per-series style override (`McTimelineSeries.SeriesStyle`)
+- Day and hour scale rendering with adaptive hour label density based on zoom
+- Scroll and zoom interaction on pointer wheel:
+- `Ctrl + Wheel`: horizontal zoom (pixels-per-hour)
+- `Wheel`: horizontal timeline scroll
+- `Shift + Wheel`: vertical series scroll
+- Anchor-preserving zoom around mouse position
+- Legend panel (show/hide, configurable width, caption)
+- Click events for both timeline items and legend series, including pointer button info
+- Runtime style customization through dependency properties and resource dictionaries
+- Custom timeline bar type support via `TimelineBarType` (`ITimelineBar` + `FrameworkElement`)
+- Public refresh and fit APIs:
+- `Refresh()`
+- `ZoomSeriesToFit()`
+
+## Repository structure
+
+- `src/McTimeline/`: reusable control library
+- `src/McTimelineDemo/`: Uno demo app with live configuration panel and style presets
+- `src/Timeline.Tests/`: unit tests for viewport and axis logic
+- `src/CanvasTest/`: additional rendering/viewport experiments
+
+## Quick start
+
+1. Reference `src/McTimeline/McTimeline.csproj` from your app.
+2. Add the namespace in XAML: `xmlns:mctl="using:McTimeline"`.
+3. Bind your data and range.
 
 ```xaml
 <Page
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mctl="using:McTimeline">
-    <mctl:McTimeline Height="400" Width="800" />
+
+    <mctl:McTimeline
+        SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"
+        MinDate="{x:Bind ViewModel.DataInici, Mode=OneWay}"
+        MaxDate="{x:Bind ViewModel.DataFinal, Mode=OneWay}"
+        SeriesHeight="{x:Bind ViewModel.SeriesHeight, Mode=OneWay}"
+        ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=OneWay}"
+        LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=OneWay}"
+        PixelsPerHour="{x:Bind ViewModel.PixelsPerHour, Mode=TwoWay}" />
 </Page>
 ```
 
-> Tip: The control inherits `RequestedTheme`, so it will automatically pick up app or page-level theme changes.
+## Data model
 
-## Customizing The Look
+- `McTimelineSeriesCollection`: collection of timeline series
+- `McTimelineSeries`:
+- `Title`
+- `Items` (`ObservableCollection<McTimelineItem>`)
+- `SeriesStyle` (optional per-series style)
+- helper methods: `Add`, `Remove`, `Clear`, `Sort`, `SortDescending`
+- `McTimelineItem`:
+- `IdKey`, `Title`, `Description`
+- `Start`, `End`
+- `Visible`, `Selected`
 
-Every visual section of the control can be restyled. Define custom resources or templates and apply them via the dependency properties above:
+## Public API highlights
 
-```xaml
-<Page.Resources>
-    <Style x:Key="MyLegendStyle" TargetType="Border">
-        <Setter Property="Background" Value="DarkSlateGray" />
-        <Setter Property="BorderBrush" Value="LightGray" />
-    </Style>
-</Page.Resources>
+### Events
 
-<mctl:McTimeline LegendStyle="{StaticResource MyLegendStyle}" />
+- `ItemClicked` (`McTimelineItemClickedEventArgs`)
+- `SeriesClicked` (`McTimelineSeriesClickedEventArgs`)
+
+Both event args include:
+
+- clicked entity (`Item` or `Series`)
+- `SeriesIndex`
+- pointer button (`McTimelinePointerButton`: `Left`, `Right`, `Middle`, `X1`, `X2`)
+
+### Key dependency properties
+
+- data and range:
+- `SeriesCollection`
+- `MinDate`, `MaxDate`
+- layout and zoom:
+- `PixelsPerHour` (clamped to `[10, 300]`)
+- `SeriesHeight`
+- `ScaleHeight`
+- `LegendWidth`
+- legend:
+- `IsLegendVisible`
+- `LegendCaption`
+- styling:
+- `TimeScaleStyle`
+- `TimeScaleTextStyle`
+- `TimeScaleTickStyle`
+- `LegendStyle`
+- `LegendCaptionStyle`
+- `LegendItemStyle`
+- `TimelineScrollStyle`
+- `TimelineCanvasStyle`
+- `TimelineItemStyle`
+- `LegendItemTemplate`
+- extensibility:
+- `TimelineBarType`
+
+## Styling and theming
+
+The control ships theme-aware resources in:
+
+- `src/McTimeline/Themes/McTimelineResources.xaml`
+- `src/McTimeline/Themes/ThemeResources.Light.xaml`
+- `src/McTimeline/Themes/ThemeResources.Dark.xaml`
+- `src/McTimeline/Themes/Generic.xaml`
+
+See `src/McTimeline/README_STYLES.md` for the full catalog and examples.
+
+## Template parts
+
+If you replace `ControlTemplate`, keep these named parts compatible:
+
+- `PART_Container`
+- `PART_TimeScaleGrid`
+- `PART_TimeScaleDays`
+- `PART_TimeScaleHours`
+- `PART_LegendBorder`
+- `PART_SeriesRepeater`
+- `PART_TimelineScroll`
+- `PART_TimelineCanvas`
+- `PART_HScroll`
+- `PART_VScroll`
+- `PART_LegendCanvas`
+
+## Demo app functionality (`src/McTimelineDemo`)
+
+Current demo includes:
+
+- configuration panel with live controls for:
+- theme toggle
+- add new series
+- legend visibility
+- legend width
+- series height
+- scale height
+- pixels-per-hour (zoom)
+- zoom-series-to-fit action
+- style presets:
+- multicolor series styles
+- gradient series styles
+- selected item and selected series feedback panels
+- keyboard/mouse instruction helper for zoom/scroll behavior
+
+### Demo startup zoom
+
+- library style default is `McTimelineDefaultPixelsPerHour = 60`
+- demo forces startup zoom to `30` on page load and keeps `PixelsPerHour` bound in `TwoWay`
+- zoom changes from `Ctrl + Wheel` update the bound value and the configuration panel
+
+## Build and run
+
+Build library:
+
+```powershell
+dotnet build C:\Code\McTimeline\src\McTimeline\McTimeline.csproj -c Debug -f net10.0-desktop
 ```
 
-Light and dark theme resource dictionaries are provided out of the box. See `src/McTimeline/README_STYLES.md` for the full catalog of colors, brushes, dimensions, and template parts that ship with the control.
+Build demo:
 
-## Template Parts
+```powershell
+dotnet build C:\Code\McTimeline\src\McTimelineDemo\McTimelineDemo\McTimelineDemo.csproj -c Debug -f net10.0-desktop
+```
 
-Advanced scenarios can replace the default control template to draw custom time scale, legend, or item visuals. The default template exposes the following named parts:
+Run tests:
 
-| Part | Type | Purpose |
-| --- | --- | --- |
-| `PART_Container` | `Grid` | Root layout container |
-| `PART_TimeScaleGrid` | `Grid` | Hosts day/hour canvases |
-| `PART_TimeScaleDays` | `Canvas` | Draw day headers |
-| `PART_TimeScaleHours` | `Canvas` | Draw hour ticks |
-| `PART_LegendBorder` | `Border` | Wraps legend content |
-| `PART_SeriesRepeater` | `ItemsRepeater` | Renders series labels |
-| `PART_TimelineScroll` | `ScrollViewer` | Provides scroll/zoom viewport |
-| `PART_TimelineCanvas` | `Canvas` | Surface for timeline items |
+```powershell
+dotnet test C:\Code\McTimeline\src\Timeline.Tests\Timeline.Tests.csproj -c Debug
+```
 
-When you provide a custom `ControlTemplate`, ensure these parts are preserved (or replaced with equivalents) so the code-behind can locate them during `OnApplyTemplate`.
+## Test coverage in `Timeline.Tests`
 
-## Demo Application
+Current automated tests cover:
 
-A sample app lives under `src/McTimelineDemo/`. It shows how to embed the control in an Uno Platform solution, toggle between light and dark themes, and start experimenting with custom styles.
+- time-axis conversions, clamping, intersections, zoom-to-fit
+- series-axis conversions, clamping, scrolling, intersections, zoom-to-fit
+- viewport size/scroll synchronization and item positioning
 
-## Roadmap & Contributions
+## Notes
 
-The current implementation focuses on structure and styling hooks. Rendering logic for time scale markers, item positioning, and minimap interactions is evolving. Contributions and issue reports are welcome—open a discussion or pull request describing proposed improvements.
+- The project is under active development; implementation details can evolve.
+- If you update public behavior (properties, interactions, defaults), update this README and `src/McTimeline/README_STYLES.md` together.

@@ -19,7 +19,10 @@ public partial class MainViewModel : ObservableObject {
     public partial double ScaleHeight { get; set; } = 50;
 
     [ObservableProperty]
-    public partial double SeriesHeight { get; set; } = 30;
+    public partial double SeriesHeight { get; set; } = 40;
+
+    [ObservableProperty]
+    public partial double PixelsPerHour { get; set; } = 30;
 
     [ObservableProperty]
     public partial bool IsLegendVisible { get; set; } = true;

@@ -289,7 +289,7 @@ public sealed partial class McTimeline : Control {
             // Keep the world hour under the cursor fixed while zooming.
             var hoursAtCursorBeforeZoom = _viewport.TimeAxis.ScreenToHours(pointerX);
             var oldPixelsPerHour = _viewport.TimeAxis.PixelsPerHour;
-            _viewport.TimeAxis.PixelsPerHour = Math.Clamp(oldPixelsPerHour * zoomFactor, MinPixelsPerHour, MaxPixelsPerHour);
+            PixelsPerHour = Math.Clamp(oldPixelsPerHour * zoomFactor, MinPixelsPerHour, MaxPixelsPerHour);
             _viewport.TimeAxis.OffsetHours = hoursAtCursorBeforeZoom - (pointerX / _viewport.TimeAxis.PixelsPerHour);
             UpdateHScrollBar();
             InvalidateTimeline();

@@ -26,6 +26,7 @@
                                         LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=TwoWay}"
                                         SeriesHeight="{x:Bind ViewModel.SeriesHeight, Mode=TwoWay}"
                                         ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=TwoWay}"
+                                        PixelsPerHour="{x:Bind ViewModel.PixelsPerHour, Mode=TwoWay}"
                                         GradientsRequested="GradientsRequested_Click"
                                         MulticolorRequested="MulticolorRequested_Click"
                                         ZoomSeriesToFit="ZoomSeriesToFitButton_Click"/>
@@ -63,6 +64,7 @@
       <!-- Timeline control -->
       <mctl:McTimeline Grid.Row="3"
                        x:Name="TimelineControl"
+                       PixelsPerHour="{x:Bind ViewModel.PixelsPerHour, Mode=TwoWay}"
                        LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=OneWay}"
                        ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=OneWay}"
                        SeriesCollection="{x:Bind ViewModel.Series, Mode=OneWay}"

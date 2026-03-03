@@ -76,7 +76,7 @@ public sealed partial class McTimeline {
     }
 
     public static readonly DependencyProperty PixelsPerHourProperty =
-        DependencyProperty.Register(
+        DependencyProperty.Register( 
             nameof(PixelsPerHour),
             typeof(double),
             typeof(McTimeline),
@@ -110,7 +110,7 @@ public sealed partial class McTimeline {
             nameof(SeriesHeight),
             typeof(double),
             typeof(McTimeline),
-            new PropertyMetadata(30.0, OnSeriesHeightChanged));
+            new PropertyMetadata(40.0, OnSeriesHeightChanged));
 
     private static void OnSeriesHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is McTimeline timeline) {

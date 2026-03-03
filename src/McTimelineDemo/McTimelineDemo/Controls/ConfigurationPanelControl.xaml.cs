@@ -54,6 +54,14 @@ public sealed partial class ConfigurationPanelControl : UserControl {
     public static readonly DependencyProperty ScaleHeightProperty =
         DependencyProperty.Register(nameof(ScaleHeight), typeof(decimal), typeof(ConfigurationPanelControl), new PropertyMetadata(100));
 
+    public decimal PixelsPerHour {
+        get { return (decimal)GetValue(PixelsPerHourProperty); }
+        set { SetValue(PixelsPerHourProperty, value); }
+    }
+
+    public static readonly DependencyProperty PixelsPerHourProperty =
+        DependencyProperty.Register(nameof(PixelsPerHour), typeof(decimal), typeof(ConfigurationPanelControl), new PropertyMetadata(30));
+
     private void ZoomSeriesToFit_Click(object sender, RoutedEventArgs e) {
         ZoomSeriesToFit?.Invoke(this, e);
     }

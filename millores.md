@@ -14,9 +14,9 @@
 
 ## Millores d'estil/theming
 [ ]1. Brushes separats per: text escala, ticks, grid major/minor, linia `now`.
-[ ]2. Mides i espaiats configurables: alcada de files, alcada escala, mida font per nivell de zoom.
+[x]2. Mides i espaiats configurables: alcada de files, alcada escala, mida font per nivell de zoom.
 [ ]3. Estils diferenciats per `major ticks` (00:00, inici de dia) i `minor ticks`.
-[ ]4. Temes de demo predefinits (`Classic`, `High Contrast`, `Compact`).
+[ ]4. ~~Temes de demo predefinits (`Classic`, `High Contrast`, `Compact`).~~
 
 ## Rendiment i robustesa
 [ ] 1. Reutilitzacio incremental de visuals a escala (evitar `Children.Clear()` total cada redraw).

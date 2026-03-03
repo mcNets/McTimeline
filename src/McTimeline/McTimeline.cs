@@ -357,6 +357,12 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
+    /// <summary>
+    /// Handles the pointer pressed event on a timeline item.
+    /// </summary>
+    /// <param name="sender">The source of the event, expected to be an <see cref="Controls.ITimelineBar"/>.</param>
+    /// <param name="e">The pointer event arguments.</param>
+    /// <remarks>This method resolves the clicked item and raises the <see cref="ItemClicked"/> event with details about the clicked item and pointer button.</remarks>
     private void OnTimelineItemPointerPressed(object sender, PointerRoutedEventArgs e) {
         if (sender is not Controls.ITimelineBar bar) {
             return;
@@ -369,6 +375,12 @@ public sealed partial class McTimeline : Control {
         ItemClicked?.Invoke(this, new McTimelineItemClickedEventArgs(clickedItem, bar.SeriesIndex, GetPointerButton(e)));
     }
 
+    /// <summary>
+    /// Handles the pointer pressed event on a legend item.
+    /// </summary>
+    /// <param name="sender">The source of the event, expected to be a <see cref="FrameworkElement"/> representing the legend item.</param>
+    /// <param name="e">The pointer event arguments.</param>
+    /// <remarks>This method resolves the clicked series and raises the <see cref="SeriesClicked"/> event with details about the clicked series and pointer button.</remarks>
     private void OnLegendItemPointerPressed(object sender, PointerRoutedEventArgs e) {
         if (sender is not FrameworkElement legendElement) {
             return;
@@ -381,6 +393,12 @@ public sealed partial class McTimeline : Control {
         SeriesClicked?.Invoke(this, new McTimelineSeriesClickedEventArgs(clickedSeries, seriesIndex, GetPointerButton(e)));
     }
 
+    /// <summary>
+    /// Attempts to resolve the clicked timeline item based on the provided bar information.
+    /// </summary>
+    /// <param name="bar">The timeline bar that was clicked, containing series index and item key information.</param>
+    /// <param name="item">When this method returns, contains the resolved <see cref="McTimelineItem"/> if the resolution was successful; otherwise, null.</param>
+    /// <returns>True if the clicked item was successfully resolved; otherwise, false.</returns>
     private bool TryResolveClickedItem(Controls.ITimelineBar bar, out McTimelineItem? item) {
         item = null;
 
@@ -403,6 +421,14 @@ public sealed partial class McTimeline : Control {
         return false;
     }
 
+    
+    /// <summary>
+    /// Attempts to resolve the clicked series based on the provided legend element.
+    /// </summary>
+    /// <param name="legendElement">The legend element that was clicked.</param>
+    /// <param name="seriesIndex">When this method returns, contains the index of the resolved series if the resolution was successful; otherwise, -1.</param>
+    /// <param name="series">When this method returns, contains the resolved <see cref="McTimelineSeries"/> if the resolution was successful; otherwise, null.</param>
+    /// <returns>True if the clicked series was successfully resolved; otherwise, false.</returns>
     private bool TryResolveClickedSeries(FrameworkElement legendElement, out int seriesIndex, out McTimelineSeries? series) {
         seriesIndex = -1;
         series = null;
@@ -424,6 +450,12 @@ public sealed partial class McTimeline : Control {
         return series != null;
     }
 
+    /// <summary>
+    /// Determines which pointer button was pressed based on the provided pointer event arguments.
+    /// </summary>
+    /// <param name="e">The pointer event arguments containing information about the pointer state.</param>
+    /// <returns>A <see cref="McTimelinePointerButton"/> value indicating which pointer button was pressed.</returns>
+    /// <remarks>This method checks the pointer properties to determine which button was pressed, including left, right, middle, and extended buttons. If no known button is detected as pressed, it returns <see cref="McTimelinePointerButton.Unknown"/>.</remarks>
     private static McTimelinePointerButton GetPointerButton(PointerRoutedEventArgs e) {
         var props = e.GetCurrentPoint(null).Properties;
         if (props.IsLeftButtonPressed) {

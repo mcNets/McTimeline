@@ -123,4 +123,125 @@ public class McVirtualSeriesAxisTests {
 
         axis.SeriesHeight.Should().Be(0.5); // 50 / 100
     }
+
+    [Fact]
+    public void SetRange_ShouldThrowWhenMaxNotGreaterThanMin() {
+        var axis = new McVirtualSeriesAxis();
+
+        var act = () => axis.SetRange(5, 5);
+
+        act.Should().Throw<ArgumentException>();
+    }
+
+    [Fact]
+    public void SetRange_ShouldSetMinUnitsAndContentUnits() {
+        var axis = new McVirtualSeriesAxis();
+
+        axis.SetRange(2, 12);
+
+        axis.MinUnits.Should().Be(2);
+        axis.ContentUnits.Should().Be(10);
+    }
+
+    [Fact]
+    public void MaxOffsetSteps_ShouldCeilFractionalMaxOffsetUnits() {
+        // ViewportUnits = 45/10 = 4.5 → MaxOffsetUnits = 10 - 4.5 = 5.5
+        // MaxOffsetSteps = ceil(5.5 - epsilon) = 6
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 10,
+            SeriesHeight = 10,
+            ViewportPixels = 45
+        };
+
+        axis.MaxOffsetSteps.Should().Be(6);
+    }
+
+    [Fact]
+    public void MaxOffsetSteps_ShouldBeZeroWhenContentFitsViewport() {
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 5,
+            SeriesHeight = 10,
+            ViewportPixels = 100 // ViewportUnits = 10 > ContentUnits = 5
+        };
+
+        axis.MaxOffsetSteps.Should().Be(0);
+    }
+
+    [Fact]
+    public void UnitsToPixels_ShouldConvertCorrectly() {
+        var axis = new McVirtualSeriesAxis { SeriesHeight = 15 };
+
+        var px = axis.UnitsToPixels(4);
+
+        px.Should().Be(60); // 4 * 15
+    }
+
+    [Fact]
+    public void ViewportUnits_ShouldReturnPixelsDividedBySeriesHeight() {
+        var axis = new McVirtualSeriesAxis {
+            ViewportPixels = 150,
+            SeriesHeight = 30
+        };
+
+        axis.ViewportUnits.Should().Be(5);
+    }
+
+    [Fact]
+    public void VisibleUnitsRange_ShouldReturnCurrentViewRange() {
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 20,
+            SeriesHeight = 10,
+            ViewportPixels = 50,   // ViewportUnits = 5
+            OffsetUnits = 3
+        };
+
+        var (top, bottom) = axis.VisibleUnitsRange;
+
+        top.Should().Be(3);
+        bottom.Should().Be(8); // 3 + 5
+    }
+
+    [Fact]
+    public void ScrollNormalized_GetShouldReturnNormalizedPosition() {
+        // ContentUnits=10, SeriesHeight=10, ViewportPixels=50 → ViewportUnits=5, MaxOffsetUnits=5, MaxOffsetSteps=5
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 10,
+            SeriesHeight = 10,
+            ViewportPixels = 50,
+            OffsetUnits = 5   // at max
+        };
+
+        axis.ScrollNormalized.Should().BeApproximately(1.0, 0.001);
+    }
+
+    [Fact]
+    public void ScrollNormalized_SetShouldUpdateOffset() {
+        var axis = new McVirtualSeriesAxis {
+            ContentUnits = 10,
+            SeriesHeight = 10,
+            ViewportPixels = 50  // MaxOffsetSteps = 5
+        };
+
+        axis.ScrollNormalized = 0.0;
+
+        axis.OffsetUnits.Should().Be(0);
+    }
+
+    [Fact]
+    public void SeriesHeight_ShouldBeClampedToPositiveMinimum() {
+        var axis = new McVirtualSeriesAxis();
+
+        axis.SeriesHeight = -5;
+
+        axis.SeriesHeight.Should().BeGreaterThan(0);
+    }
+
+    [Fact]
+    public void ContentUnits_ShouldBeClampedToZero() {
+        var axis = new McVirtualSeriesAxis();
+
+        axis.ContentUnits = -10;
+
+        axis.ContentUnits.Should().Be(0);
+    }
 }

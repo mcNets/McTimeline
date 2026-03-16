@@ -4,7 +4,7 @@ namespace McTimeline.Controls;
 /// Represents a visual bar element that can be displayed on the timeline.
 /// This control is used to render individual timeline items with text and tooltip support.
 /// </summary>
-public sealed class McTimelineBar : Control, ITimelineBar {
+public sealed partial class McTimelineBar : Control, ITimelineBar {
     public McTimelineBar() {
         this.DefaultStyleKey = typeof(McTimelineBar);
     }

@@ -8,7 +8,7 @@ namespace McTimeline.Viewport;
 /// </summary>
 public sealed class McVirtualTimeAxis {
     private double _offsetHours;          // world units (hours, left of the viewport)
-    private double _pixelsPerHour = 10.0; // screen px per world unit (>0)
+    private double _pixelsPerHour = McConstants.MIN_PIXELS_PER_HOUR; // screen px per world unit (>0)
     private double _viewportPx;           // width of the viewport in pixels
     private double _contentHours;         // total length of the content in hours
 
@@ -41,7 +41,7 @@ public sealed class McVirtualTimeAxis {
     public double PixelsPerHour {
         get => _pixelsPerHour;
         set {
-            _pixelsPerHour = Math.Max(1e-6, value); // avoids 0 or negatives
+            _pixelsPerHour = Math.Max(McConstants.MIN_SERIES_HEIGHT, value); // avoids 0 or negatives
             _offsetHours = Math.Clamp(_offsetHours, 0, MaxOffsetHours);
         }
     }
@@ -160,7 +160,7 @@ public sealed class McVirtualTimeAxis {
     /// indicators.</remarks>
     public double ScrollNormalized {
         get {
-            var denom = Math.Max(MaxOffsetHours, 1e-6);
+            var denom = Math.Max(MaxOffsetHours, McConstants.MIN_SERIES_HEIGHT);
             return Math.Clamp(_offsetHours / denom, 0, 1);
         }
         set => OffsetHours = value * MaxOffsetHours;

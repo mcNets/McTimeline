@@ -108,7 +108,7 @@ public sealed partial class McTimeline : Control {
 
         // Initialize time axis
         _viewport.TimeAxis.SetRange(MinDate, MaxDate);
-        _viewport.TimeAxis.PixelsPerHour = Math.Clamp(PixelsPerHour, MinPixelsPerHour, MaxPixelsPerHour);
+        _viewport.TimeAxis.PixelsPerHour = Math.Clamp(PixelsPerHour, McConstants.MIN_PIXELS_PER_HOUR, McConstants.MAX_PIXELS_PER_HOUR);
         _viewport.TimeAxis.ViewportPixels = _timelineCanvas?.ActualWidth ?? 0;
 
         // Initialize series axis
@@ -284,12 +284,12 @@ public sealed partial class McTimeline : Control {
         var delta = e.GetCurrentPoint(_timelineCanvas).Properties.MouseWheelDelta;
         if ((e.KeyModifiers & VirtualKeyModifiers.Control) != 0) {
             // Zoom horizontal
-            double zoomFactor = delta > 0 ? 1.2 : 0.8;
+            double zoomFactor = delta > 0 ? McConstants.ZOOM_IN_FACTOR : McConstants.ZOOM_OUT_FACTOR;
             var pointerX = e.GetCurrentPoint(_timelineCanvas).Position.X;
             // Keep the world hour under the cursor fixed while zooming.
             var hoursAtCursorBeforeZoom = _viewport.TimeAxis.ScreenToHours(pointerX);
             var oldPixelsPerHour = _viewport.TimeAxis.PixelsPerHour;
-            PixelsPerHour = Math.Clamp(oldPixelsPerHour * zoomFactor, MinPixelsPerHour, MaxPixelsPerHour);
+            PixelsPerHour = Math.Clamp(oldPixelsPerHour * zoomFactor, McConstants.MIN_PIXELS_PER_HOUR, McConstants.MAX_PIXELS_PER_HOUR);
             _viewport.TimeAxis.OffsetHours = hoursAtCursorBeforeZoom - (pointerX / _viewport.TimeAxis.PixelsPerHour);
             UpdateHScrollBar();
             InvalidateTimeline();
@@ -303,7 +303,7 @@ public sealed partial class McTimeline : Control {
         }
         else {
             // Scroll vertical
-            double scrollDelta = delta > 0 ? -50 : 50; // Adjust step
+            double scrollDelta = delta > 0 ? -McConstants.SCROLL_DELTA_PIXELS : McConstants.SCROLL_DELTA_PIXELS;
             _viewport.TimeAxis.ScrollByPixels(scrollDelta);
             UpdateHScrollBar();
             InvalidateTimeline();
@@ -322,7 +322,7 @@ public sealed partial class McTimeline : Control {
             _hScroll.Value = _viewport.TimeAxis.OffsetHours;
             _hScroll.ViewportSize = _viewport.TimeAxis.ViewportHours;
             _hScroll.LargeChange = _viewport.TimeAxis.ViewportHours;
-            _hScroll.SmallChange = _viewport.TimeAxis.ViewportHours / 10;
+            _hScroll.SmallChange = _viewport.TimeAxis.ViewportHours / McConstants.HSCROLL_SMALL_CHANGE_DIVISOR;
         }
     }
 

@@ -10,15 +10,14 @@ public sealed class McVirtualSeriesAxis {
     #region Private fields
     
     private double _offsetUnits;          // world units (series indices, above the viewport)
-    private double _seriesHeight = 30.0;  // screen px per series (>0)
+    private double _seriesHeight = McConstants.SERIES_HEIGHT;  // screen px per series (>0)
     private double _viewportPx;           // height of the viewport in pixels
     private double _contentUnits;         // total number of series
 
     #endregion
 
     /// <summary>
-    /// Gets or sets the minimum unit value for the axis range.
-    /// (Minimum number of series)
+    /// Gets or sets the minimum unit value for the axis range. (Minimum number of series)
     /// </summary>
     public double MinUnits { get; set; } = 0;
 
@@ -54,7 +53,7 @@ public sealed class McVirtualSeriesAxis {
     public double SeriesHeight {
         get => _seriesHeight;
         set {
-            _seriesHeight = Math.Max(1e-6, value); // avoids 0 or negatives
+            _seriesHeight = Math.Max(McConstants.MIN_SERIES_HEIGHT, value); // avoids 0 or negatives
             ClampOffsetIntoRange();
         }
     }
@@ -107,8 +106,7 @@ public sealed class McVirtualSeriesAxis {
             if (raw <= 0) {
                 return 0;
             }
-            const double epsilon = 1e-9;
-            return Math.Ceiling(raw - epsilon);
+            return Math.Ceiling(raw - McConstants.MAX_OFFSET_EPSILON);
         }
     }
 
@@ -170,7 +168,7 @@ public sealed class McVirtualSeriesAxis {
     /// range. The value is clamped to the range [0, 1] when read.</remarks>
     public double ScrollNormalized {
         get {
-            var denom = Math.Max(MaxOffsetSteps, 1e-6);
+            var denom = Math.Max(MaxOffsetSteps, McConstants.MIN_SERIES_HEIGHT);
             return Math.Clamp(_offsetUnits / denom, 0, 1);
         }
         set => OffsetUnits = value * MaxOffsetSteps;

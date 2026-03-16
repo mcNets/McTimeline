@@ -58,7 +58,7 @@ public sealed partial class McTimeline : Control {
                 dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
                 dayLabel.Style = TimeScaleTextStyle;
                 dayLabel.Width = dayWidth;
-                const double dayTopPadding = 3;
+                const double dayTopPadding = Viewport.McConstants.DAY_LABEL_TOP_PADDING;
                 dayLabel.Height = Math.Max(0, canvasHeight - dayTopPadding);
                 dayLabel.TextAlignment = TextAlignment.Left;
                 dayLabel.VerticalAlignment = VerticalAlignment.Center;
@@ -141,7 +141,7 @@ public sealed partial class McTimeline : Control {
 
         // Tick dimensions
         const double tickWidth = 1;
-        double tickHeight = canvasHeight * 0.3; // 30% of canvas height
+        double tickHeight = canvasHeight * Viewport.McConstants.TICK_HEIGHT_RATIO; // 30% of canvas height
 
         // Render each clock hour within the visible range.
         while (currentHour <= endHour) {

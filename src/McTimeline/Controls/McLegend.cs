@@ -3,7 +3,7 @@ namespace McTimeline.Controls;
 /// <summary>
 /// Simple legend control composed of a border and centered text with overridable styles.
 /// </summary>
-public sealed class McLegend : Control {
+public sealed partial class McLegend : Control {
     public McLegend() {
         DefaultStyleKey = typeof(McLegend);
     }

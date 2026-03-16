@@ -1,9 +1,6 @@
 namespace McTimeline;
 
 public sealed partial class McTimeline {
-    private const double MinPixelsPerHour = 10.0;
-    private const double MaxPixelsPerHour = 300.0;
-
     #region Timeline series
 
     /// <summary>
@@ -80,12 +77,12 @@ public sealed partial class McTimeline {
             nameof(PixelsPerHour),
             typeof(double),
             typeof(McTimeline),
-            new PropertyMetadata(10.0, OnPixelsPerHourChanged));
+            new PropertyMetadata(Viewport.McConstants.MIN_PIXELS_PER_HOUR, OnPixelsPerHourChanged));
 
     private static void OnPixelsPerHourChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is McTimeline timeline) {
             double requested = (double)e.NewValue;
-            double coerced = Math.Clamp(requested, MinPixelsPerHour, MaxPixelsPerHour);
+            double coerced = Math.Clamp(requested, McConstants.MIN_PIXELS_PER_HOUR, McConstants.MAX_PIXELS_PER_HOUR);
             if (Math.Abs(requested - coerced) > double.Epsilon) {
                 timeline.SetValue(PixelsPerHourProperty, coerced);
                 return;
@@ -110,7 +107,7 @@ public sealed partial class McTimeline {
             nameof(SeriesHeight),
             typeof(double),
             typeof(McTimeline),
-            new PropertyMetadata(40.0, OnSeriesHeightChanged));
+            new PropertyMetadata(McConstants.SERIES_HEIGHT, OnSeriesHeightChanged));
 
     private static void OnSeriesHeightChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is McTimeline timeline) {

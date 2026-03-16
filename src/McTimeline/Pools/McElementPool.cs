@@ -1,3 +1,5 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace McTimeline.Pools;
 
 /// <summary>
@@ -5,7 +7,7 @@ namespace McTimeline.Pools;
 /// and improve rendering performance.
 /// </summary>
 /// <typeparam name="T">The type of element to pool. Must be a FrameworkElement.</typeparam>
-public class McElementPool<T> : IDisposable where T : FrameworkElement {
+public partial class McElementPool<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T> : IDisposable where T : FrameworkElement {
     private const int INITIAL_POOL_SIZE = 50;
 
     private readonly Stack<T> _pool;
@@ -48,7 +50,7 @@ public class McElementPool<T> : IDisposable where T : FrameworkElement {
     /// </summary>
     /// <param name="itemStyle">The style to apply to created elements.</param>
     /// <param name="initialSize">The initial number of elements to pre-create in the pool.</param>
-    public McElementPool(Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE) 
+    public McElementPool(Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE)
         : this(() => Activator.CreateInstance<T>(), itemStyle, initialSize) {
     }
 

@@ -114,10 +114,14 @@ public sealed class McTimelineViewport {
         UpdateVisibleSeriesRange();
     }
 
+    /// <summary>
+    /// Recalculates the visible series index range based on the current vertical axis state
+    /// and raises <see cref="VisibleSeriesRangeChanged"/> if the range has changed.
+    /// </summary>
     private void UpdateVisibleSeriesRange() {
         var (topUnits, bottomUnits) = SeriesAxis.VisibleUnitsRange;
         int minIndex = (int)Math.Floor(SeriesAxis.MinUnits);
-        int totalSeries = (int)Math.Max(0, Math.Floor(SeriesAxis.ContentUnits + 1e-6));
+        int totalSeries = (int)Math.Max(0, Math.Floor(SeriesAxis.ContentUnits + McConstants.MIN_SERIES_HEIGHT));
         int maxIndex = totalSeries > 0 ? minIndex + totalSeries - 1 : minIndex - 1;
 
         int newStart = totalSeries == 0

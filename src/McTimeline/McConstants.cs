@@ -1,7 +1,7 @@
-namespace McTimeline.Viewport;
+namespace McTimeline;
 
 /// <summary>
-/// Default and minimum constant values used by <see cref="McVirtualSeriesAxis"/>.
+/// Default and minimum constant values used in the <see cref="McTimeline"/> project.
 /// </summary>
 internal static class McConstants {
     /// <summary>
@@ -58,4 +58,9 @@ internal static class McConstants {
     /// Fraction of the time-scale canvas height used for hour tick marks.
     /// </summary>
     public const double TICK_HEIGHT_RATIO = 0.3;
+
+    /// <summary>
+    /// Initial number of elements to pre-create in each element pool.
+    /// </summary>
+    public const int INITIAL_POOL_SIZE = 50;
 }

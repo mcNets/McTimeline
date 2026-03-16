@@ -5,7 +5,6 @@ using Windows.Foundation;
 namespace McTimeline;
 
 public sealed partial class McTimeline : Control {
-
     /// <summary>
     /// Draws the day labels in the PART_TimeScaleDays canvas.
     /// Only renders days visible in the current viewport to optimize performance.
@@ -58,7 +57,7 @@ public sealed partial class McTimeline : Control {
                 dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
                 dayLabel.Style = TimeScaleTextStyle;
                 dayLabel.Width = dayWidth;
-                const double dayTopPadding = Viewport.McConstants.DAY_LABEL_TOP_PADDING;
+                const double dayTopPadding = McConstants.DAY_LABEL_TOP_PADDING;
                 dayLabel.Height = Math.Max(0, canvasHeight - dayTopPadding);
                 dayLabel.TextAlignment = TextAlignment.Left;
                 dayLabel.VerticalAlignment = VerticalAlignment.Center;
@@ -141,7 +140,7 @@ public sealed partial class McTimeline : Control {
 
         // Tick dimensions
         const double tickWidth = 1;
-        double tickHeight = canvasHeight * Viewport.McConstants.TICK_HEIGHT_RATIO; // 30% of canvas height
+        double tickHeight = canvasHeight * McConstants.TICK_HEIGHT_RATIO; // 30% of canvas height
 
         // Render each clock hour within the visible range.
         while (currentHour <= endHour) {

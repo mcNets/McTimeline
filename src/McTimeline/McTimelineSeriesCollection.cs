@@ -7,8 +7,10 @@ namespace McTimeline;
 /// Represents a collection of timeline series that can be observed for changes.
 /// </summary>
 public partial class McTimelineSeriesCollection : ObservableCollection<McTimelineSeries>, IDisposable {
+    #region Private fields
     private bool _disposed;
     private string _name = string.Empty;
+    #endregion
 
     /// <summary>
     /// Initializes a new instance of the <see cref="McTimelineSeriesCollection"/> class.

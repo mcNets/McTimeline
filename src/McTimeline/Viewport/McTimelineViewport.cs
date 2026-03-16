@@ -1,4 +1,5 @@
 using System;
+using McTimeline;
 using Windows.Foundation;
 
 namespace McTimeline.Viewport;
@@ -9,8 +10,10 @@ namespace McTimeline.Viewport;
 /// Provides methods for generating ticks, checking series visibility, and calculating item positions.
 /// </summary>
 public sealed class McTimelineViewport {
+    #region Private fields
     private int _visibleSeriesStartIndex;
     private int _visibleSeriesEndIndex = -1;
+    #endregion
 
     /// <summary>
     /// Time axis for horizontal positioning and time-based calculations.

@@ -1,3 +1,5 @@
+using McTimeline;
+
 namespace McTimeline.Viewport;
 
 /// <summary>
@@ -8,12 +10,10 @@ namespace McTimeline.Viewport;
 /// </summary>
 public sealed class McVirtualSeriesAxis {
     #region Private fields
-    
     private double _offsetUnits;          // world units (series indices, above the viewport)
     private double _seriesHeight = McConstants.SERIES_HEIGHT;  // screen px per series (>0)
     private double _viewportPx;           // height of the viewport in pixels
     private double _contentUnits;         // total number of series
-
     #endregion
 
     /// <summary>

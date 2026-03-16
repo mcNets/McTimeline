@@ -1,3 +1,5 @@
+using McTimeline;
+
 namespace McTimeline.Viewport;
 
 /// <summary>
@@ -7,10 +9,12 @@ namespace McTimeline.Viewport;
 /// Combines the functionality of virtual space management and time axis in a single class.
 /// </summary>
 public sealed class McVirtualTimeAxis {
+    #region Private fields
     private double _offsetHours;          // world units (hours, left of the viewport)
     private double _pixelsPerHour = McConstants.MIN_PIXELS_PER_HOUR; // screen px per world unit (>0)
     private double _viewportPx;           // width of the viewport in pixels
     private double _contentHours;         // total length of the content in hours
+    #endregion
 
     /// <summary>
     /// Gets the earliest date allowed for the operation or entity.

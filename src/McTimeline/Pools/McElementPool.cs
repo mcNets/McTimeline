@@ -8,12 +8,12 @@ namespace McTimeline.Pools;
 /// </summary>
 /// <typeparam name="T">The type of element to pool. Must be a FrameworkElement.</typeparam>
 public partial class McElementPool<[DynamicallyAccessedMembers(DynamicallyAccessedMemberTypes.PublicParameterlessConstructor)] T> : IDisposable where T : FrameworkElement {
-    private const int INITIAL_POOL_SIZE = 50;
-
+    #region Private fields
     private readonly Stack<T> _pool;
     private readonly Func<T> _factory;
     private bool _disposed;
     private Style? _itemStyle;
+    #endregion
 
     /// <summary>
     /// Gets or sets the style to apply to pooled elements.
@@ -29,12 +29,12 @@ public partial class McElementPool<[DynamicallyAccessedMembers(DynamicallyAccess
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="McElementPool{T}"/> class with a factory function.
+    /// Initializes a new instance of the <see cref="McElementPool{T}"/> class using a factory function supplied by the caller.
     /// </summary>
     /// <param name="factory">A function that creates new instances of T.</param>
     /// <param name="itemStyle">The style to apply to created elements.</param>
     /// <param name="initialSize">The initial number of elements to pre-create in the pool.</param>
-    public McElementPool(Func<T> factory, Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE) {
+    public McElementPool(Func<T> factory, Style? itemStyle = null, int initialSize = McConstants.INITIAL_POOL_SIZE) {
         _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         _pool = new Stack<T>(initialSize);
         ItemStyle = itemStyle;
@@ -50,7 +50,7 @@ public partial class McElementPool<[DynamicallyAccessedMembers(DynamicallyAccess
     /// </summary>
     /// <param name="itemStyle">The style to apply to created elements.</param>
     /// <param name="initialSize">The initial number of elements to pre-create in the pool.</param>
-    public McElementPool(Style? itemStyle = null, int initialSize = INITIAL_POOL_SIZE)
+    public McElementPool(Style? itemStyle = null, int initialSize = McConstants.INITIAL_POOL_SIZE)
         : this(() => Activator.CreateInstance<T>(), itemStyle, initialSize) {
     }
 

@@ -77,7 +77,7 @@ public sealed partial class McTimeline {
             nameof(PixelsPerHour),
             typeof(double),
             typeof(McTimeline),
-            new PropertyMetadata(Viewport.McConstants.MIN_PIXELS_PER_HOUR, OnPixelsPerHourChanged));
+            new PropertyMetadata(McConstants.MIN_PIXELS_PER_HOUR, OnPixelsPerHourChanged));
 
     private static void OnPixelsPerHourChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
         if (d is McTimeline timeline) {

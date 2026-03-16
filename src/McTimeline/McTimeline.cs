@@ -11,19 +11,7 @@ namespace McTimeline;
 /// Represents a timeline control that displays time-based series data with interactive navigation.
 /// </summary>
 public sealed partial class McTimeline : Control {
-
-    /// <summary>
-    /// Raised when a timeline item bar is clicked.
-    /// </summary>
-    public event EventHandler<McTimelineItemClickedEventArgs>? ItemClicked;
-
-    /// <summary>
-    /// Raised when a legend series is clicked.
-    /// </summary>
-    public event EventHandler<McTimelineSeriesClickedEventArgs>? SeriesClicked;
-
     #region Private fields
-
     private Grid? _container;
     private Grid? _timeScaleGrid;
     private Canvas? _timeScaleDays;
@@ -39,7 +27,6 @@ public sealed partial class McTimeline : Control {
     private ColumnDefinition? _timeScaleLegendColumn;
     private GridLength _legendColumnWidth;
     private GridLength _timeScaleLegendColumnWidth;
-
     private readonly McTimelineViewport _viewport;
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = new();
     private readonly McElementPool<McLegend> _legendItemPool;
@@ -49,8 +36,17 @@ public sealed partial class McTimeline : Control {
     private readonly McElementPool<TextBlock> _hourTextBlockPool;
     private readonly McElementPool<Border> _hourTickPool;
     private readonly List<FrameworkElement> _visibleHourElements = new();
-
     #endregion
+
+    /// <summary>
+    /// Raised when a timeline item bar is clicked.
+    /// </summary>
+    public event EventHandler<McTimelineItemClickedEventArgs>? ItemClicked;
+
+    /// <summary>
+    /// Raised when a legend series is clicked.
+    /// </summary>
+    public event EventHandler<McTimelineSeriesClickedEventArgs>? SeriesClicked;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="McTimeline"/> class.
@@ -282,8 +278,8 @@ public sealed partial class McTimeline : Control {
     /// </summary>
     private void OnCanvasPointerWheelChanged(object? sender, PointerRoutedEventArgs e) {
         var delta = e.GetCurrentPoint(_timelineCanvas).Properties.MouseWheelDelta;
+        // Zoom horizontal
         if ((e.KeyModifiers & VirtualKeyModifiers.Control) != 0) {
-            // Zoom horizontal
             double zoomFactor = delta > 0 ? McConstants.ZOOM_IN_FACTOR : McConstants.ZOOM_OUT_FACTOR;
             var pointerX = e.GetCurrentPoint(_timelineCanvas).Position.X;
             // Keep the world hour under the cursor fixed while zooming.
@@ -294,15 +290,15 @@ public sealed partial class McTimeline : Control {
             UpdateHScrollBar();
             InvalidateTimeline();
         }
+        // Scroll horizontal
         else if ((e.KeyModifiers & VirtualKeyModifiers.Shift) != 0) {
-            // Scroll horizontal
             double scrollDelta = delta > 0 ? -1 : 1; // Adjust step
             _viewport.SeriesAxis.OffsetUnits += scrollDelta;
             UpdateVScrollBar();
             InvalidateTimeline();
         }
+        // Scroll vertical
         else {
-            // Scroll vertical
             double scrollDelta = delta > 0 ? -McConstants.SCROLL_DELTA_PIXELS : McConstants.SCROLL_DELTA_PIXELS;
             _viewport.TimeAxis.ScrollByPixels(scrollDelta);
             UpdateHScrollBar();

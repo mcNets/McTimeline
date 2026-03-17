@@ -194,19 +194,20 @@ public sealed partial class McTimeline {
             throw new ArgumentNullException(nameof(type));
         }
 
-        if (!typeof(Controls.ITimelineBar).IsAssignableFrom(type)) {
-            throw new ArgumentException($"TimelineBarType must implement {nameof(Controls.ITimelineBar)}.", nameof(type));
+        if (!typeof(ITimelineBar).IsAssignableFrom(type)) {
+            throw new ArgumentException($"TimelineBarType must implement {nameof(ITimelineBar)}.", nameof(type));
         }
 
         if (!typeof(FrameworkElement).IsAssignableFrom(type)) {
             throw new ArgumentException($"TimelineBarType must derive from {nameof(FrameworkElement)}.", nameof(type));
         }
 
+        ClearTimelineVisuals();
+
         // Recreate the pool with the new type
         _seriesItemPool?.Dispose();
-        _seriesItemPool = new Pools.McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
+        _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
         
-        ClearTimelineVisuals();
         InvalidateTimeline();
     }
 

@@ -29,6 +29,7 @@
                                         PixelsPerHour="{x:Bind ViewModel.PixelsPerHour, Mode=TwoWay}"
                                         GradientsRequested="GradientsRequested_Click"
                                         MulticolorRequested="MulticolorRequested_Click"
+                                        DefaultStyleRequested="DefaultStyleRequested_Click"
                                         ZoomSeriesToFit="ZoomSeriesToFitButton_Click"/>
 
     <Button x:Name="ConfigToggleButton"

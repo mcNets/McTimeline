@@ -6,6 +6,7 @@ public sealed partial class ConfigurationPanelControl : UserControl {
     }
 
     public event EventHandler<RoutedEventArgs>? ZoomSeriesToFit;
+    public event EventHandler<RoutedEventArgs>? DefaultStyleRequested;
     public event EventHandler<RoutedEventArgs>? MulticolorRequested;
     public event EventHandler<RoutedEventArgs>? GradientsRequested;
 
@@ -66,11 +67,14 @@ public sealed partial class ConfigurationPanelControl : UserControl {
         ZoomSeriesToFit?.Invoke(this, e);
     }
 
-    private void MulticolorButton_Click(object sender, RoutedEventArgs e) {
-        MulticolorRequested?.Invoke(this, e);
-    }
-
-    private void GradientsButton_Click(object sender, RoutedEventArgs e) {
-        GradientsRequested?.Invoke(this, e);
+    private void StylingListBox_SelectionChanged(object sender, SelectionChangedEventArgs e) {
+        if (e.AddedItems.Count == 0 || e.AddedItems[0] is not ComboBoxItem item) {
+            return;
+        }
+        switch (item.Content as string) {
+            case "Default":    DefaultStyleRequested?.Invoke(this, new RoutedEventArgs()); break;
+            case "Multicolor": MulticolorRequested?.Invoke(this, new RoutedEventArgs()); break;
+            case "Gradients":  GradientsRequested?.Invoke(this, new RoutedEventArgs()); break;
+        }
     }
 }

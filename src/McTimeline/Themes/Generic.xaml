@@ -48,9 +48,7 @@
 				Value="{ThemeResource McTimelineDefaultLegendWidth}" />
 
 		<Setter Property="Template">
-
 			<Setter.Value>
-
 				<ControlTemplate TargetType="local:McTimeline">
 
 					<Grid x:Name="PART_Container"
@@ -167,11 +165,8 @@
 					</Grid>
 
 				</ControlTemplate>
-
 			</Setter.Value>
-
 		</Setter>
-
 	</Style>
 
 	<!-- McLegend Template -->
@@ -185,9 +180,7 @@
 		<Setter Property="Foreground" Value="{ThemeResource McTimelineForegroundBrush}" />
 
 		<Setter Property="Template">
-
 			<Setter.Value>
-
 				<ControlTemplate TargetType="controls:McLegend">
 
 					<Border
@@ -207,11 +200,8 @@
 					</Border>
 
 				</ControlTemplate>
-
 			</Setter.Value>
-
 		</Setter>
-		
 	</Style>
 
 	<!-- McTimelineBar Template -->
@@ -225,9 +215,7 @@
 		<Setter Property="Foreground" Value="{ThemeResource McTimelineForegroundBrush}" />
 
 		<Setter Property="Template">
-
 			<Setter.Value>
-
 				<ControlTemplate TargetType="controls:McTimelineBar">
 
 					<Border
@@ -249,11 +237,8 @@
 					</Border>
 
 				</ControlTemplate>
-
 			</Setter.Value>
-
 		</Setter>
-		
-	</Style>
+ 	</Style>
 
 </ResourceDictionary>

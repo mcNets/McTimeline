@@ -25,11 +25,6 @@ public sealed partial class McTimeline : Control {
         double canvasWidth = _timeScaleDays.ActualWidth;
         double canvasHeight = _timeScaleDays.ActualHeight;
 
-        // Apply clipping to prevent overflow
-        _timeScaleDays.Clip = new RectangleGeometry {
-            Rect = new Rect(0, 0, canvasWidth, canvasHeight)
-        };
-
         // Get visible date range from viewport
         var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;
 
@@ -100,11 +95,6 @@ public sealed partial class McTimeline : Control {
         // Calculate the width of the canvas
         double canvasWidth = _timeScaleHours.ActualWidth;
         double canvasHeight = _timeScaleHours.ActualHeight;
-
-        // Apply clipping to prevent overflow
-        _timeScaleHours.Clip = new RectangleGeometry {
-            Rect = new Rect(0, 0, canvasWidth, canvasHeight)
-        };
 
         // Get visible date range from viewport so ticks align with real hour boundaries (:00).
         var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;

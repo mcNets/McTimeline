@@ -64,11 +64,11 @@
 
                                 <TextBlock Text="Styling"/>
 
-                                <Button HorizontalAlignment="Stretch" Content="Multicolor"
-                                        Click="MulticolorButton_Click"/>
-
-                                <Button HorizontalAlignment="Stretch" Content="Gradients"
-                                        Click="GradientsButton_Click"/>
+                                <ComboBox HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="StylingListBox_SelectionChanged">
+                                        <ComboBoxItem Content="Default"/>
+                                        <ComboBoxItem Content="Multicolor"/>
+                                        <ComboBoxItem Content="Gradients"/>
+                                </ComboBox>
 
                         </StackPanel>
 

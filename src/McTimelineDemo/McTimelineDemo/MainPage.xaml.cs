@@ -90,6 +90,13 @@ public sealed partial class MainPage : Page
         ApplyStyles(_gradientStyleKeys);
     }
 
+    private void DefaultStyleRequested_Click(object sender, RoutedEventArgs e)
+    {
+        foreach (var series in ViewModel.Series) {
+            series.SeriesStyle = null;
+        }
+    }
+
     private void ConfigToggleButton_Click(object sender, RoutedEventArgs e)
     {
         _isConfigPanelExpanded = !_isConfigPanelExpanded;

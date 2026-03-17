@@ -14,35 +14,45 @@
             </ResourceDictionary.MergedDictionaries>
 
             <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Default">
-                    <Color x:Key="TL_Color1">#1496f6</Color>
-                    <Color x:Key="TL_Color2">#67e4ad</Color>
-                    <Color x:Key="TL_Color3">#7a67f8</Color>
-                    <Color x:Key="TL_Color4">#f85977</Color>
+                <ResourceDictionary x:Key="Light">
+                    <Color x:Key="TL_Color1">#86c6f5</Color>
+                    <Color x:Key="TL_Color2">#90e4bf</Color>
+                    <Color x:Key="TL_Color3">#aca1f7</Color>
+                    <Color x:Key="TL_Color4">#ad6d79</Color>
 
                     <Color x:Key="TL_GradStart1">#bcd4ec</Color>
                     <Color x:Key="TL_GradStart2">#c4e6d7</Color>
                     <Color x:Key="TL_GradStart3">#d2caef</Color>
                     <Color x:Key="TL_GradStart4">#f0cdd7</Color>
+                    
+                    <Color x:Key="TL_GradEnd1">#8394a4</Color>
+                    <Color x:Key="TL_GradEnd2">#82988e</Color>
+                    <Color x:Key="TL_GradEnd3">#6c687c</Color>
+                    <Color x:Key="TL_GradEnd4">#7e6c71</Color>
 
                     <Color x:Key="TL_GradBorder1">#78a9dc</Color>
                     <Color x:Key="TL_GradBorder2">#79c9aa</Color>
                     <Color x:Key="TL_GradBorder3">#9583d8</Color>
-                    <Color x:Key="TL_GradBorder4">#d6758c</Color>
+                    <Color x:Key="TL_GradBorder4">#958086</Color>
 
                     <Color x:Key="TL_GradEnd">#fafcff</Color>
                 </ResourceDictionary>
 
                 <ResourceDictionary x:Key="Dark">
-                    <Color x:Key="TL_Color1">#1496f6</Color>
-                    <Color x:Key="TL_Color2">#67e4ad</Color>
-                    <Color x:Key="TL_Color3">#7a67f8</Color>
-                    <Color x:Key="TL_Color4">#f85977</Color>
+                    <Color x:Key="TL_Color1">#07375a</Color>
+                    <Color x:Key="TL_Color2">#1a5538</Color>
+                    <Color x:Key="TL_Color3">#625b8c</Color>
+                    <Color x:Key="TL_Color4">#5c1128</Color>
 
                     <Color x:Key="TL_GradStart1">#2d4a72</Color>
                     <Color x:Key="TL_GradStart2">#2b5a4c</Color>
                     <Color x:Key="TL_GradStart3">#463a74</Color>
                     <Color x:Key="TL_GradStart4">#6b3a47</Color>
+                    
+                    <Color x:Key="TL_GradEnd1">#2b3136</Color>
+                    <Color x:Key="TL_GradEnd2">#2a322e</Color>
+                    <Color x:Key="TL_GradEnd3">#27262d</Color>
+                    <Color x:Key="TL_GradEnd4">#30292b</Color>
 
                     <Color x:Key="TL_GradBorder1">#7fa6db</Color>
                     <Color x:Key="TL_GradBorder2">#8acfb2</Color>
@@ -65,22 +75,22 @@
 
             <LinearGradientBrush x:Key="TL_GradientBrush1" StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart1}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd1}" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="TL_GradientBrush2" StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart2}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd2}" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="TL_GradientBrush3" StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart3}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd3}" />
             </LinearGradientBrush>
 
             <LinearGradientBrush x:Key="TL_GradientBrush4" StartPoint="0,0" EndPoint="1,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart4}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd4}" />
             </LinearGradientBrush>
 
             <Style x:Key="TL_MulticolorSeriesStyle1"
@@ -112,6 +122,7 @@
                    BasedOn="{StaticResource DefaultTimelineItemStyle}">
                 <Setter Property="Background" Value="{StaticResource TL_GradientBrush1}" />
                 <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush1}" />
+                <Setter Property="BorderThickness" Value="0" />
             </Style>
 
             <Style x:Key="TL_GradientSeriesStyle2"
@@ -119,6 +130,7 @@
                    BasedOn="{StaticResource DefaultTimelineItemStyle}">
                 <Setter Property="Background" Value="{StaticResource TL_GradientBrush2}" />
                 <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush2}" />
+                <Setter Property="BorderThickness" Value="0" />
             </Style>
 
             <Style x:Key="TL_GradientSeriesStyle3"
@@ -126,6 +138,7 @@
                    BasedOn="{StaticResource DefaultTimelineItemStyle}">
                 <Setter Property="Background" Value="{StaticResource TL_GradientBrush3}" />
                 <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush3}" />
+                <Setter Property="BorderThickness" Value="0" />
             </Style>
 
             <Style x:Key="TL_GradientSeriesStyle4"
@@ -133,6 +146,7 @@
                    BasedOn="{StaticResource DefaultTimelineItemStyle}">
                 <Setter Property="Background" Value="{StaticResource TL_GradientBrush4}" />
                 <Setter Property="BorderBrush" Value="{ThemeResource TL_GradBorderBrush4}" />
+                <Setter Property="BorderThickness" Value="0" />
             </Style>
 
         </ResourceDictionary>

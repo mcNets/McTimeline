@@ -3,7 +3,6 @@ using Microsoft.UI.Xaml.Controls.Primitives;
 using Microsoft.UI.Xaml.Input;
 using Windows.System;
 using Windows.Foundation;
-using Microsoft.UI.Xaml.Shapes;
 
 namespace McTimeline;
 
@@ -12,6 +11,14 @@ namespace McTimeline;
 /// </summary>
 public sealed partial class McTimeline : Control {
     #region Private fields
+    private readonly McTimelineViewport _viewport;
+    private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = [];
+    private readonly McElementPool<McLegend> _legendItemPool; 
+    private readonly McElementPool<TextBlock> _dayTextBlockPool;
+    private readonly List<TextBlock> _visibleDayLabels = [];
+    private readonly McElementPool<TextBlock> _hourTextBlockPool;
+    private readonly McElementPool<Border> _hourTickPool;
+    private readonly List<FrameworkElement> _visibleHourElements = [];
     private Grid? _container;
     private Grid? _timeScaleGrid;
     private Canvas? _timeScaleDays;
@@ -27,15 +34,7 @@ public sealed partial class McTimeline : Control {
     private ColumnDefinition? _timeScaleLegendColumn;
     private GridLength _legendColumnWidth;
     private GridLength _timeScaleLegendColumnWidth;
-    private readonly McTimelineViewport _viewport;
-    private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = new();
-    private readonly McElementPool<McLegend> _legendItemPool;
     private McElementPool<FrameworkElement> _seriesItemPool;
-    private readonly McElementPool<TextBlock> _dayTextBlockPool;
-    private readonly List<TextBlock> _visibleDayLabels = new();
-    private readonly McElementPool<TextBlock> _hourTextBlockPool;
-    private readonly McElementPool<Border> _hourTickPool;
-    private readonly List<FrameworkElement> _visibleHourElements = new();
     #endregion
 
     /// <summary>
@@ -58,7 +57,7 @@ public sealed partial class McTimeline : Control {
         _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
         _dayTextBlockPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
         _hourTextBlockPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
-        _hourTickPool = new McElementPool<Border>(() => new Border(), TimeScaleTickStyle);
+        _hourTickPool = new McElementPool<Border>(TimeScaleTickStyle);
     }
 
     /// <summary>
@@ -97,6 +96,9 @@ public sealed partial class McTimeline : Control {
 
         _legendCanvas?.SizeChanged += OnLegendCanvasSizeChanged;
 
+        _timeScaleDays?.SizeChanged += OnTimeScaleSizeChanged;
+        _timeScaleHours?.SizeChanged += OnTimeScaleSizeChanged;
+
         // Subscribe to scroll changes
         _timelineScroll?.ViewChanged += OnTimelineScrollViewChanged;
         _hScroll?.ValueChanged += OnHScrollValueChanged;
@@ -125,18 +127,27 @@ public sealed partial class McTimeline : Control {
     /// Updates the viewport dimensions and refreshes the display.
     /// </summary>
     private void OnTimelineCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
-        // Update viewport size when canvas size changes
+        _timelineCanvas!.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
         _viewport.OnSizeChanged(e.NewSize);
         _viewport.RefreshVisibleSeriesRange();
         UpdateHScrollBar();
         UpdateVScrollBar();
-        
-        // Update clipping to prevent overflow
-        _timelineCanvas?.Clip = new RectangleGeometry {
-                Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height)
-            };
-        
         InvalidateTimeline();
+    }
+
+    /// <summary>
+    /// Handles the size changed event of the time scale canvases.
+    /// Updates the clipping region and redraws labels to match the new size.
+    /// </summary>
+    private void OnTimeScaleSizeChanged(object sender, SizeChangedEventArgs e) {
+        if (sender == _timeScaleDays) {
+            _timeScaleDays.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
+            DrawDays();
+        }
+        else if (sender == _timeScaleHours) {
+            _timeScaleHours.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
+            DrawHours();
+        }
     }
 
     /// <summary>
@@ -144,9 +155,7 @@ public sealed partial class McTimeline : Control {
     /// Updates the clipping region to match the new size.
     /// </summary>
     private void OnLegendCanvasSizeChanged(object sender, SizeChangedEventArgs e) {
-        _legendCanvas?.Clip = new RectangleGeometry {
-                Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height)
-            };
+        _legendCanvas!.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
     }
 
     /// <summary>

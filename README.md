@@ -13,7 +13,7 @@ It is implemented as a multi-targeted class library in `src/McTimeline/McTimelin
 
 </br>
 
-![ScreenShot](./docs/screen01.png)
+![ScreenShot](./docs/screen02.png)
 
 ## Current capabilities
 

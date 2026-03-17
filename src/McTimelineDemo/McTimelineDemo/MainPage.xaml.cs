@@ -92,6 +92,7 @@ public sealed partial class MainPage : Page
 
     private void DefaultStyleRequested_Click(object sender, RoutedEventArgs e)
     {
+        _visualMode = SeriesVisualMode.None;
         foreach (var series in ViewModel.Series) {
             series.SeriesStyle = null;
         }

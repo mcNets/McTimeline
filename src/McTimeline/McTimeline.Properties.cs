@@ -160,7 +160,7 @@ public sealed partial class McTimeline {
 
     #endregion
 
-    #region Customization Properties
+    #region TimelineBar Type and Creation
 
     /// <summary>
     /// Gets or sets the type of control to use for timeline bars.
@@ -190,9 +190,7 @@ public sealed partial class McTimeline {
     /// <param name="type">The type to validate.</param>
     /// <exception cref="ArgumentException">Thrown if the type doesn't implement ITimelineBar or derive from FrameworkElement.</exception>
     private void ValidateAndUpdateBarType(Type type) {
-        if (type == null) {
-            throw new ArgumentNullException(nameof(type));
-        }
+        ArgumentNullException.ThrowIfNull(type);
 
         if (!typeof(ITimelineBar).IsAssignableFrom(type)) {
             throw new ArgumentException($"TimelineBarType must implement {nameof(ITimelineBar)}.", nameof(type));
@@ -212,9 +210,9 @@ public sealed partial class McTimeline {
     }
 
     /// <summary>
-    /// Creates a new instance of the timeline bar control.
+    /// Creates a new instance of the TimelineBar control.
     /// </summary>
-    /// <returns>A new timeline bar instance.</returns>
+    /// <returns>A new timeline bar instance according to the <see cref="TimelineBarType"/>.</returns>
     private FrameworkElement CreateTimelineBarInstance() {
         return (FrameworkElement)Activator.CreateInstance(TimelineBarType)!;
     }

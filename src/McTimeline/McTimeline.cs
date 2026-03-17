@@ -171,16 +171,6 @@ public sealed partial class McTimeline : Control {
     }
 
     /// <summary>
-    /// Updates the visibility of the legend based on the <see cref="IsLegendVisible"/> property.
-    /// </summary>
-    private void UpdateLegendVisibility() {
-        bool isVisible = IsLegendVisible;
-        _legendBorder?.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
-        _legendColumn?.Width = isVisible ? _legendColumnWidth : new GridLength(0);
-        _timeScaleLegendColumn?.Width = isVisible ? _timeScaleLegendColumnWidth : new GridLength(0);
-    }
-
-    /// <summary>
     /// Handles changes to the series collection when the collection is replaced.
     /// </summary>
     private void OnSeriesCollectionChanged(McTimelineSeriesCollection oldValue, McTimelineSeriesCollection newValue) {
@@ -244,6 +234,16 @@ public sealed partial class McTimeline : Control {
     private void SyncSeriesAxisWithCollection() {
         _viewport.SeriesAxis.ContentUnits = SeriesCollection?.Count ?? 0;
         _viewport.RefreshVisibleSeriesRange();
+    }
+
+    /// <summary>
+    /// Updates the visibility of the legend based on the <see cref="IsLegendVisible"/> property.
+    /// </summary>
+    private void UpdateLegendVisibility() {
+        bool isVisible = IsLegendVisible;
+        _legendBorder?.Visibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
+        _legendColumn?.Width = isVisible ? _legendColumnWidth : new GridLength(0);
+        _timeScaleLegendColumn?.Width = isVisible ? _timeScaleLegendColumnWidth : new GridLength(0);
     }
 
     /// <summary>
@@ -355,12 +355,6 @@ public sealed partial class McTimeline : Control {
         InvalidateTimeline();
     }
 
-    /// <summary>
-    /// Forces the timeline to redraw using current data and styles.
-    /// </summary>
-    public void Refresh() {
-        InvalidateTimeline();
-    }
 
     /// <summary>
     /// Handles the pointer pressed event on a timeline item.

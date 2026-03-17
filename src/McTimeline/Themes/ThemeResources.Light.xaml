@@ -8,7 +8,7 @@
 	<Color x:Key="McTimelineForegroundColor">#000000</Color>
 	<Color x:Key="McTimelineGridLineColor">#E0E0E0</Color>
 	<Color x:Key="McTimelineLegendBackgroundColor">#F5F5F5</Color>
-	<Color x:Key="McTimelineItemBackgroundColor">#3B5998</Color>
+	<Color x:Key="McTimelineItemBackgroundColor">#86b06d</Color>
 	<Color x:Key="McTimelineMinimapBackgroundColor">#FAFAFA</Color>
 	<Color x:Key="McTimelineHoverColor">#E5F3FF</Color>
 	<Color x:Key="McTimelineSelectionColor">#CCE8FF</Color>

@@ -31,7 +31,7 @@ public sealed partial class MainPage : Page
     public MainPage()
     {
         this.InitializeComponent();
-        Loaded += MainPage_Loaded;
+        //Loaded += MainPage_Loaded;
         TimelineControl.ItemClicked += TimelineControl_ItemClicked;
         TimelineControl.SeriesClicked += TimelineControl_SeriesClicked;
         ViewModel.Series.CollectionChanged += Series_CollectionChanged;
@@ -39,13 +39,13 @@ public sealed partial class MainPage : Page
         Task.Run(async () => await ViewModel.AddNewSeries());
     }
 
-    private void MainPage_Loaded(object sender, RoutedEventArgs e)
-    {
-        // Apply the demo startup zoom after template/style initialization.
-        ViewModel.PixelsPerHour = 30;
-        TimelineControl.PixelsPerHour = 30;
-        Loaded -= MainPage_Loaded;
-    }
+    // private void MainPage_Loaded(object sender, RoutedEventArgs e)
+    // {
+    //     // Apply the demo startup zoom after template/style initialization.
+    //     ViewModel.PixelsPerHour = 30;
+    //     TimelineControl.PixelsPerHour = 30;
+    //     Loaded -= MainPage_Loaded;
+    // }
 
     private void Series_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {

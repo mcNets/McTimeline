@@ -12,65 +12,71 @@
         <!-- Configuration panel -->
         <Border x:Name="ConfigPanelContainer"
                 Background="{ThemeResource SolidBackgroundFillColorTertiaryBrush}"
+                MaxWidth="200"
                 MinWidth="200">
 
                 <Grid>
 
                         <ScrollViewer VerticalScrollBarVisibility="Auto">
 
-                        <StackPanel x:Name="ConfigPanel"
-                                    Padding="20"
-                                    Spacing="20">
+                                <StackPanel x:Name="ConfigPanel"
+                                            Padding="20"
+                                            Spacing="20">
 
-                                <Button HorizontalAlignment="Stretch" Content="Change theme"
-                                        Click="ThemeButton_Click"/>
+                                        <Button HorizontalAlignment="Stretch"
+                                                Content="Change theme"
+                                                Click="ThemeButton_Click"/>
 
-                                <Button HorizontalAlignment="Stretch" Content="Add new series"
-                                        Command="{x:Bind AddNewSeries, Mode=OneWay}"/>
+                                        <Button HorizontalAlignment="Stretch"
+                                                Content="Add new series"
+                                                Command="{x:Bind AddNewSeries, Mode=OneWay}"/>
 
-                                <CheckBox IsChecked="{x:Bind IsLegendVisible, Mode=TwoWay}"
-                                          Content="Show legend"/>
+                                        <CheckBox IsChecked="{x:Bind IsLegendVisible, Mode=TwoWay}"
+                                                  Content="Show legend"/>
 
-                                <NumberBox Header="Legend width"
-                                           SpinButtonPlacementMode="Inline"
-                                           Minimum="100"
-                                           Maximum="300"
-                                           SmallChange="10"
-                                           Value="{x:Bind LegendWidth, Mode=TwoWay}"/>
+                                        <NumberBox Header="Legend width"
+                                                   SpinButtonPlacementMode="Inline"
+                                                   Minimum="100"
+                                                   Maximum="300"
+                                                   SmallChange="10"
+                                                   Value="{x:Bind LegendWidth, Mode=TwoWay}"/>
 
-                                <NumberBox Header="Series height"
-                                           SpinButtonPlacementMode="Inline"
-                                           Minimum="30"
-                                           Maximum="300"
-                                           SmallChange="10"
-                                           Value="{x:Bind SeriesHeight, Mode=TwoWay}"/>
+                                        <NumberBox Header="Series height"
+                                                   SpinButtonPlacementMode="Inline"
+                                                   Minimum="30"
+                                                   Maximum="300"
+                                                   SmallChange="10"
+                                                   Value="{x:Bind SeriesHeight, Mode=TwoWay}"/>
 
-                                <NumberBox Header="Scale height"
-                                           SpinButtonPlacementMode="Inline"
-                                           Minimum="50"
-                                           Maximum="200"
-                                           SmallChange="10"
-                                           Value="{x:Bind ScaleHeight, Mode=TwoWay}"/>
+                                        <NumberBox Header="Scale height"
+                                                   SpinButtonPlacementMode="Inline"
+                                                   Minimum="50"
+                                                   Maximum="200"
+                                                   SmallChange="10"
+                                                   Value="{x:Bind ScaleHeight, Mode=TwoWay}"/>
 
-                                <NumberBox Header="Zoom level"
-                                           SpinButtonPlacementMode="Inline"
-                                           Minimum="10"
-                                           Maximum="300"
-                                           SmallChange="10"
-                                           Value="{x:Bind PixelsPerHour, Mode=TwoWay}"/>
+                                        <NumberBox Header="Zoom level"
+                                                   SpinButtonPlacementMode="Inline"
+                                                   Minimum="10"
+                                                   Maximum="300"
+                                                   SmallChange="10"
+                                                   Value="{x:Bind PixelsPerHour, Mode=TwoWay}"/>
 
-                                <Button HorizontalAlignment="Stretch" Content="Zoom series to fit"
-                                        Click="ZoomSeriesToFit_Click"/>
+                                        <Button HorizontalAlignment="Stretch"
+                                                Content="Zoom series to fit"
+                                                Click="ZoomSeriesToFit_Click"/>
 
-                                <TextBlock Text="Styling"/>
+                                        <TextBlock Text="Styling"/>
 
-                                <ComboBox HorizontalAlignment="Stretch" SelectedIndex="0" SelectionChanged="StylingListBox_SelectionChanged">
-                                        <ComboBoxItem Content="Default"/>
-                                        <ComboBoxItem Content="Multicolor"/>
-                                        <ComboBoxItem Content="Gradients"/>
-                                </ComboBox>
+                                        <ComboBox HorizontalAlignment="Stretch"
+                                                  SelectedIndex="0"
+                                                  SelectionChanged="StylingListBox_SelectionChanged">
+                                                <ComboBoxItem Content="Default"/>
+                                                <ComboBoxItem Content="Multicolor"/>
+                                                <ComboBoxItem Content="Gradients"/>
+                                        </ComboBox>
 
-                        </StackPanel>
+                                </StackPanel>
 
                         </ScrollViewer>
                 </Grid>

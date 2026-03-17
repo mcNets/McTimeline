@@ -59,7 +59,7 @@
                     <Color x:Key="TL_GradBorder3">#a194de</Color>
                     <Color x:Key="TL_GradBorder4">#e08a9d</Color>
 
-                    <Color x:Key="TL_GradEnd">#0a0a0a</Color>
+                    <Color x:Key="TL_GradEnd">#181818</Color>
                 </ResourceDictionary>
             </ResourceDictionary.ThemeDictionaries>
 

@@ -109,7 +109,7 @@
         <Setter Property="Background"
                 Value="{ThemeResource McTimelineItemBackgroundBrush}" />
         <Setter Property="BorderBrush"
-                Value="{StaticResource McTimelineBorderBrush}" />
+                Value="{ThemeResource McTimelineBorderBrush}" />
         <Setter Property="BorderThickness"
                 Value="{StaticResource McTimelineBorderThickness}" />
         <Setter Property="CornerRadius"

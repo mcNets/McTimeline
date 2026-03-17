@@ -73,24 +73,24 @@
             <SolidColorBrush x:Key="TL_GradBorderBrush3" Color="{ThemeResource TL_GradBorder3}" />
             <SolidColorBrush x:Key="TL_GradBorderBrush4" Color="{ThemeResource TL_GradBorder4}" />
 
-            <LinearGradientBrush x:Key="TL_GradientBrush1" StartPoint="0,0" EndPoint="1,1">
+            <LinearGradientBrush x:Key="TL_GradientBrush1" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart1}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd1}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
             </LinearGradientBrush>
 
-            <LinearGradientBrush x:Key="TL_GradientBrush2" StartPoint="0,0" EndPoint="1,1">
+            <LinearGradientBrush x:Key="TL_GradientBrush2" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart2}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd2}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
             </LinearGradientBrush>
 
-            <LinearGradientBrush x:Key="TL_GradientBrush3" StartPoint="0,0" EndPoint="1,1">
+            <LinearGradientBrush x:Key="TL_GradientBrush3" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart3}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd3}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
             </LinearGradientBrush>
 
-            <LinearGradientBrush x:Key="TL_GradientBrush4" StartPoint="0,0" EndPoint="1,1">
+            <LinearGradientBrush x:Key="TL_GradientBrush4" StartPoint="0,0" EndPoint="0,1">
                 <GradientStop Offset="0" Color="{ThemeResource TL_GradStart4}" />
-                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd4}" />
+                <GradientStop Offset="1" Color="{ThemeResource TL_GradEnd}" />
             </LinearGradientBrush>
 
             <Style x:Key="TL_MulticolorSeriesStyle1"

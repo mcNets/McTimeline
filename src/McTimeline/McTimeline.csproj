@@ -32,6 +32,11 @@
 		</UnoFeatures>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<None Include="..\..\nuget_icon.jpg" Pack="true" PackagePath="\" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="\" />
+	</ItemGroup>
+
 	<ItemGroup Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">
 		<!--
     If you encounter this error message:

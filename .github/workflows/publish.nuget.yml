@@ -22,10 +22,10 @@ jobs:
       run: dotnet workload install android wasm-tools
 
     - name: Restore dependencies
-      run: dotnet restore src/McTimeline/McTimeline.csproj '-p:TargetFrameworks=net10.0;net10.0-android;net10.0-browserwasm;net10.0-desktop'
+      run: dotnet restore src/McTimeline/McTimeline.csproj
 
     - name: Build project
-      run: dotnet build src/McTimeline/McTimeline.csproj --configuration Release --no-restore '-p:TargetFrameworks=net10.0;net10.0-android;net10.0-browserwasm;net10.0-desktop'
+      run: dotnet build src/McTimeline/McTimeline.csproj --configuration Release --no-restore
 
     - name: Run tests
       run: dotnet test src/Timeline.Tests/Timeline.Tests.csproj --configuration Release

@@ -18,11 +18,14 @@ jobs:
       with:
         dotnet-version: '10.0.x'
 
+    - name: Install workloads
+      run: dotnet workload install android wasm-tools
+
     - name: Restore dependencies
-      run: dotnet restore src/McTimeline/McTimeline.csproj
+      run: dotnet restore src/McTimeline/McTimeline.csproj -p:TargetFrameworks="net10.0;net10.0-android;net10.0-browserwasm;net10.0-desktop"
 
     - name: Build project
-      run: dotnet build src/McTimeline/McTimeline.csproj --configuration Release --no-restore
+      run: dotnet build src/McTimeline/McTimeline.csproj --configuration Release --no-restore -p:TargetFrameworks="net10.0;net10.0-android;net10.0-browserwasm;net10.0-desktop"
 
     - name: Run tests
       run: dotnet test src/Timeline.Tests/Timeline.Tests.csproj --configuration Release

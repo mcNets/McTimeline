@@ -8,6 +8,20 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Title>McTimeline</Title>
+		<Authors>Joan Magnet</Authors>
+		<Description>McTimeline is a library for creating timeline visualizations on Desktop, WASM, Android, IOS and Windows platforms.</Description>
+		<Copyright>Joan Magnet</Copyright>
+		
+		<PackageProjectUrl>https://github.com/mcNets/McTimeline</PackageProjectUrl>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageOutputPath>.\Packages</PackageOutputPath>
+		<PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+		<PackageIcon>nuget_icon.jpg</PackageIcon>
+		
+		<Version>0.0.1</Version>
+
 		<!--
       UnoFeatures let's you quickly add and manage implicit package references based on the features you want to use.
       https://aka.platform.uno/singleproject-features
@@ -31,10 +45,6 @@
     -->
 		<!-- <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" RuntimeFrameworkVersion="10.0.22621.28" />
     <FrameworkReference Update="Microsoft.Windows.SDK.NET.Ref" TargetingPackVersion="10.0.22621.28" /> -->
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Folder Include="Series\" />
 	</ItemGroup>
 
 </Project>

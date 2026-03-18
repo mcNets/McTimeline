@@ -1,0 +1,36 @@
+name: Publish NuGet Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore src/McTimeline/McTimeline.csproj -p:TargetFrameworks="net10.0;net10.0-android;net10.0-browserwasm;net10.0-desktop"
+
+    - name: Build project
+      run: dotnet build src/McTimeline/McTimeline.csproj --configuration Release --no-restore -p:TargetFrameworks="net10.0;net10.0-android;net10.0-browserwasm;net10.0-desktop"
+
+    - name: Run tests
+      run: dotnet test src/Timeline.Tests/Timeline.Tests.csproj --configuration Release
+
+    - name: List packaged files
+      run: ls -la src/McTimeline/Packages
+
+    - name: Publish to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+      run: dotnet nuget push src/McTimeline/Packages/*.nupkg --api-key $NUGET_API_KEY --source https://api.nuget.org/v3/index.json --skip-duplicate

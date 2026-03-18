@@ -59,9 +59,9 @@
           <Color x:Key="TL_GradBorder3">#a194de</Color>
           <Color x:Key="TL_GradBorder4">#e08a9d</Color>
 
-          <Color x:Key="TL_GradEnd">#0a0a0a</Color>
-        </ResourceDictionary>
-      </ResourceDictionary.ThemeDictionaries>
+                    <Color x:Key="TL_GradEnd">#181818</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.ThemeDictionaries>
 
       <SolidColorBrush x:Key="TL_Brush1"
                        Color="{ThemeResource TL_Color1}" />

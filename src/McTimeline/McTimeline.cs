@@ -13,16 +13,17 @@ public sealed partial class McTimeline : Control {
     #region Private fields
     private readonly McTimelineViewport _viewport;
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = [];
-    private readonly McElementPool<McLegend> _legendItemPool; 
-    private readonly McElementPool<TextBlock> _dayTextBlockPool;
-    private readonly List<TextBlock> _visibleDayLabels = [];
-    private readonly McElementPool<TextBlock> _hourTextBlockPool;
-    private readonly McElementPool<Border> _hourTickPool;
+    private readonly Dictionary<DateTime, TextBlock> _visibleDayLabels = [];
     private readonly List<FrameworkElement> _visibleHourElements = [];
+    private readonly McElementPool<McLegend> _legendItemPool; 
+    private readonly McElementPool<TextBlock> _scaleDaysPool;
+    private McElementPool<FrameworkElement> _seriesItemPool;
+    private readonly McElementPool<TextBlock> _scaleHoursPool;
+    private readonly McElementPool<Border> _hourTickPool;
     private Grid? _container;
     private Grid? _timeScaleGrid;
-    private Canvas? _timeScaleDays;
-    private Canvas? _timeScaleHours;
+    private Canvas? _scaleDaysCanvas;
+    private Canvas? _scaleHoursCanvas;
     private Border? _legendBorder;
     private ItemsRepeater? _seriesRepeater;
     private ScrollViewer? _timelineScroll;
@@ -34,7 +35,6 @@ public sealed partial class McTimeline : Control {
     private ColumnDefinition? _timeScaleLegendColumn;
     private GridLength _legendColumnWidth;
     private GridLength _timeScaleLegendColumnWidth;
-    private McElementPool<FrameworkElement> _seriesItemPool;
     #endregion
 
     /// <summary>
@@ -55,8 +55,8 @@ public sealed partial class McTimeline : Control {
         _viewport = new McTimelineViewport();
         _legendItemPool = new McElementPool<McLegend>(LegendStyle);
         _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
-        _dayTextBlockPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
-        _hourTextBlockPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
+        _scaleDaysPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
+        _scaleHoursPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
         _hourTickPool = new McElementPool<Border>(TimeScaleTickStyle);
     }
 
@@ -68,14 +68,14 @@ public sealed partial class McTimeline : Control {
 
         _container = GetTemplateChild("PART_Container") as Grid;
         _timeScaleGrid = GetTemplateChild("PART_TimeScaleGrid") as Grid;
-        _timeScaleDays = GetTemplateChild("PART_TimeScaleDays") as Canvas;
-        _timeScaleHours = GetTemplateChild("PART_TimeScaleHours") as Canvas;
         _legendBorder = GetTemplateChild("PART_LegendBorder") as Border;
         _seriesRepeater = GetTemplateChild("PART_SeriesRepeater") as ItemsRepeater;
         _timelineScroll = GetTemplateChild("PART_TimelineScroll") as ScrollViewer;
-        _timelineCanvas = GetTemplateChild("PART_TimelineCanvas") as Canvas;
         _hScroll = GetTemplateChild("PART_HScroll") as ScrollBar;
         _vScroll = GetTemplateChild("PART_VScroll") as ScrollBar;
+        _scaleDaysCanvas = GetTemplateChild("PART_TimeScaleDays") as Canvas;
+        _scaleHoursCanvas = GetTemplateChild("PART_TimeScaleHours") as Canvas;
+        _timelineCanvas = GetTemplateChild("PART_TimelineCanvas") as Canvas;
         _legendCanvas = GetTemplateChild("PART_LegendCanvas") as Canvas;
 
         // Adjust legend column width
@@ -96,8 +96,8 @@ public sealed partial class McTimeline : Control {
 
         _legendCanvas?.SizeChanged += OnLegendCanvasSizeChanged;
 
-        _timeScaleDays?.SizeChanged += OnTimeScaleSizeChanged;
-        _timeScaleHours?.SizeChanged += OnTimeScaleSizeChanged;
+        _scaleDaysCanvas?.SizeChanged += OnTimeScaleSizeChanged;
+        _scaleHoursCanvas?.SizeChanged += OnTimeScaleSizeChanged;
 
         // Subscribe to scroll changes
         _timelineScroll?.ViewChanged += OnTimelineScrollViewChanged;
@@ -140,12 +140,12 @@ public sealed partial class McTimeline : Control {
     /// Updates the clipping region and redraws labels to match the new size.
     /// </summary>
     private void OnTimeScaleSizeChanged(object sender, SizeChangedEventArgs e) {
-        if (sender == _timeScaleDays) {
-            _timeScaleDays.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
+        if (sender == _scaleDaysCanvas) {
+            _scaleDaysCanvas.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
             DrawDays();
         }
-        else if (sender == _timeScaleHours) {
-            _timeScaleHours.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
+        else if (sender == _scaleHoursCanvas) {
+            _scaleHoursCanvas.Clip = new RectangleGeometry { Rect = new Rect(0, 0, e.NewSize.Width, e.NewSize.Height) };
             DrawHours();
         }
     }

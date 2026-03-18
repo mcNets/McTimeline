@@ -1,6 +1,5 @@
 using System.Globalization;
-// using Microsoft.UI.Xaml.Shapes;
-// using Windows.Foundation;
+using Microsoft.UI;
 
 namespace McTimeline;
 
@@ -10,29 +9,42 @@ public sealed partial class McTimeline : Control {
     /// Only renders days visible in the current viewport to optimize performance.
     /// </summary>
     private void DrawDays() {
-        if (_timeScaleDays == null) {
+        if (_scaleDaysCanvas == null) {
             return;
         }
 
-        // Clear existing day labels
-        _timeScaleDays.Children.Clear();
-        foreach (var label in _visibleDayLabels) {
-            _dayTextBlockPool.RecycleElement(label);
-        }
-        _visibleDayLabels.Clear();
-
         // Calculate the width of the canvas
-        double canvasWidth = _timeScaleDays.ActualWidth;
-        double canvasHeight = _timeScaleDays.ActualHeight;
+        double canvasWidth = _scaleDaysCanvas.ActualWidth;
+        double canvasHeight = _scaleDaysCanvas.ActualHeight;
 
         // Get visible date range from viewport
         var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;
 
-        // Start from the beginning of the first visible day
-        DateTime currentDay = visibleStart.Date;
-        DateTime endDay = visibleEnd.Date.AddDays(1);
+        DateTime firstVisibleDay = visibleStart.Date;
+        DateTime lastVisibleDay = visibleEnd.Date;
 
-        // Render each day within the visible range
+        // Remove day labels that are no longer in the visible range
+        Span<DateTime> keysBuffer = stackalloc DateTime[_visibleDayLabels.Count];
+        int count = 0;
+        foreach (var key in _visibleDayLabels.Keys) {
+            if (key < firstVisibleDay || key > lastVisibleDay) {
+                keysBuffer[count++] = key;
+            }
+        }
+        for (int i = 0; i < count; i++) {
+            DateTime key = keysBuffer[i];
+            if (_visibleDayLabels.TryGetValue(key, out var label)) {
+                _scaleDaysCanvas.Children.Remove(label);
+                _scaleDaysPool.RecycleElement(label);
+                _visibleDayLabels.Remove(key);
+            }
+        }
+
+        // Add or update visible day labels
+        DateTime currentDay = firstVisibleDay;
+        DateTime endDay = lastVisibleDay.AddDays(1);
+        const double dayTopPadding = McConstants.DAY_LABEL_TOP_PADDING;
+
         while (currentDay < endDay) {
             // Calculate position for this day
             double hoursFromMin = (currentDay - _viewport.TimeAxis.MinDate).TotalHours;
@@ -46,27 +58,28 @@ public sealed partial class McTimeline : Control {
 
             // Render only if this day cell intersects the viewport.
             if (nextX > 0 && x < canvasWidth) {
+                if (!_visibleDayLabels.TryGetValue(currentDay, out TextBlock? dayLabel) || dayLabel == null) {
+                    // Create new label for a day entering the viewport
+                    dayLabel = _scaleDaysPool.GetElement();
+                    dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
+                    dayLabel.Style = TimeScaleTextStyle;
+                    dayLabel.TextAlignment = TextAlignment.Left;
+                    dayLabel.VerticalAlignment = VerticalAlignment.Center;
+                    _visibleDayLabels[currentDay] = dayLabel;
+                    _scaleDaysCanvas.Children.Add(dayLabel);
+                }
+                else {
+                    // Update style in case it changed
+                    dayLabel.Style = TimeScaleTextStyle;
+                }
 
-                // Create or reuse TextBlock for day label
-                TextBlock dayLabel = _dayTextBlockPool.GetElement();
-                dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
-                dayLabel.Style = TimeScaleTextStyle;
+                // Always update size and position (handles zoom/pan changes)
                 dayLabel.Width = dayWidth;
-                const double dayTopPadding = McConstants.DAY_LABEL_TOP_PADDING;
                 dayLabel.Height = Math.Max(0, canvasHeight - dayTopPadding);
-                dayLabel.TextAlignment = TextAlignment.Left;
-                dayLabel.VerticalAlignment = VerticalAlignment.Center;
-
-                // Position the label
                 Canvas.SetLeft(dayLabel, x);
                 Canvas.SetTop(dayLabel, dayTopPadding);
-
-                // Add to canvas
-                _timeScaleDays.Children.Add(dayLabel);
-                _visibleDayLabels.Add(dayLabel);
             }
 
-            // Move to next day
             currentDay = currentDay.AddDays(1);
         }
     }
@@ -76,15 +89,15 @@ public sealed partial class McTimeline : Control {
     /// Always renders tick marks for each hour. Only renders hour labels when there is enough space.
     /// </summary>
     private void DrawHours() {
-        if (_timeScaleHours == null) {
+        if (_scaleHoursCanvas == null) {
             return;
         }
 
         // Clear existing hour elements
-        _timeScaleHours.Children.Clear();
+        _scaleHoursCanvas.Children.Clear();
         foreach (var element in _visibleHourElements) {
             if (element is TextBlock textBlock) {
-                _hourTextBlockPool.RecycleElement(textBlock);
+                _scaleHoursPool.RecycleElement(textBlock);
             }
             else if (element is Border border) {
                 _hourTickPool.RecycleElement(border);
@@ -93,8 +106,8 @@ public sealed partial class McTimeline : Control {
         _visibleHourElements.Clear();
 
         // Calculate the width of the canvas
-        double canvasWidth = _timeScaleHours.ActualWidth;
-        double canvasHeight = _timeScaleHours.ActualHeight;
+        double canvasWidth = _scaleHoursCanvas.ActualWidth;
+        double canvasHeight = _scaleHoursCanvas.ActualHeight;
 
         // Get visible date range from viewport so ticks align with real hour boundaries (:00).
         var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;
@@ -150,12 +163,12 @@ public sealed partial class McTimeline : Control {
                 Canvas.SetLeft(tick, x);
                 Canvas.SetTop(tick, canvasHeight - tickHeight);
                 
-                _timeScaleHours.Children.Add(tick);
+                _scaleHoursCanvas.Children.Add(tick);
                 _visibleHourElements.Add(tick);
 
                 // Draw labels at an adaptive cadence to avoid overlap when zoomed out.
                 if (currentHour.Hour % hourLabelStep == 0) {
-                    TextBlock hourLabel = _hourTextBlockPool.GetElement();
+                    TextBlock hourLabel = _scaleHoursPool.GetElement();
                     hourLabel.Text = currentHour.ToString("HH", CultureInfo.CurrentCulture);
                     hourLabel.Style = TimeScaleTextStyle;
                     hourLabel.Width = labelSlotWidth;
@@ -167,7 +180,7 @@ public sealed partial class McTimeline : Control {
                     Canvas.SetLeft(hourLabel, x - (labelSlotWidth / 2));
                     Canvas.SetTop(hourLabel, 2);
                     
-                    _timeScaleHours.Children.Add(hourLabel);
+                    _scaleHoursCanvas.Children.Add(hourLabel);
                     _visibleHourElements.Add(hourLabel);
                 }
             }

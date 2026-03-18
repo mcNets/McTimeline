@@ -16,10 +16,10 @@
          TargetType="TextBlock">
     <Setter Property="Foreground"
             Value="{ThemeResource McTimelineForegroundBrush}" />
-    <Setter Property="FontFamily"
-            Value="{ThemeResource McTimelineFontFamily}" />
+    <!-- <Setter Property="FontFamily"
+            Value="{ThemeResource McTimelineFontFamily}" /> -->
     <Setter Property="FontSize"
-            Value="{ThemeResource McTimelineFontSize}" />
+            Value="{ThemeResource McTimelineLargeFontSize}" />
   </Style>
 
   <Style x:Key="DefaultTimeScaleTickStyle"

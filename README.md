@@ -1,5 +1,8 @@
 # McTimeline
 
+![Latest Release](https://img.shields.io/github/v/release/mcNets/McTimeline?label=Latest%20Release&color=green) 
+[![NuGet](https://img.shields.io/nuget/v/McTimeline)](https://www.nuget.org/packages/McTimeline/)
+
 `McTimeline` is a reusable Uno/WinUI timeline control for rendering time-based items grouped by series.
 
 It is implemented as a multi-targeted class library in `src/McTimeline/McTimeline.csproj` and currently targets:

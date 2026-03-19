@@ -14,11 +14,11 @@ public sealed partial class McTimeline : Control {
     private readonly McTimelineViewport _viewport;
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = [];
     private readonly Dictionary<DateTime, TextBlock> _visibleDays = [];
-    private readonly List<FrameworkElement> _visibleHourElements = [];
+    private readonly List<FrameworkElement> _visibleHours = [];
     private readonly McElementPool<McLegend> _legendItemPool; 
     private readonly McElementPool<TextBlock> _scaleDaysPool;
-    private McElementPool<FrameworkElement> _seriesItemPool;
     private readonly McElementPool<TextBlock> _scaleHoursPool;
+    private McElementPool<FrameworkElement> _seriesItemPool;
     private readonly McElementPool<Border> _hourTickPool;
     private Grid? _container;
     private Grid? _timeScaleGrid;

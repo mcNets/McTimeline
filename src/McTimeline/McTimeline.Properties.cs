@@ -288,6 +288,21 @@ public sealed partial class McTimeline {
             new PropertyMetadata(null));
 
     /// <summary>
+    /// Gets or sets the style for hours labels in the time scale.
+    /// </summary>
+    public Style? TimeScaleHoursStyle {
+        get => (Style?)GetValue(TimeScaleHoursStyleProperty);
+        set => SetValue(TimeScaleHoursStyleProperty, value);
+    }
+
+    public static readonly DependencyProperty TimeScaleHoursStyleProperty =
+        DependencyProperty.Register(
+            nameof(TimeScaleHoursStyle),
+            typeof(Style),
+            typeof(McTimeline),
+            new PropertyMetadata(null));
+
+    /// <summary>
     /// Gets or sets the style for time-scale tick visuals and scale background border.
     /// </summary>
     public Style? TimeScaleTickStyle {

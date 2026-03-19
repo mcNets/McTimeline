@@ -17,7 +17,7 @@
     <Setter Property="Foreground"
             Value="{ThemeResource McTimelineForegroundBrush}" />
     <Setter Property="FontSize"
-            Value="{ThemeResource McTimelineFontSize}" />
+            Value="{StaticResource McTimelineFontSize}" />
     <Setter Property="TextAlignment"
             Value="Left" />
     <Setter Property="VerticalAlignment"
@@ -26,10 +26,28 @@
             Value="0,3,0,0" />
   </Style>
 
+  <Style x:Key="DefaultTimeScaleHoursStyle"
+         TargetType="TextBlock">
+    <Setter Property="Foreground"
+            Value="{ThemeResource McTimelineForegroundBrush}" />
+    <Setter Property="FontSize"
+            Value="{StaticResource McTimelineSmallFontSize}" />
+    <Setter Property="TextAlignment"
+            Value="Center" />
+    <Setter Property="VerticalAlignment"
+            Value="Top" />
+    <Setter Property="Padding"
+            Value="0,0,0,0" />
+  </Style>
+
   <Style x:Key="DefaultTimeScaleTickStyle"
          TargetType="Border">
     <Setter Property="Background"
             Value="{ThemeResource McTimelineScaleBackgroundBrush}" />
+    <Setter Property="BorderBrush"
+            Value="White" />
+    <Setter Property="BorderThickness"
+            Value="1" />
   </Style>
 
   <!-- Default style for legend border -->

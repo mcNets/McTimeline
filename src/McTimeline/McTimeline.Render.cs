@@ -73,7 +73,8 @@ public sealed partial class McTimeline : Control {
 
     /// <summary>
     /// Draws the hour labels and tick marks in the PART_TimeScaleHours canvas.
-    /// Always renders tick marks for each hour. Only renders hour labels when there is enough space.
+    /// Always renders tick marks for each hour. 
+    /// Only renders hour labels when there is enough space.
     /// </summary>
     private void DrawHours() {
         if (_scaleHoursCanvas == null) {
@@ -82,7 +83,7 @@ public sealed partial class McTimeline : Control {
 
         // Clear existing hour elements
         _scaleHoursCanvas.Children.Clear();
-        foreach (var element in _visibleHourElements) {
+        foreach (var element in _visibleHours) {
             if (element is TextBlock textBlock) {
                 _scaleHoursPool.RecycleElement(textBlock);
             }
@@ -90,7 +91,7 @@ public sealed partial class McTimeline : Control {
                 _hourTickPool.RecycleElement(border);
             }
         }
-        _visibleHourElements.Clear();
+        _visibleHours.Clear();
 
         // Calculate the width of the canvas
         double canvasWidth = _scaleHoursCanvas.ActualWidth;
@@ -145,19 +146,19 @@ public sealed partial class McTimeline : Control {
                 tick.Style = TimeScaleTickStyle;
                 tick.Width = tickWidth;
                 tick.Height = tickHeight;
-                tick.Background = BorderBrush ?? Foreground;
+                //tick.Background = BorderBrush ?? Foreground;
                 
                 Canvas.SetLeft(tick, x);
                 Canvas.SetTop(tick, canvasHeight - tickHeight);
                 
                 _scaleHoursCanvas.Children.Add(tick);
-                _visibleHourElements.Add(tick);
+                _visibleHours.Add(tick);
 
                 // Draw labels at an adaptive cadence to avoid overlap when zoomed out.
                 if (currentHour.Hour % hourLabelStep == 0) {
                     TextBlock hourLabel = _scaleHoursPool.GetElement();
                     hourLabel.Text = currentHour.ToString("HH", CultureInfo.CurrentCulture);
-                    hourLabel.Style = TimeScaleDaysStyle;
+                    hourLabel.Style = TimeScaleHoursStyle;
                     hourLabel.Width = labelSlotWidth;
                     hourLabel.TextAlignment = TextAlignment.Center;
                     hourLabel.VerticalAlignment = VerticalAlignment.Top;
@@ -168,7 +169,7 @@ public sealed partial class McTimeline : Control {
                     Canvas.SetTop(hourLabel, 2);
                     
                     _scaleHoursCanvas.Children.Add(hourLabel);
-                    _visibleHourElements.Add(hourLabel);
+                    _visibleHours.Add(hourLabel);
                 }
             }
 

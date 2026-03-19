@@ -18,6 +18,8 @@
             Value="{StaticResource DefaultTimeScaleStyle}" />
     <Setter Property="TimeScaleDaysStyle"
             Value="{StaticResource DefaultTimeScaleDaysStyle}" />
+    <Setter Property="TimeScaleHoursStyle"
+            Value="{StaticResource DefaultTimeScaleHoursStyle}" />
     <Setter Property="TimeScaleTickStyle"
             Value="{StaticResource DefaultTimeScaleTickStyle}" />
     <Setter Property="LegendStyle"

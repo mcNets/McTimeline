@@ -50,11 +50,6 @@ internal static class McConstants {
     public const double HSCROLL_SMALL_CHANGE_DIVISOR = 10.0;
 
     /// <summary>
-    /// Top padding in pixels for day labels in the time scale.
-    /// </summary>
-    public const double DAY_LABEL_TOP_PADDING = 3.0;
-
-    /// <summary>
     /// Fraction of the time-scale canvas height used for hour tick marks.
     /// </summary>
     public const double TICK_HEIGHT_RATIO = 0.3;

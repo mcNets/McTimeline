@@ -39,10 +39,10 @@
         </ResourceDictionary>
 
         <ResourceDictionary x:Key="Dark">
-          <Color x:Key="TL_Color1">#07375a</Color>
-          <Color x:Key="TL_Color2">#1a5538</Color>
-          <Color x:Key="TL_Color3">#625b8c</Color>
-          <Color x:Key="TL_Color4">#5c1128</Color>
+          <Color x:Key="TL_Color1">#780505</Color>
+          <Color x:Key="TL_Color2">#878571</Color>
+          <Color x:Key="TL_Color3">#26408b</Color>
+          <Color x:Key="TL_Color4">#FDD611</Color>
 
           <Color x:Key="TL_GradStart1">#2d4a72</Color>
           <Color x:Key="TL_GradStart2">#2b5a4c</Color>

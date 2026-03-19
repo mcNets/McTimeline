@@ -1,0 +1,1 @@
+- [x] Remove McConstants.DAY_LABEL_TOP_PADDING

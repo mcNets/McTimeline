@@ -1,5 +1,3 @@
-using Windows.Foundation;
-
 namespace McTimeline;
 
 public sealed partial class McTimeline : Control {
@@ -15,13 +13,6 @@ public sealed partial class McTimeline : Control {
         double canvasWidth = _scaleDaysCanvas.ActualWidth;
         double canvasHeight = _scaleDaysCanvas.ActualHeight;
 
-        // var tb = new TextBlock
-        // {
-        //     Text = "HELLO",
-        // };
-        // tb.Style = TimeScaleDaysStyle;
-        // tb.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-
         var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;
 
         DateTime firstVisibleDay = visibleStart.Date;
@@ -30,58 +21,50 @@ public sealed partial class McTimeline : Control {
         // Remove day labels that are no longer in the visible range
         Span<DateTime> daysBuffer = stackalloc DateTime[_visibleDays.Count];
         int count = 0;
-        foreach (var day in _visibleDays.Keys) {
+
+        foreach (DateTime day in _visibleDays.Keys) {
             if (day < firstVisibleDay || day > lastVisibleDay) {
                 daysBuffer[count++] = day;
             }
         }
+
         for (int i = 0; i < count; i++) {
-            DateTime key = daysBuffer[i];
-            if (_visibleDays.TryGetValue(key, out var label)) {
+            if (_visibleDays.Remove(daysBuffer[i], out TextBlock? label) && label is not null) {
                 _scaleDaysCanvas.Children.Remove(label);
                 _scaleDaysPool.RecycleElement(label);
-                _visibleDays.Remove(key);
             }
         }
 
         // Add or update visible day labels
         DateTime currentDay = firstVisibleDay;
         DateTime endDay = lastVisibleDay.AddDays(1);
-        const double dayTopPadding = McConstants.DAY_LABEL_TOP_PADDING;
 
         while (currentDay < endDay) {
-            // Calculate position for this day
+            // Position for this day
             double hoursFromMin = (currentDay - _viewport.TimeAxis.MinDate).TotalHours;
-            double x = _viewport.TimeAxis.HoursToScreen(hoursFromMin);
+            double posX = _viewport.TimeAxis.HoursToScreen(hoursFromMin);
 
             // Calculate the width for this day (distance to next day)
             DateTime nextDay = currentDay.AddDays(1);
             double nextHours = (nextDay - _viewport.TimeAxis.MinDate).TotalHours;
             double nextX = _viewport.TimeAxis.HoursToScreen(nextHours);
-            double dayWidth = nextX - x;
+            double dayWidth = nextX - posX;
 
             // Render only if this day cell intersects the viewport.
-            if (nextX > 0 && x < canvasWidth) {
+            if (nextX > 0 && posX < canvasWidth) {
                 if (!_visibleDays.TryGetValue(currentDay, out TextBlock? dayLabel) || dayLabel == null) {
                     // Create new label for a day entering the viewport
                     dayLabel = _scaleDaysPool.GetElement();
                     dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
-                    dayLabel.Tag = currentDay; // Store the date in Tag for reference
                     _visibleDays[currentDay] = dayLabel;
                     _scaleDaysCanvas.Children.Add(dayLabel);
                 }
 
-                // Update style in case it changed
-                dayLabel.Style = TimeScaleDaysStyle;
-
                 // Always update size and position (handles zoom/pan changes)
+                dayLabel.Style = TimeScaleDaysStyle;
                 dayLabel.Width = dayWidth;
-                dayLabel.Height = canvasHeight;
-                //dayLabel.Height = Math.Max(0, canvasHeight - dayTopPadding);
-                Canvas.SetLeft(dayLabel, x);
+                Canvas.SetLeft(dayLabel, posX);
                 Canvas.SetTop(dayLabel, 0);
-                //Canvas.SetTop(dayLabel, dayTopPadding);
-                //Canvas.SetTop(dayLabel, (canvasHeight - tb.DesiredSize.Height) / 2); // Position at bottom with small padding
             }
 
             currentDay = currentDay.AddDays(1);

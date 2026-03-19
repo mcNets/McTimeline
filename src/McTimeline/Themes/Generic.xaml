@@ -16,8 +16,8 @@
             Value="{ThemeResource McTimelineForegroundBrush}" />
     <Setter Property="TimeScaleStyle"
             Value="{StaticResource DefaultTimeScaleStyle}" />
-    <Setter Property="TimeScaleTextStyle"
-            Value="{StaticResource DefaultTimeScaleTextStyle}" />
+    <Setter Property="TimeScaleDaysStyle"
+            Value="{StaticResource DefaultTimeScaleDaysStyle}" />
     <Setter Property="TimeScaleTickStyle"
             Value="{StaticResource DefaultTimeScaleTickStyle}" />
     <Setter Property="LegendStyle"

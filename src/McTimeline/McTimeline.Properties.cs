@@ -273,16 +273,16 @@ public sealed partial class McTimeline {
             new PropertyMetadata(null));
 
     /// <summary>
-    /// Gets or sets the style for day/hour labels in the time scale.
+    /// Gets or sets the style for days labels in the time scale.
     /// </summary>
-    public Style? TimeScaleTextStyle {
-        get => (Style?)GetValue(TimeScaleTextStyleProperty);
-        set => SetValue(TimeScaleTextStyleProperty, value);
+    public Style? TimeScaleDaysStyle {
+        get => (Style?)GetValue(TimeScaleDaysStyleProperty);
+        set => SetValue(TimeScaleDaysStyleProperty, value);
     }
 
-    public static readonly DependencyProperty TimeScaleTextStyleProperty =
+    public static readonly DependencyProperty TimeScaleDaysStyleProperty =
         DependencyProperty.Register(
-            nameof(TimeScaleTextStyle),
+            nameof(TimeScaleDaysStyle),
             typeof(Style),
             typeof(McTimeline),
             new PropertyMetadata(null));

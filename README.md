@@ -107,7 +107,7 @@ Both event args include:
 - `LegendCaption`
 - styling:
 - `TimeScaleStyle`
-- `TimeScaleTextStyle`
+- `TimeScaleDaysStyle`
 - `TimeScaleTickStyle`
 - `LegendStyle`
 - `LegendCaptionStyle`

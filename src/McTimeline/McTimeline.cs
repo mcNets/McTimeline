@@ -13,7 +13,7 @@ public sealed partial class McTimeline : Control {
     #region Private fields
     private readonly McTimelineViewport _viewport;
     private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = [];
-    private readonly Dictionary<DateTime, TextBlock> _visibleDayLabels = [];
+    private readonly Dictionary<DateTime, TextBlock> _visibleDays = [];
     private readonly List<FrameworkElement> _visibleHourElements = [];
     private readonly McElementPool<McLegend> _legendItemPool; 
     private readonly McElementPool<TextBlock> _scaleDaysPool;
@@ -55,8 +55,8 @@ public sealed partial class McTimeline : Control {
         _viewport = new McTimelineViewport();
         _legendItemPool = new McElementPool<McLegend>(LegendStyle);
         _seriesItemPool = new McElementPool<FrameworkElement>(() => CreateTimelineBarInstance(), TimelineItemStyle);
-        _scaleDaysPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
-        _scaleHoursPool = new McElementPool<TextBlock>(TimeScaleTextStyle);
+        _scaleDaysPool = new McElementPool<TextBlock>(TimeScaleDaysStyle);
+        _scaleHoursPool = new McElementPool<TextBlock>(TimeScaleDaysStyle);
         _hourTickPool = new McElementPool<Border>(TimeScaleTickStyle);
     }
 

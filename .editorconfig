@@ -5,9 +5,7 @@ root = true
 [*.cs]
 # EOL should be normalized by Git. See https://github.com/dotnet/format/issues/1099
 end_of_line = unset
-
 # See https://github.com/dotnet/roslyn/issues/20356#issuecomment-310143926
 trim_trailing_whitespace = false
-
 # C# code style: keep open brackets on the same line
 csharp_new_line_before_open_brace = none

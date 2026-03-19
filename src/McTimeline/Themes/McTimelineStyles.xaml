@@ -12,14 +12,18 @@
             Value="{ThemeResource McTimelineScaleBackgroundBrush}" />
   </Style>
 
-  <Style x:Key="DefaultTimeScaleTextStyle"
+  <Style x:Key="DefaultTimeScaleDaysStyle"
          TargetType="TextBlock">
     <Setter Property="Foreground"
             Value="{ThemeResource McTimelineForegroundBrush}" />
-    <!-- <Setter Property="FontFamily"
-            Value="{ThemeResource McTimelineFontFamily}" /> -->
     <Setter Property="FontSize"
-            Value="{ThemeResource McTimelineLargeFontSize}" />
+            Value="{ThemeResource McTimelineFontSize}" />
+    <Setter Property="TextAlignment"
+            Value="Left" />
+    <Setter Property="VerticalAlignment"
+            Value="Center" />
+    <!-- <Setter Property="Padding"
+            Value="0,15,0,0" /> -->
   </Style>
 
   <Style x:Key="DefaultTimeScaleTickStyle"

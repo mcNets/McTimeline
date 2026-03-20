@@ -12,18 +12,22 @@ namespace McTimeline;
 public sealed partial class McTimeline : Control {
     #region Private fields
     private readonly McTimelineViewport _viewport;
-    private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = [];
-    private readonly Dictionary<DateTime, TextBlock> _visibleDays = [];
-    private readonly List<FrameworkElement> _visibleHours = [];
-    private readonly McElementPool<McLegend> _legendItemPool; 
-    private readonly McElementPool<TextBlock> _scaleDaysPool;
-    private readonly McElementPool<TextBlock> _scaleHoursPool;
-    private McElementPool<FrameworkElement> _seriesItemPool;
-    private readonly McElementPool<Border> _hourTickPool;
     private Grid? _container;
+    // Scale elements
     private Grid? _timeScaleGrid;
     private Canvas? _scaleDaysCanvas;
+    private readonly Dictionary<DateTime, TextBlock> _visibleDays = [];
+    private readonly McElementPool<TextBlock> _scaleDaysPool;
     private Canvas? _scaleHoursCanvas;
+    private readonly List<FrameworkElement> _visibleHours = [];
+    private readonly McElementPool<TextBlock> _scaleHoursPool;
+    private readonly McElementPool<Border> _hourTickPool;
+    private ColumnDefinition? _timeScaleLegendColumn;
+    private GridLength _timeScaleLegendColumnWidth;
+
+    private readonly Dictionary<int, FrameworkElement> _visibleLegendItems = [];
+    private readonly McElementPool<McLegend> _legendItemPool; 
+    private McElementPool<FrameworkElement> _seriesItemPool;
     private Border? _legendBorder;
     private ItemsRepeater? _seriesRepeater;
     private ScrollViewer? _timelineScroll;
@@ -32,9 +36,7 @@ public sealed partial class McTimeline : Control {
     private ScrollBar? _hScroll;
     private ScrollBar? _vScroll;
     private ColumnDefinition? _legendColumn;
-    private ColumnDefinition? _timeScaleLegendColumn;
     private GridLength _legendColumnWidth;
-    private GridLength _timeScaleLegendColumnWidth;
     #endregion
 
     /// <summary>

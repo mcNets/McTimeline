@@ -102,10 +102,9 @@
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
 
-              <!--Border overlay for both rows-->
+              <!--Border overlay for both rows but only is drawn for the bottom-->
               <Border BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-                      Style="{TemplateBinding TimeScaleTickStyle}"
-                      BorderThickness="0,0,0,1"
+                      Style="{TemplateBinding TimeScaleStyle}"
                       Grid.RowSpan="2" />
 
               <!-- Time Scale Days -->

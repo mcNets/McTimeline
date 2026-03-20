@@ -53,7 +53,6 @@ public sealed partial class McTimeline : Control {
             // Render only if this day cell intersects the viewport.
             if (nextX > 0 && posX < canvasWidth) {
                 if (!_visibleDays.TryGetValue(currentDay, out TextBlock? dayLabel) || dayLabel == null) {
-                    // Create new label for a day entering the viewport
                     dayLabel = _scaleDaysPool.GetElement();
                     dayLabel.Text = currentDay.ToString("dd/MM/yy", CultureInfo.CurrentCulture);
                     _visibleDays[currentDay] = dayLabel;
@@ -93,14 +92,11 @@ public sealed partial class McTimeline : Control {
         }
         _visibleHours.Clear();
 
-        // Calculate the width of the canvas
         double canvasWidth = _scaleHoursCanvas.ActualWidth;
         double canvasHeight = _scaleHoursCanvas.ActualHeight;
 
-        // Get visible date range from viewport so ticks align with real hour boundaries (:00).
         var (visibleStart, visibleEnd) = _viewport.TimeAxis.VisibleDateRange;
 
-        // Start from the current hour boundary and include one hour before for smooth panning.
         DateTime currentHour = new DateTime(
             visibleStart.Year,
             visibleStart.Month,
@@ -108,9 +104,8 @@ public sealed partial class McTimeline : Control {
             visibleStart.Hour,
             0,
             0,
-            visibleStart.Kind).AddHours(-1);
+            visibleStart.Kind);
 
-        // Include one extra hour beyond the visible end for smooth panning.
         DateTime endHour = new DateTime(
             visibleEnd.Year,
             visibleEnd.Month,
@@ -118,7 +113,7 @@ public sealed partial class McTimeline : Control {
             visibleEnd.Hour,
             0,
             0,
-            visibleEnd.Kind).AddHours(1);
+            visibleEnd.Kind);
 
         double pixelsPerHour = _viewport.TimeAxis.PixelsPerHour;
         int hourLabelStep = pixelsPerHour switch {
@@ -131,43 +126,31 @@ public sealed partial class McTimeline : Control {
 
         // Tick dimensions
         const double tickWidth = 1;
-        double tickHeight = canvasHeight * McConstants.TICK_HEIGHT_RATIO; // 30% of canvas height
+        double tickHeight = canvasHeight * McConstants.TICK_HEIGHT_RATIO;
 
-        // Render each clock hour within the visible range.
         while (currentHour <= endHour) {
-            // Calculate position for this hour boundary.
             double hourValue = (currentHour - _viewport.TimeAxis.MinDate).TotalHours;
-            double x = _viewport.TimeAxis.HoursToScreen(hourValue);
+            double posX = _viewport.TimeAxis.HoursToScreen(hourValue);
 
-            // Only render if within canvas bounds (with buffer)
-            if (x >= -50 && x <= canvasWidth + 50) {
-                // Always draw tick mark
+            if (posX >= 0 && posX <= canvasWidth) {
+                // Tick mark
                 Border tick = _hourTickPool.GetElement();
                 tick.Style = TimeScaleTickStyle;
                 tick.Width = tickWidth;
-                tick.Height = tickHeight;
-                //tick.Background = BorderBrush ?? Foreground;
-                
-                Canvas.SetLeft(tick, x);
-                Canvas.SetTop(tick, canvasHeight - tickHeight);
-                
+                tick.Height = currentHour.Hour == 0 ? canvasHeight : tickHeight;
+                Canvas.SetLeft(tick, posX);
+                Canvas.SetTop(tick, currentHour.Hour == 0 ? 0 : canvasHeight - tickHeight);
                 _scaleHoursCanvas.Children.Add(tick);
                 _visibleHours.Add(tick);
 
-                // Draw labels at an adaptive cadence to avoid overlap when zoomed out.
-                if (currentHour.Hour % hourLabelStep == 0) {
+                // Hour label (adaptive cadence)
+                if (currentHour.Hour % hourLabelStep == 0 && currentHour.Hour != 0) {
                     TextBlock hourLabel = _scaleHoursPool.GetElement();
                     hourLabel.Text = currentHour.ToString("HH", CultureInfo.CurrentCulture);
                     hourLabel.Style = TimeScaleHoursStyle;
                     hourLabel.Width = labelSlotWidth;
-                    hourLabel.TextAlignment = TextAlignment.Center;
-                    hourLabel.VerticalAlignment = VerticalAlignment.Top;
-                    hourLabel.FontSize = 10;
-                    
-                    // Center the label around the tick and keep it within the hour cell.
-                    Canvas.SetLeft(hourLabel, x - (labelSlotWidth / 2));
-                    Canvas.SetTop(hourLabel, 2);
-                    
+                    Canvas.SetLeft(hourLabel, posX - (labelSlotWidth / 2));
+                    Canvas.SetTop(hourLabel, 0);
                     _scaleHoursCanvas.Children.Add(hourLabel);
                     _visibleHours.Add(hourLabel);
                 }

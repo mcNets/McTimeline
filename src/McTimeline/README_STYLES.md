@@ -56,7 +56,6 @@ The McTimeline control automatically responds to theme changes through WinUI's `
 
 | Resource | Value |
 |--------|-------|
-| `McTimelineFontFamily` | `Segoe UI` |
 | `McTimelineFontSize` | `14` |
 | `McTimelineSmallFontSize` | `12` |
 | `McTimelineLargeFontSize` | `16` |

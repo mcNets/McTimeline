@@ -233,7 +233,6 @@ public sealed partial class McTimeline {
             timeline.InvalidateTimeline();
         }
     }
-    
 
     /// <summary>
     /// Gets or sets a value indicating whether the legend column is visible.
@@ -270,6 +269,21 @@ public sealed partial class McTimeline {
     #endregion
 
     #region Style Dependency Properties
+
+    /// <summary>
+    /// Gets or sets the style for the time scale grid (top section).
+    /// </summary>
+    public Style? TimelineStyle {
+        get => (Style?)GetValue(TimelineStyleProperty);
+        set => SetValue(TimelineStyleProperty, value);
+    }
+
+    public static readonly DependencyProperty TimelineStyleProperty =
+        DependencyProperty.Register(
+            nameof(TimelineStyle),
+            typeof(Style),
+            typeof(McTimeline),
+            new PropertyMetadata(null));
 
     /// <summary>
     /// Gets or sets the style for the time scale grid (top section).

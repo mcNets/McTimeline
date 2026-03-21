@@ -125,6 +125,14 @@ public sealed partial class McTimeline : Control {
     }
 
     /// <summary>
+    /// Creates a new instance of the TimelineBar control.
+    /// </summary>
+    /// <returns>A new timeline bar instance according to the <see cref="TimelineBarType"/>.</returns>
+    private FrameworkElement CreateTimelineBarInstance() {
+        return (FrameworkElement)Activator.CreateInstance(TimelineBarType)!;
+    }
+
+    /// <summary>
     /// Handles the size changed event of the timeline canvas.
     /// Updates the viewport dimensions and refreshes the display.
     /// </summary>

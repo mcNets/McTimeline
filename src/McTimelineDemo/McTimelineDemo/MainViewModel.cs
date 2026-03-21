@@ -28,6 +28,9 @@ public partial class MainViewModel : ObservableObject {
     public partial bool IsLegendVisible { get; set; } = true;
 
     [ObservableProperty]
+    public partial bool IsTextVisible { get; set; } = true;
+
+    [ObservableProperty]
     public partial DateTime DataInici { get; set; } = DateTime.Now.AddMonths(-6);
 
     [ObservableProperty]

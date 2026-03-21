@@ -29,6 +29,7 @@
   <Thickness x:Key="McTimelineBorderThickness">1</Thickness>
   <Thickness x:Key="McTimelineItemMargin">0,3,0,3</Thickness>
   <Thickness x:Key="McTimelineBorderBottomThickness">0,0,0,1</Thickness>
+  <Thickness x:Key="McTimelineBorderRightThickness">0,0,1,0</Thickness>
 
   <CornerRadius x:Key="McTimelineCornerRadius">8</CornerRadius>
 

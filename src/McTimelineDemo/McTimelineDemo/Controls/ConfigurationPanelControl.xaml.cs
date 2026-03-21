@@ -31,6 +31,14 @@ public sealed partial class ConfigurationPanelControl : UserControl {
     public static readonly DependencyProperty IsLegendVisibleProperty =
         DependencyProperty.Register(nameof(IsLegendVisible), typeof(bool), typeof(ConfigurationPanelControl), new PropertyMetadata(true));
 
+    public bool IsTextVisible {
+        get { return (bool)GetValue(IsTextVisibleProperty); }
+        set { SetValue(IsTextVisibleProperty, value); }
+    }
+
+    public static readonly DependencyProperty IsTextVisibleProperty =
+        DependencyProperty.Register(nameof(IsTextVisible), typeof(bool), typeof(ConfigurationPanelControl), new PropertyMetadata(true));
+
     public decimal LegendWidth {
         get { return (decimal)GetValue(LegendWidthProperty); }
         set { SetValue(LegendWidthProperty, value); }

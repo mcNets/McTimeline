@@ -17,7 +17,7 @@ internal class MockTimelineItemsSeries
         var initialGap = random.Next(1, 4);
         currentStartDate = currentStartDate.AddHours(initialGap);
 
-        while (currentStartDate <= endDate.AddHours(-15) && items.Count() < maxItemsCount)
+        while (currentStartDate <= endDate.AddHours(-15) && items.Count < maxItemsCount)
         {
             var duration = random.Next(8, 24); // between 8 and 24 hours
             var itemEndDate = currentStartDate.AddHours(duration);

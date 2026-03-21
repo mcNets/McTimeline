@@ -15,21 +15,21 @@
     <Setter Property="Foreground"
             Value="{ThemeResource McTimelineForegroundBrush}" />
     <Setter Property="TimeScaleStyle"
-            Value="{StaticResource DefaultTimeScaleStyle}" />
+            Value="{ThemeResource DefaultTimeScaleStyle}" />
     <Setter Property="TimeScaleDaysStyle"
-            Value="{StaticResource DefaultTimeScaleDaysStyle}" />
+            Value="{ThemeResource DefaultTimeScaleDaysStyle}" />
     <Setter Property="TimeScaleHoursStyle"
-            Value="{StaticResource DefaultTimeScaleHoursStyle}" />
+            Value="{ThemeResource DefaultTimeScaleHoursStyle}" />
     <Setter Property="TimeScaleTickStyle"
-            Value="{StaticResource DefaultTimeScaleTickStyle}" />
+            Value="{ThemeResource DefaultTimeScaleTickStyle}" />
     <Setter Property="LegendStyle"
-            Value="{StaticResource DefaultLegendStyle}" />
+            Value="{ThemeResource DefaultLegendStyle}" />
     <Setter Property="LegendCaptionStyle"
-            Value="{StaticResource DefaultLegendCaptionStyle}" />
+            Value="{ThemeResource DefaultLegendCaptionStyle}" />
     <Setter Property="LegendItemStyle"
-            Value="{StaticResource DefaultLegendItemStyle}" />
+            Value="{ThemeResource DefaultLegendItemStyle}" />
     <Setter Property="TimelineScrollStyle"
-            Value="{StaticResource DefaultTimelineScrollStyle}" />
+            Value="{ThemeResource DefaultTimelineScrollStyle}" />
     <Setter Property="TimelineCanvasStyle"
             Value="{StaticResource DefaultTimelineCanvasStyle}" />
     <Setter Property="TimelineItemStyle"
@@ -48,6 +48,8 @@
             Value="{ThemeResource McTimelineDefaultPixelsPerHour}" />
     <Setter Property="LegendWidth"
             Value="{ThemeResource McTimelineDefaultLegendWidth}" />
+    <Setter Property="IsTextVisible"
+            Value="true" />
 
     <Setter Property="Template">
       <Setter.Value>
@@ -96,15 +98,14 @@
                   Grid.Row="0"
                   Grid.Column="1">
               <Grid.RowDefinitions>
-                <!-- Dates / Days -->
+                <!-- Days -->
                 <RowDefinition Height="*" />
                 <!-- Hours -->
                 <RowDefinition Height="*" />
               </Grid.RowDefinitions>
 
               <!--Border overlay for both rows but only is drawn for the bottom-->
-              <Border BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-                      Style="{TemplateBinding TimeScaleStyle}"
+              <Border Style="{TemplateBinding TimeScaleStyle}"
                       Grid.RowSpan="2" />
 
               <!-- Time Scale Days -->
@@ -121,14 +122,14 @@
                     Grid.Column="2"
                     Style="{TemplateBinding TimeScaleTickStyle}"
                     BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-                    BorderThickness="0,0,0,1" />
+                    BorderThickness="{StaticResource McTimelineBorderRightThickness}" />
 
             <!-- Legend -->
             <Border x:Name="PART_LegendBorder"
                     Grid.Row="1"
                     Grid.Column="0"
                     BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-                    BorderThickness="0,0,1,0">
+                    BorderThickness="{StaticResource McTimelineBorderRightThickness}">
 
               <Canvas x:Name="PART_LegendCanvas"
                       Style="{TemplateBinding LegendStyle}" />
@@ -226,6 +227,8 @@
             Value="Center" />
     <Setter Property="Foreground"
             Value="{ThemeResource McTimelineForegroundBrush}" />
+    <Setter Property="Margin"
+            Value="0,5,0,5" />
 
     <Setter Property="Template">
       <Setter.Value>
@@ -237,9 +240,21 @@
                   CornerRadius="{TemplateBinding CornerRadius}"
                   Padding="{TemplateBinding Padding}"
                   ToolTipService.ToolTip="{TemplateBinding ItemToolTip}"
-                  Margin="0,5,0,5">
+                  Margin="{TemplateBinding Margin}">
 
-            <TextBlock HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+            <VisualStateManager.VisualStateGroups>
+              <VisualStateGroup x:Name="TextVisibilityStates">
+                <VisualState x:Name="TextVisible" />
+                <VisualState x:Name="TextHidden">
+                  <VisualState.Setters>
+                    <Setter Target="PART_ItemText.Visibility" Value="Collapsed" />
+                  </VisualState.Setters>
+                </VisualState>
+              </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <TextBlock x:Name="PART_ItemText"
+                       HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                        Text="{TemplateBinding ItemText}"
                        TextAlignment="Center"
                        VerticalAlignment="{TemplateBinding VerticalContentAlignment}"

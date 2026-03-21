@@ -365,7 +365,11 @@ public sealed partial class McTimeline : Control {
         var (x, y, width) = _viewport.GetItemPosition(item, seriesIndex);
 
         // Set common ITimelineBar properties
+        bar.ItemText = item.Title;
         bar.ItemToolTip = McTimeline.CreateItemToolTip(item);
+        if (bar is Controls.McTimelineBar mcBar) {
+            mcBar.IsTextVisible = IsTextVisible;
+        }
         
         // Prefer the series-specific style and fallback to the timeline default style.
         var seriesStyle = SeriesCollection?[seriesIndex].SeriesStyle;

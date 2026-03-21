@@ -23,6 +23,7 @@
                                         MinWidth="200"
                                         AddNewSeries="{x:Bind ViewModel.AddNewSeriesCommand}"
                                         IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=TwoWay}"
+                                        IsTextVisible="{x:Bind ViewModel.IsTextVisible, Mode=TwoWay}"
                                         LegendWidth="{x:Bind ViewModel.LegendWidth, Mode=TwoWay}"
                                         SeriesHeight="{x:Bind ViewModel.SeriesHeight, Mode=TwoWay}"
                                         ScaleHeight="{x:Bind ViewModel.ScaleHeight, Mode=TwoWay}"
@@ -74,7 +75,8 @@
                        LegendCaptionStyle="{StaticResource DefaultLegendCaptionStyle}"
                        IsLegendVisible="{x:Bind ViewModel.IsLegendVisible, Mode=OneWay}"
                        MinDate="{x:Bind ViewModel.DataInici, Mode=OneWay}"
-                       MaxDate="{x:Bind ViewModel.DataFinal, Mode=OneWay}" />
+                       MaxDate="{x:Bind ViewModel.DataFinal, Mode=OneWay}"
+                       IsTextVisible="{x:Bind ViewModel.IsTextVisible, Mode=OneWay}" />
     </Grid>
 
   </Grid>

@@ -1,7 +1,7 @@
 namespace McTimeline;
 
 public sealed partial class McTimeline {
-    #region Timeline series
+    #region Timeline series collection
 
     /// <summary>
     /// Gets or sets the collection of timeline series.
@@ -26,7 +26,7 @@ public sealed partial class McTimeline {
 
     #endregion
 
-    #region Timeline Range and Scale Properties
+    #region Timeline Range and Scale
 
     /// <summary>
     /// Gets or sets the minimum date/time of the timeline.
@@ -209,17 +209,31 @@ public sealed partial class McTimeline {
         InvalidateTimeline();
     }
 
-    /// <summary>
-    /// Creates a new instance of the TimelineBar control.
-    /// </summary>
-    /// <returns>A new timeline bar instance according to the <see cref="TimelineBarType"/>.</returns>
-    private FrameworkElement CreateTimelineBarInstance() {
-        return (FrameworkElement)Activator.CreateInstance(TimelineBarType)!;
-    }
-
     #endregion
 
     #region Layout Dependency Properties
+
+    /// <summary>
+    /// Gets or sets a value indicating whether text labels on timeline bars are visible.
+    /// </summary>
+    public bool IsTextVisible
+    {
+        get { return (bool)GetValue(IsTextVisibleProperty); }
+        set { SetValue(IsTextVisibleProperty, value); }
+    }
+    
+    /// <summary>
+    /// Gets or sets a value indicating whether text labels on timeline bars are visible.
+    /// </summary>
+    public static readonly DependencyProperty IsTextVisibleProperty = 
+        DependencyProperty.Register("IsTextVisible", typeof(bool), typeof(McTimeline), new PropertyMetadata(false, OnIsTextVisibleChanged));
+
+    private static void OnIsTextVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is McTimeline timeline) {
+            timeline.InvalidateTimeline();
+        }
+    }
+    
 
     /// <summary>
     /// Gets or sets a value indicating whether the legend column is visible.

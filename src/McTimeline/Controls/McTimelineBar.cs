@@ -9,6 +9,39 @@ public sealed partial class McTimelineBar : Control, ITimelineBar {
         this.DefaultStyleKey = typeof(McTimelineBar);
     }
 
+    protected override void OnApplyTemplate() {
+        base.OnApplyTemplate();
+        UpdateTextVisibility();
+    }
+
+    private void UpdateTextVisibility() {
+        VisualStateManager.GoToState(this, IsTextVisible ? "TextVisible" : "TextHidden", false);
+    }
+
+    /// <summary>
+    /// Gets or sets a value indicating whether text labels on timeline bars are visible.
+    /// </summary>
+    public bool IsTextVisible {
+        get => (bool)GetValue(IsTextVisibleProperty);
+        set => SetValue(IsTextVisibleProperty, value);
+    }
+
+    /// <summary>
+    /// Identifies the <see cref="IsTextVisible"/> dependency property.
+    /// </summary>
+    public static readonly DependencyProperty IsTextVisibleProperty =
+        DependencyProperty.Register(
+            nameof(IsTextVisible),
+            typeof(bool),
+            typeof(McTimelineBar),
+            new PropertyMetadata(false, OnIsTextVisibleChanged));
+
+    private static void OnIsTextVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) {
+        if (d is McTimelineBar bar) {
+            bar.UpdateTextVisibility();
+        }
+    }
+
     /// <summary>
     /// Gets or sets the text displayed on the timeline bar.
     /// </summary>

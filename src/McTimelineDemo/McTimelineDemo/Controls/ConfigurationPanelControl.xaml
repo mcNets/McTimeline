@@ -34,6 +34,9 @@
                                         <CheckBox IsChecked="{x:Bind IsLegendVisible, Mode=TwoWay}"
                                                   Content="Show legend"/>
 
+                                        <CheckBox IsChecked="{x:Bind IsTextVisible, Mode=TwoWay}"
+                                                  Content="Show labels"/>
+
                                         <NumberBox Header="Legend width"
                                                    SpinButtonPlacementMode="Inline"
                                                    Minimum="100"

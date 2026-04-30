@@ -112,14 +112,15 @@
                           Grid.Row="1" />
               
                 </Grid>
+
               </Border>
   
               <!--Blank-->
-              <Border Grid.Row="0"
+              <!-- <Border Grid.Row="0"
                       Grid.Column="2"
-                      Style="{TemplateBinding TimeScaleTickStyle}"
+                      Style="{TemplateBinding TimeScaleStyle}"
                       BorderBrush="{ThemeResource McTimelineGridLineBrush}"
-                      BorderThickness="{StaticResource McTimelineBorderRightThickness}" />
+                      BorderThickness="{StaticResource McTimelineBorderBottomThickness}" /> -->
   
               <!-- Legend -->
               <Border x:Name="PART_LegendBorder"

@@ -296,7 +296,8 @@ public sealed partial class McTimeline : Control {
     /// Control+Wheel: Horizontal zoom, Shift+Wheel: Horizontal scroll, Wheel: Vertical scroll.
     /// </summary>
     private void OnCanvasPointerWheelChanged(object? sender, PointerRoutedEventArgs e) {
-        var delta = e.GetCurrentPoint(_timelineCanvas).Properties.MouseWheelDelta;
+        var props = e.GetCurrentPoint(_timelineCanvas).Properties;
+        var delta = props.MouseWheelDelta;
         // Zoom horizontal
         if ((e.KeyModifiers & VirtualKeyModifiers.Control) != 0) {
             double zoomFactor = delta > 0 ? McConstants.ZOOM_IN_FACTOR : McConstants.ZOOM_OUT_FACTOR;
@@ -309,7 +310,15 @@ public sealed partial class McTimeline : Control {
             UpdateHScrollBar();
             InvalidateTimeline();
         }
-        // Scroll horizontal
+        // Scroll horizontal (touchpad)
+        else if (props.IsHorizontalMouseWheel) {
+            // On Windows, horizontal touchpad right-swipe produces a negative delta; invert to match gesture direction.
+            double scrollDelta = delta > 0 ? McConstants.SCROLL_DELTA_PIXELS : -McConstants.SCROLL_DELTA_PIXELS;
+            _viewport.TimeAxis.ScrollByPixels(scrollDelta);
+            UpdateHScrollBar();
+            InvalidateTimeline();
+        }
+        // Scroll horizontal (Shift+Wheel)
         else if ((e.KeyModifiers & VirtualKeyModifiers.Shift) != 0) {
             double scrollDelta = delta > 0 ? -1 : 1; // Adjust step
             _viewport.SeriesAxis.OffsetUnits += scrollDelta;
